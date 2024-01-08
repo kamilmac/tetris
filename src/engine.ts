@@ -93,8 +93,6 @@ export class Engine {
   setup() {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
-      stencil: false,
-      depth: false,
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
