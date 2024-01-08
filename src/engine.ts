@@ -140,7 +140,7 @@ export class Engine {
     this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
     this.camera.position.x = floorCenterX;
     this.camera.position.y = 12;
-    this.camera.position.z = floorCenterZ + 2.5;
+    this.camera.position.z = floorCenterZ + this.stage.depth / 2;
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(
@@ -150,7 +150,6 @@ export class Engine {
     );
     this.controls.update();
     this.scene = new THREE.Scene();
-    // this.scene.add(this.cubeObj);
     this.renderFloor();
   }
 
@@ -160,6 +159,11 @@ export class Engine {
     }
     this.idsInStage.push(cube.id);
     if (this.boxes[cube.id]) {
+      // if (y % 2) {
+      //   this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(22,222,216)");
+      // } else {
+      //   this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(224,222,216)");
+      // }
       this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
       // this.boxes[cube.id].material.color.setHex(cube.color);
       this.boxes[cube.id]._lerpDone = false;
@@ -198,7 +202,7 @@ export class Engine {
         return;
       }
       if (box._targetPosition && !box._lerpDone) {
-        box.position.lerp(box._targetPosition, 0.2);
+        box.position.lerp(box._targetPosition, 0.25);
         if (box.position.distanceTo(box._targetPosition) < 0.001) {
           box._lerpDone = true;
         }
