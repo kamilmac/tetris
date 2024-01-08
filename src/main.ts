@@ -3,14 +3,34 @@ import { Brick } from "./brick";
 import { Engine } from "./engine";
 import { Controls } from "./controls";
 
-const CYCLE_LENGTH_MS = 400;
+export const CFG = {
+  colors: [
+    0x1a1b26, 0x414868, 0xbb9af7, 0x7dcfff, 0x9ece6a, 0xff9e64, 0xf7768e,
+  ],
+  cycleTime: 400,
+  shapes: [],
+  stage: {
+    width: 8,
+    height: 12,
+  },
+  controls: {
+    cameraRotateRight: "d",
+    cameraRotateLeft: "s",
+    moveBlockLeft: "ArrowLeft",
+    moveBlockRight: "ArrowRight",
+    moveBlockDown: "ArrowDown",
+    moveBlockRotate: "ArrowUp",
+  },
+};
+
+const CYCLE_LENGTH_MS = CFG.cycleTime;
 
 class Game {
   constructor() {
     this.blockCyclesCount = 1;
-    this.stage = new Stage(12, 8, 8);
+    this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.width);
     this.engine = new Engine(this.stage, () => {
-      this.controls = new Controls();
+      this.controls = new Controls(CFG.controls);
       this.addBrick();
       this.loop();
     });
@@ -44,24 +64,3 @@ class Game {
 }
 
 new Game();
-
-export const CFG = {
-  colors: {
-    active: "",
-    locked: "",
-    floor: "",
-  },
-  cycleTime: 800,
-  shapes: [],
-  stage: {
-    width: 8,
-    height: 8,
-    height: 12,
-  },
-  controls: {
-    left: "ArrowLeft",
-    right: "ArrowRight",
-    down: "ArrowDown",
-    rotate: "ArrowUp",
-  },
-};
