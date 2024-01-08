@@ -61,6 +61,8 @@ const cubeMaterial = new THREE.ShaderMaterial({
   transparent: true,
 });
 
+let tempCounter = 0;
+
 export class Engine {
   constructor(stage, onReady) {
     this.stage = stage;
@@ -90,8 +92,7 @@ export class Engine {
 
   setup() {
     this.renderer = new THREE.WebGLRenderer({
-      powerPreference: "high-performance",
-      antialias: false,
+      antialias: true,
       stencil: false,
       depth: false,
     });
@@ -128,11 +129,11 @@ export class Engine {
       this.boxes[cube.id]._lerpDone = false;
       return;
     }
-    // const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const geometry = this.cubeObj;
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // const geometry = this.cubeObj;
     // const material = new THREE.MeshBasicMaterial({ color: cube.color });
     const mesh = new THREE.Mesh(geometry, cubeMaterial);
-    mesh.scale.set(0.5, 0.5, 0.5);
+    mesh.scale.set(0.95, 0.95, 0.95);
     mesh.position.x = x;
     mesh.position.y = y;
     mesh.position.z = z;
@@ -191,6 +192,8 @@ export class Engine {
   }
 
   render() {
+    tempCounter += 0.03
+    cubeMaterial.uniforms.u_thickness.value = Math.sin(tempCounter) * 0.03 + 0.07
     if (this.stage.dirty) {
       this.applyStage();
       this.stage.dirty = false;
