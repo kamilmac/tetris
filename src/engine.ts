@@ -10,20 +10,56 @@ import cubeObj from "./cube.obj?url";
 // import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 // import Lifeforms from "lifeforms";
 
+const floorMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    gridSpacing: { value: 1.0 },
+    lineWidth: { value: 0.05 },
+  },
+  vertexShader: `
+    varying vec3 vPosition;
+
+    void main() {
+      vPosition = position;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float gridSpacing;
+    uniform float lineWidth;
+    varying vec3 vPosition;
+
+    void main() {
+      // Calculate the fraction part of the current position divided by gridSpacing
+      vec3 grid = abs(fract(vPosition.xyz / gridSpacing - 0.5) - 0.5) / lineWidth;
+      // Determine the minimum distance to the closest edge in X and Z
+      float minDist = min(grid.x, grid.z);
+      // Draw grid lines by checking if we are close to an edge
+      float edgeFactor = min(minDist, 1.0);
+
+      if(edgeFactor == 1.0) {
+        discard; // Discard grid lines fragment
+      }
+
+      gl_FragColor = vec4(edgeFactor); // White for grid lines, black elsewhere
+    }
+  `,
+  transparent: true,
+});
+
 const cubeMaterial = new THREE.ShaderMaterial({
   uniforms: {
     u_time: {
-      value: 1.0
+      value: 1.0,
     },
     u_colorA: {
-      value: new THREE.Color('rgb(224,222,216)')
+      value: new THREE.Color("rgb(224,222,216)"),
     },
     u_colorB: {
-      value: new THREE.Color('rgb(58,58,58)')
+      value: new THREE.Color("rgb(58,58,58)"),
     },
     u_thickness: {
-      value: 0.015
-    }
+      value: 0.001,
+    },
   },
   vertexShader: `
     varying vec2 vUv;
@@ -140,15 +176,16 @@ export class Engine {
   }
 
   renderFloor() {
+    const floorThickness = 0.1;
     const geometry = new THREE.BoxGeometry(
       this.stage.width,
-      1,
+      floorThickness,
       this.stage.depth,
     );
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const mesh = new THREE.Mesh(geometry, material);
+    // const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const mesh = new THREE.Mesh(geometry, floorMaterial);
     mesh.position.x = this.stage.width / 2 - 0.5;
-    mesh.position.y = -1;
+    mesh.position.y = -floorThickness - 0.5;
     mesh.position.z = this.stage.depth / 2 - 0.5;
     this.scene.add(mesh);
   }
@@ -190,8 +227,9 @@ export class Engine {
   }
 
   render() {
-    tempCounter += 0.03
-    cubeMaterial.uniforms.u_thickness.value = Math.sin(tempCounter) * 0.03 + 0.07
+    tempCounter += 0.03;
+    cubeMaterial.uniforms.u_thickness.value =
+      Math.sin(tempCounter) * 0.01 + 0.05;
     if (this.stage.dirty) {
       this.applyStage();
       this.stage.dirty = false;
