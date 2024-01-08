@@ -1,1 +1,1 @@
-# 3D Tetris game made with ThreeJS
+3D Tetris game made with ThreeJS
