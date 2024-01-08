@@ -135,16 +135,18 @@ export class Engine {
     document.body.appendChild(this.renderer.domElement);
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const floorCenterX = this.stage.width / 2 - 0.5;
+    const floorCenterZ = this.stage.depth / 2 - 0.5;
     this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    this.camera.position.x = 12;
-    this.camera.position.y = 6;
-    this.camera.position.z = 12;
+    this.camera.position.x = floorCenterX;
+    this.camera.position.y = 12;
+    this.camera.position.z = floorCenterZ + 2.5;
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(
-      this.stage.width / 2 - 0.5,
+      floorCenterX,
       0,
-      this.stage.depth / 2 - 0.5,
+      floorCenterZ,
     );
     this.controls.update();
     this.scene = new THREE.Scene();
