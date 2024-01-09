@@ -143,11 +143,7 @@ export class Engine {
     this.camera.position.z = floorCenterZ + this.stage.depth / 2;
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.target.set(
-      floorCenterX,
-      0,
-      floorCenterZ,
-    );
+    this.controls.target.set(floorCenterX, 0, floorCenterZ);
     this.controls.update();
     this.scene = new THREE.Scene();
     this.renderFloor();
@@ -159,11 +155,11 @@ export class Engine {
     }
     this.idsInStage.push(cube.id);
     if (this.boxes[cube.id]) {
-      // if (y % 2) {
-      //   this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(22,222,216)");
-      // } else {
-      //   this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(224,222,216)");
-      // }
+      if (y % 2) {
+        this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(174,202,186)");
+      } else {
+        this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(224,222,216)");
+      }
       this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
       // this.boxes[cube.id].material.color.setHex(cube.color);
       this.boxes[cube.id]._lerpDone = false;
@@ -172,7 +168,9 @@ export class Engine {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     // const geometry = this.cubeObj;
     // const material = new THREE.MeshBasicMaterial({ color: cube.color });
-    const mesh = new THREE.Mesh(geometry, cubeMaterial);
+    const mesh = new THREE.Mesh(geometry, cubeMaterial.clone());
+    const col = getRandomHSLColor();
+    // mesh.material.uniforms.u_colorA.value = new THREE.Color().setHSL(col[0], col[1], col[2]);
     mesh.scale.set(0.95, 0.95, 0.95);
     mesh.position.x = x;
     mesh.position.y = y;
@@ -244,3 +242,12 @@ export class Engine {
     this.renderer.render(this.scene, this.camera);
   }
 }
+
+const getRandomHSLColor = () => {
+  const hue = Math.random();
+  // const saturation = Math.floor(Math.random() * 101); // Percentage value between 0 and 100
+  // const lightness = Math.floor(Math.random() * 101); // Percentage value between 0 and 100
+  // return `hsl(${hue}, ${s}%, ${l}%)`;
+  console.log({hue})
+  return [hue, 0.7, 0.6];
+};
