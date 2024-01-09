@@ -1,60 +1,35 @@
+import { Stage } from "./stage";
+
+interface BrickCube {
+  position: number[];
+  id: number;
+  color: number;
+  locked: boolean;
+}
+
 export class Brick {
+  stage: Stage;
+  locked: boolean;
+  color: number;
+  cubes: BrickCube[];
+
   static SHAPES = [
-    [
-      [1],
-      [1],
-      [1, 1],
-    ],
+    [[1], [1], [1, 1]],
     [
       [1, 1],
       [1, 1],
     ],
-    [
-      [1],
-      [1, 1],
-    ],
-    [
-      [1],
-      [1, 1],
-      [0, 1],
-    ],
-    [
-      [0, 1],
-      [1, 1],
-      [1],
-    ],
-    [
-      [1],
-      [1],
-      [1],
-      [1],
-    ],
-    [
-      [1],
-      [1],
-      [1],
-    ],
-    [
-      [1],
-      [1],
-      [1, 1],
-      [1, 1],
-    ],
-    [
-      [1],
-      [1, 1],
-      [1],
-    ],
-    [
-      [1],
-      [1],
-    ],
-    [
-      [1, 1],
-    ],
+    [[1], [1, 1]],
+    [[1], [1, 1], [0, 1]],
+    [[0, 1], [1, 1], [1]],
+    [[1], [1], [1], [1]],
+    [[1], [1], [1]],
+    [[1], [1, 1], [1]],
+    [[1], [1]],
+    [[1, 1]],
   ];
-  
-  constructor(stage) {
+
+  constructor(stage: Stage) {
     this.stage = stage;
     this.locked = false;
     this.color = 0x008833;
@@ -70,10 +45,10 @@ export class Brick {
     this.updateStage();
   }
 
-  move(x, z) {
+  move(x: number, z: number) {
     if (this.locked) return;
     this.clearFromStage();
-    const newPosition = this.cubes.map(cube => [
+    const newPosition = this.cubes.map((cube) => [
       cube.position[0] + x,
       cube.position[1],
       cube.position[2] + z,
@@ -87,7 +62,7 @@ export class Brick {
   moveDown() {
     if (this.locked) return;
     this.clearFromStage();
-    const newPosition = this.cubes.map(cube => [
+    const newPosition = this.cubes.map((cube) => [
       cube.position[0],
       cube.position[1] - 1,
       cube.position[2],
@@ -100,7 +75,7 @@ export class Brick {
     }
   }
 
-  applyNewPosition(newPosition) {
+  applyNewPosition(newPosition: number[][]) {
     for (let index = 0; index < this.cubes.length; index += 1) {
       this.cubes[index].position[0] = newPosition[index][0];
       this.cubes[index].position[1] = newPosition[index][1];
@@ -108,9 +83,15 @@ export class Brick {
     }
   }
 
-  isColliding(newPosition) {
+  isColliding(newPosition: number[][]) {
     for (let i = 0; i < newPosition.length; i++) {
-      if (this.stage.isCollidingCube(newPosition[i][0], newPosition[i][1], newPosition[i][2])) {
+      if (
+        this.stage.isCollidingCube(
+          newPosition[i][0],
+          newPosition[i][1],
+          newPosition[i][2],
+        )
+      ) {
         return true;
       }
     }
@@ -124,15 +105,11 @@ export class Brick {
     const pivotIndex = Math.floor(this.cubes.length / 2);
     const pivot = this.cubes[pivotIndex].position;
     // Calculate new positions for each cube after rotation
-    const newPosition = this.cubes.map(cube => {
+    const newPosition = this.cubes.map((cube) => {
       const x = cube.position[0] - pivot[0];
       const z = cube.position[2] - pivot[2];
       // Rotate 90 degrees around the pivot on the Y axis
-      return [
-        pivot[0] + z,
-        cube.position[1],
-        pivot[2] - x,
-      ];
+      return [pivot[0] + z, cube.position[1], pivot[2] - x];
     });
     // Apply new position if there is no collision
     this.applyNewPosition(newPosition);
@@ -144,7 +121,11 @@ export class Brick {
 
   clearFromStage() {
     this.cubes.forEach((cube) => {
-      this.stage.resetCube(cube.position[0], cube.position[1], cube.position[2]);
+      this.stage.resetCube(
+        cube.position[0],
+        cube.position[1],
+        cube.position[2],
+      );
     });
   }
 
@@ -155,8 +136,7 @@ export class Brick {
         cube.position[1],
         cube.position[2],
         cube.id,
-        cube.locked ? 'locked' : 'active',
-        cube.color,
+        cube.locked ? "locked" : "active",
       );
     });
   }
@@ -209,14 +189,15 @@ export class Brick {
       for (let z = 0; z < shape[x].length; z++) {
         if (shape[x][z] === 1) {
           const cube = {
-            position: [],
+            position: [
+              startPosition[0] + x,
+              startPosition[1],
+              startPosition[2] + z,
+            ],
             id: this.stage.getNewID(),
             color: this.color,
             locked: false,
           };
-          cube.position[0] = startPosition[0] + x;
-          cube.position[1] = startPosition[1];
-          cube.position[2] = startPosition[2] + z;
           this.cubes.push(cube);
         }
       }
