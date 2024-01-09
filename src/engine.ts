@@ -2,6 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
+import { CFG } from "./config";
+import { cubeMaterial, floorMaterial } from "./materials";
+
 // import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 // import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 // import { HBAOPass } from 'three/addons/postprocessing/HBAOPass.js';
@@ -9,93 +12,6 @@ import cubeObj from "./cube.obj?url";
 // import { HalftonePass } from 'three/addons/postprocessing/HalftonePass.js';
 // import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 // import Lifeforms from "lifeforms";
-
-const floorMaterial = new THREE.ShaderMaterial({
-  uniforms: {
-    gridSpacing: { value: 1.0 },
-    lineWidth: { value: 0.05 },
-  },
-  vertexShader: `
-    varying vec3 vPosition;
-
-    void main() {
-      vPosition = position;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform float gridSpacing;
-    uniform float lineWidth;
-    varying vec3 vPosition;
-
-    void main() {
-      // Calculate the fraction part of the current position divided by gridSpacing
-      vec3 grid = abs(fract(vPosition.xyz / gridSpacing - 0.5) - 0.5) / lineWidth;
-      // Determine the minimum distance to the closest edge in X and Z
-      float minDist = min(grid.x, grid.z);
-      // Draw grid lines by checking if we are close to an edge
-      float edgeFactor = min(minDist, 1.0);
-
-      if(edgeFactor == 1.0) {
-        discard; // Discard grid lines fragment
-      }
-
-      gl_FragColor = vec4(edgeFactor); // White for grid lines, black elsewhere
-    }
-  `,
-  transparent: true,
-});
-
-const cubeMaterial = new THREE.ShaderMaterial({
-  uniforms: {
-    u_time: {
-      value: 1.0,
-    },
-    u_colorA: {
-      value: new THREE.Color("rgb(224,222,216)"),
-    },
-    u_colorB: {
-      value: new THREE.Color("rgb(58,58,58)"),
-    },
-    u_thickness: {
-      value: 0.001,
-    },
-  },
-  vertexShader: `
-    varying vec2 vUv;
-    varying float y;
-    uniform float u_thickness;
-
-    void main() {
-      vUv = uv;
-      vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-
-      vec4 viewPosition = viewMatrix * modelPosition;
-      vec4 projectedPosition = projectionMatrix * viewPosition;
-      projectedPosition.y = u_thickness + projectedPosition.y;
-      y = projectedPosition.y;
-      gl_Position = projectedPosition;
-    }
-  `,
-  fragmentShader: `
-    varying vec2 vUv;
-    varying float y;
-    uniform float u_time;
-    uniform float u_thickness;
-    uniform vec3 u_colorA;
-    uniform vec3 u_colorB;
-
-    void main() {
-      float thickness = u_thickness;
-      if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
-        gl_FragColor = vec4(u_colorB, 1.0);
-      } else {
-        gl_FragColor = LinearTosRGB(vec4(u_colorA, 1.0));
-      }
-    }
-  `,
-  transparent: true,
-});
 
 let tempCounter = 0;
 
@@ -155,22 +71,19 @@ export class Engine {
     }
     this.idsInStage.push(cube.id);
     if (this.boxes[cube.id]) {
-      if (y % 2) {
-        this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(174,202,186)");
-      } else {
-        this.boxes[cube.id].material.uniforms.u_colorA.value = new THREE.Color("rgb(224,222,216)");
+      if (cube.state !== "active") {
+        y % 2
+          ? (this.boxes[cube.id].material.uniforms.u_colorA.value =
+              new THREE.Color("rgb(174,202,186)"))
+          : (this.boxes[cube.id].material.uniforms.u_colorA.value =
+              new THREE.Color("rgb(224,222,216)"));
       }
       this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
-      // this.boxes[cube.id].material.color.setHex(cube.color);
       this.boxes[cube.id]._lerpDone = false;
       return;
     }
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    // const geometry = this.cubeObj;
-    // const material = new THREE.MeshBasicMaterial({ color: cube.color });
     const mesh = new THREE.Mesh(geometry, cubeMaterial.clone());
-    const col = getRandomHSLColor();
-    // mesh.material.uniforms.u_colorA.value = new THREE.Color().setHSL(col[0], col[1], col[2]);
     mesh.scale.set(0.95, 0.95, 0.95);
     mesh.position.x = x;
     mesh.position.y = y;
@@ -186,7 +99,6 @@ export class Engine {
       floorThickness,
       this.stage.depth,
     );
-    // const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const mesh = new THREE.Mesh(geometry, floorMaterial);
     mesh.position.x = this.stage.width / 2 - 0.5;
     mesh.position.y = -floorThickness - 0.5;
@@ -238,16 +150,10 @@ export class Engine {
       this.applyStage();
       this.stage.dirty = false;
     }
+    this.camera.position.x += Math.sin(tempCounter) / 400;
+    this.camera.position.z += Math.cos(tempCounter) / 400;
+    this.camera.updateProjectionMatrix();
     this.lerpTargets();
     this.renderer.render(this.scene, this.camera);
   }
 }
-
-const getRandomHSLColor = () => {
-  const hue = Math.random();
-  // const saturation = Math.floor(Math.random() * 101); // Percentage value between 0 and 100
-  // const lightness = Math.floor(Math.random() * 101); // Percentage value between 0 and 100
-  // return `hsl(${hue}, ${s}%, ${l}%)`;
-  console.log({hue})
-  return [hue, 0.7, 0.6];
-};

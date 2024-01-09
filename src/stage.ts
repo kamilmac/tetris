@@ -1,5 +1,18 @@
+interface Cube {
+  color: number;
+  id: number | null;
+  state: "floor" | "wall" | "locked" | "active";
+}
+
 export class Stage {
-  static id = 0;
+  static id: number = 0;
+  height: number;
+  width: number;
+  depth: number;
+  cubes: (Cube | null)[][][];
+  toBeRemovedCubes: number[];
+  dirty: boolean;
+  lastLockedY: number;
 
   constructor(height = 24, width = 12, depth = 12) {
     this.height = height;
@@ -41,7 +54,7 @@ export class Stage {
     return null;
   }
 
-  getFloorCube() {
+  getFloorCube(): Cube {
     return {
       color: 0x724722,
       id: null,
@@ -49,7 +62,7 @@ export class Stage {
     };
   }
 
-  getWallCube() {
+  getWallCube(): Cube {
     return {
       color: 0x255377,
       id: null,
@@ -58,7 +71,7 @@ export class Stage {
   }
 
   // TODO: pass array of cubes instead here
-  fillCube(x, y, z, id, state) {
+  fillCube(x: number, y: number, z: number, id: number, state: Cube["state"]) {
     let color = 0x00ff00;
     if (state === "locked") {
       color = 0xff0000;
@@ -74,23 +87,29 @@ export class Stage {
     }
   }
 
-  resetCube(x, y, z) {
+  resetCube(x: number, y: number, z: number) {
     if (this.isCubeDefined(x, y, z)) {
       this.cubes[x][y][z] = this.getEmptyCube();
     }
   }
 
-  setToBeRemovedCube(x, y, z) {
+  setToBeRemovedCube(x: number, y: number, z: number) {
     if (this.isCubeDefined(x, y, z)) {
       this.cubes[x][y][z] = this.getEmptyCube();
     }
     this.dirty = true;
   }
 
-  setToBeMovedDownCube(x, y, z) {
-    if (this.isCubeDefined(x, y, z) && this.cubes[x][y][z].state === "locked") {
+  setToBeMovedDownCube(x: number, y: number, z: number) {
+    if (
+      this.isCubeDefined(x, y, z) &&
+      this.cubes[x][y][z]?.state === "locked"
+    ) {
       const cube = this.cubes[x][y][z];
-      this.fillCube(x, y - 1, z, cube.id, "locked", cube.color);
+      if (!cube?.id) {
+        return;
+      }
+      this.fillCube(x, y - 1, z, cube.id, "locked");
       this.resetCube(x, y, z);
       this.dirty = true;
     }
@@ -119,7 +138,7 @@ export class Stage {
       }
     }
 
-    const toBeMovedDown = {};
+    const toBeMovedDown: any = {};
 
     zLines.forEach((n, index) => {
       if (n) {
@@ -156,15 +175,17 @@ export class Stage {
     });
   }
 
-  isCubeDefined(x, y, z) {
+  isCubeDefined(x: number, y: number, z: number) {
     return (
       this.cubes[x] && this.cubes[x][y] && this.cubes[x][y][z] !== undefined
     );
   }
 
-  isCollidingCube(x, y, z) {
+  isCollidingCube(x: number, y: number, z: number) {
     if (this.isCubeDefined(x, y, z)) {
-      return ["floor", "wall", "locked"].includes(this.cubes[x][y][z]?.state);
+      return ["floor", "wall", "locked"].includes(
+        this.cubes[x][y][z]?.state || "",
+      );
     }
     return false;
   }
