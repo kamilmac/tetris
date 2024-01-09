@@ -4,27 +4,30 @@ import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
 import { CFG } from "./config";
 import { cubeMaterial, floorMaterial } from "./materials";
-
-// import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-// import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-// import { HBAOPass } from 'three/addons/postprocessing/HBAOPass.js';
-
-// import { HalftonePass } from 'three/addons/postprocessing/HalftonePass.js';
-// import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-// import Lifeforms from "lifeforms";
+import { Stage, Cube } from "./stage";
 
 let tempCounter = 0;
 
 export class Engine {
-  constructor(stage, onReady) {
+  private stage: Stage;
+  private boxes: (THREE.Mesh | null)[];
+  private idsInStage: number[];
+  private cubeObj?: THREE.BufferGeometry;
+  private renderer?: THREE.WebGLRenderer;
+  private camera?: THREE.PerspectiveCamera;
+  private controls: OrbitControls;
+  private scene?: THREE.Scene;
+
+  constructor(stage: Stage, onReady: () => void) {
     this.stage = stage;
     this.boxes = [];
     this.idsInStage = [];
-    this.cubeObj = null;
+    this.cubeObj = undefined;
+
     new OBJLoader().load(
       cubeObj,
-      (obj) => {
-        obj.traverse((child) => {
+      (obj: any) => {
+        obj.traverse((child: any) => {
           if (child.isMesh) {
             this.cubeObj = child.geometry; // Extract the geometry from each mesh
           }
@@ -33,10 +36,10 @@ export class Engine {
         this.setup();
         onReady();
       },
-      (xhr) => {
+      (xhr: any) => {
         console.log(xhr?.loaded);
       },
-      (error) => {
+      (error: any) => {
         console.log("error", error);
       },
     );
@@ -65,8 +68,8 @@ export class Engine {
     this.renderFloor();
   }
 
-  handleCube(cube, x, y, z) {
-    if (!cube?.id) {
+  handleCube(cube: Cube, x: number, y: number, z: number) {
+    if (!cube?.id || !this.scene) {
       return;
     }
     this.idsInStage.push(cube.id);
@@ -103,11 +106,11 @@ export class Engine {
     mesh.position.x = this.stage.width / 2 - 0.5;
     mesh.position.y = -floorThickness - 0.5;
     mesh.position.z = this.stage.depth / 2 - 0.5;
-    this.scene.add(mesh);
+    this.scene?.add(mesh);
   }
 
   lerpTargets() {
-    this.boxes.forEach((box, i) => {
+    this.boxes.forEach((box, _) => {
       if (box === null) {
         return;
       }
@@ -121,11 +124,14 @@ export class Engine {
   }
 
   applyStage() {
+    if (!this.scene) {
+      return;
+    }
     this.idsInStage = [];
     for (let x = 0; x < this.stage.width; x++) {
       for (let y = 0; y < this.stage.height; y++) {
         for (let z = 0; z < this.stage.depth; z++) {
-          const cube = this.stage.cubes[x][y][z];
+          const cube: Cube = this.stage.cubes[x][y][z];
           this.handleCube(cube, x, y, z);
         }
       }
@@ -135,14 +141,16 @@ export class Engine {
         return;
       }
       if (!this.idsInStage.includes(i)) {
-        this.scene.remove(box);
+        this.scene?.remove(box);
         this.boxes[i] = null;
       }
     });
-    window.boxes = this.boxes;
   }
 
   render() {
+    if (!this.camera || !this.renderer || !this.scene) {
+      return;
+    }
     tempCounter += 0.03;
     cubeMaterial.uniforms.u_thickness.value =
       Math.sin(tempCounter) * 0.01 + 0.05;

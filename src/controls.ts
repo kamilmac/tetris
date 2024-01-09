@@ -19,15 +19,23 @@ export class Controls {
     const keyUpHandler = (event: KeyboardEvent) => {
       switch (event.key) {
         case "ArrowLeft":
+        case "h":
+        case "a":
           this.actions.push("left");
           break;
         case "ArrowRight":
+        case "l":
+        case "d":
           this.actions.push("right");
           break;
         case "ArrowUp":
+        case "k":
+        case "w":
           this.actions.push("up");
           break;
         case "ArrowDown":
+        case "j":
+        case "s":
           this.actions.push("down");
           break;
         case "r":

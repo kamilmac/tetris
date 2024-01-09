@@ -1,4 +1,4 @@
-interface Cube {
+export interface Cube {
   color: number;
   id: number | null;
   state: "floor" | "wall" | "locked" | "active";
