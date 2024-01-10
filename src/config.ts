@@ -1,11 +1,16 @@
+const FLOOR_SIZE = 6;
+
 export const CFG = {
-  colors: [
-    0x1a1b26, 0x414868, 0xbb9af7, 0x7dcfff, 0x9ece6a, 0xff9e64, 0xf7768e,
-  ],
+  colors: {
+    activeCube: 0xefefef,
+    lockedRows: [0xff0000, 0x00ff00, 0x0000ff],
+    floor: 0xcc8822,
+  },
   cycleTime: 300,
   shapes: [],
   stage: {
-    width: 6,
+    width: FLOOR_SIZE,
+    depth: FLOOR_SIZE,
     height: 8,
   },
   controls: {

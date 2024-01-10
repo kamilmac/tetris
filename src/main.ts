@@ -22,7 +22,7 @@ class Game {
 
   constructor() {
     this.blockCyclesCount = 1;
-    this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.width);
+    this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
     this.engine = new Engine(this.stage, () => {
       this.controls = new Controls();
       this.addBrick();

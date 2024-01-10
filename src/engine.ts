@@ -74,19 +74,17 @@ export class Engine {
     }
     this.idsInStage.push(cube.id);
     if (this.boxes[cube.id]) {
-      if (cube.state !== "active") {
-        y % 2
-          ? (this.boxes[cube.id].material.uniforms.u_colorA.value =
-              new THREE.Color("rgb(174,202,186)"))
-          : (this.boxes[cube.id].material.uniforms.u_colorA.value =
-              new THREE.Color("rgb(224,222,216)"));
-      }
+      this.boxes[cube.id].material.uniforms.u_colorA.value =
+        new THREE.Color().setHex(cube.color);
       this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
       this.boxes[cube.id]._lerpDone = false;
       return;
     }
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const mesh = new THREE.Mesh(geometry, cubeMaterial.clone());
+    mesh.material.uniforms.u_colorA.value = new THREE.Color().setHex(
+      cube.color,
+    );
     mesh.scale.set(0.95, 0.95, 0.95);
     mesh.position.x = x;
     mesh.position.y = y;

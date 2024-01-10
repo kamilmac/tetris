@@ -3,14 +3,12 @@ import { Stage } from "./stage";
 interface BrickCube {
   position: number[];
   id: number;
-  color: number;
   locked: boolean;
 }
 
 export class Brick {
   stage: Stage;
   locked: boolean;
-  color: number;
   cubes: BrickCube[];
 
   static SHAPES = [
@@ -32,7 +30,6 @@ export class Brick {
   constructor(stage: Stage) {
     this.stage = stage;
     this.locked = false;
-    this.color = 0x008833;
     this.cubes = [];
     this.create();
   }
@@ -195,7 +192,6 @@ export class Brick {
               startPosition[2] + z,
             ],
             id: this.stage.getNewID(),
-            color: this.color,
             locked: false,
           };
           this.cubes.push(cube);

@@ -1,3 +1,5 @@
+import { CFG } from "./config";
+
 export interface Cube {
   color: number;
   id: number | null;
@@ -72,9 +74,10 @@ export class Stage {
 
   // TODO: pass array of cubes instead here
   fillCube(x: number, y: number, z: number, id: number, state: Cube["state"]) {
-    let color = 0x00ff00;
+    let color = CFG.colors.activeCube;
     if (state === "locked") {
-      color = 0xff0000;
+      const l = CFG.colors.lockedRows.length;
+      color = CFG.colors.lockedRows[y % l];
       this.lastLockedY = y;
     }
     if (this.isCubeDefined(x, y, z)) {

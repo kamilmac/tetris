@@ -1,9 +1,11 @@
 import * as THREE from "three";
+import { CFG } from "./config";
 
 export const floorMaterial = new THREE.ShaderMaterial({
   uniforms: {
     gridSpacing: { value: 1.0 },
     lineWidth: { value: 0.05 },
+    color: { value: new THREE.Color().setHex(CFG.colors.floor) },
   },
   vertexShader: `
     varying vec3 vPosition;
@@ -16,6 +18,7 @@ export const floorMaterial = new THREE.ShaderMaterial({
   fragmentShader: `
     uniform float gridSpacing;
     uniform float lineWidth;
+    uniform vec3 color;
     varying vec3 vPosition;
 
     void main() {
@@ -30,7 +33,7 @@ export const floorMaterial = new THREE.ShaderMaterial({
         discard; // Discard grid lines fragment
       }
 
-      gl_FragColor = vec4(edgeFactor); // White for grid lines, black elsewhere
+      gl_FragColor = vec4(color, edgeFactor); // White for grid lines, black elsewhere
     }
   `,
   transparent: true,
@@ -86,4 +89,3 @@ export const cubeMaterial = new THREE.ShaderMaterial({
   `,
   transparent: true,
 });
-
