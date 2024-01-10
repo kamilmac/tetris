@@ -51,7 +51,7 @@ export const cubeMaterial = new THREE.ShaderMaterial({
       value: new THREE.Color("rgb(58,58,58)"),
     },
     u_thickness: {
-      value: 0.001,
+      value: 0.05,
     },
   },
   vertexShader: `
@@ -84,6 +84,57 @@ export const cubeMaterial = new THREE.ShaderMaterial({
         gl_FragColor = vec4(u_colorB, 1.0);
       } else {
         gl_FragColor = LinearTosRGB(vec4(u_colorA, 1.0));
+      }
+    }
+  `,
+  transparent: true,
+});
+
+export const shadowMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    u_time: {
+      value: 1.0,
+    },
+    u_colorA: {
+      value: new THREE.Color("rgb(250,250,000)"),
+    },
+    u_colorB: {
+      value: new THREE.Color("rgb(58,58,58)"),
+    },
+    u_thickness: {
+      value: 0.05,
+    },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    varying float y;
+    uniform float u_thickness;
+
+    void main() {
+      vUv = uv;
+      vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+
+      vec4 viewPosition = viewMatrix * modelPosition;
+      vec4 projectedPosition = projectionMatrix * viewPosition;
+      projectedPosition.y = u_thickness + projectedPosition.y;
+      y = projectedPosition.y;
+      gl_Position = projectedPosition;
+    }
+  `,
+  fragmentShader: `
+    varying vec2 vUv;
+    varying float y;
+    uniform float u_time;
+    uniform float u_thickness;
+    uniform vec3 u_colorA;
+    uniform vec3 u_colorB;
+
+    void main() {
+      float thickness = u_thickness;
+      if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
+        gl_FragColor = vec4(u_colorA, 1.0);
+      } else {
+        gl_FragColor = LinearTosRGB(vec4(u_colorA, 0.0));
       }
     }
   `,

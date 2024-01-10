@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
-import { cubeMaterial, floorMaterial } from "./materials";
+import { cubeMaterial, floorMaterial, shadowMaterial } from "./materials";
 import { Stage, Cube } from "./stage";
 
 let tempCounter = 0;
@@ -80,7 +80,7 @@ export class Engine {
       this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
       this.boxes[cube.id]._lerpDone = false;
       if (cube.state === "active") {
-        this.shadowCubes.push(cube);
+        this.shadowCubes.push({ ...cube, x, y, z });
       }
       return;
     }
@@ -150,7 +150,38 @@ export class Engine {
   }
 
   renderShadows() {
-    console.log(this.shadowCubes);
+    this.scene.remove(this.shadowGroup);
+    this.shadowGroup = new THREE.Group();
+    let highestLockedYUnder = -1;
+    let lowestShadowCubeY = 1000;
+    this.shadowCubes.forEach((sc) => {
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const mesh = new THREE.Mesh(geometry, shadowMaterial);
+      mesh.scale.set(0.95, 0.95, 0.95);
+      if (sc.y < lowestShadowCubeY) {
+        lowestShadowCubeY = sc.y;
+      }
+      for (let yy = sc.y - 1; yy >= 0; yy -= 1) {
+        if (this.stage.isCubeDefined(sc.x, yy, sc.z)) {
+          if (this.stage.cubes[sc.x][yy][sc.z]?.state === "locked") {
+            if (yy > highestLockedYUnder) {
+              highestLockedYUnder = yy;
+            }
+          }
+        }
+      }
+      mesh.position.x = sc.x;
+      mesh.position.y = sc.y;
+      mesh.position.z = sc.z;
+      this.shadowGroup.add(mesh);
+    });
+    this.shadowGroup.position.y = highestLockedYUnder - lowestShadowCubeY + 1;
+    if (
+      highestLockedYUnder - lowestShadowCubeY + 1 !== 0 &&
+      highestLockedYUnder - lowestShadowCubeY + 1 !== 1000
+    ) {
+      this.scene.add(this.shadowGroup);
+    }
     this.shadowCubes = [];
   }
 
