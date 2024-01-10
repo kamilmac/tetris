@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
-import { CFG } from "./config";
 import { cubeMaterial, floorMaterial } from "./materials";
 import { Stage, Cube } from "./stage";
 
@@ -11,6 +10,7 @@ let tempCounter = 0;
 export class Engine {
   private stage: Stage;
   private boxes: (THREE.Mesh | null)[];
+  private shadowCubes: any;
   private idsInStage: number[];
   private cubeObj?: THREE.BufferGeometry;
   private renderer?: THREE.WebGLRenderer;
@@ -21,6 +21,7 @@ export class Engine {
   constructor(stage: Stage, onReady: () => void) {
     this.stage = stage;
     this.boxes = [];
+    this.shadowCubes = [];
     this.idsInStage = [];
     this.cubeObj = undefined;
 
@@ -78,6 +79,9 @@ export class Engine {
         new THREE.Color().setHex(cube.color);
       this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
       this.boxes[cube.id]._lerpDone = false;
+      if (cube.state === "active") {
+        this.shadowCubes.push(cube);
+      }
       return;
     }
     const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -145,6 +149,11 @@ export class Engine {
     });
   }
 
+  renderShadows() {
+    console.log(this.shadowCubes);
+    this.shadowCubes = [];
+  }
+
   render() {
     if (!this.camera || !this.renderer || !this.scene) {
       return;
@@ -154,6 +163,7 @@ export class Engine {
       Math.sin(tempCounter) * 0.01 + 0.05;
     if (this.stage.dirty) {
       this.applyStage();
+      this.renderShadows();
       this.stage.dirty = false;
     }
     this.camera.position.x += Math.sin(tempCounter) / 400;
