@@ -39,7 +39,6 @@ export class Brick {
     this.cubes.forEach((cube) => {
       cube.locked = true;
     });
-    this.updateStage();
   }
 
   move(x: number, z: number) {
@@ -68,8 +67,8 @@ export class Brick {
       this.lock();
     } else {
       this.applyNewPosition(newPosition);
-      this.updateStage();
     }
+    this.updateStage();
   }
 
   applyNewPosition(newPosition: number[][]) {
@@ -80,17 +79,32 @@ export class Brick {
     }
   }
 
+  getCubesPositions() {
+    const cubesPositions = [];
+    for (let i = 0; i < this.cubes.length; i += 1) {
+      cubesPositions[i] = [
+        this.cubes[i].position[0],
+        this.cubes[i].position[1],
+        this.cubes[i].position[2],
+      ];
+    }
+    return cubesPositions;
+  }
+
   isColliding(newPosition: number[][]) {
+    const collisions = [];
     for (let i = 0; i < newPosition.length; i++) {
-      if (
-        this.stage.isCollidingCube(
-          newPosition[i][0],
-          newPosition[i][1],
-          newPosition[i][2],
-        )
-      ) {
-        return true;
+      const colliding = this.stage.isCollidingCube(
+        newPosition[i][0],
+        newPosition[i][1],
+        newPosition[i][2],
+      );
+      if (colliding) {
+        collisions.push(colliding);
       }
+    }
+    if (collisions.length) {
+      return collisions;
     }
     return false;
   }
@@ -102,16 +116,30 @@ export class Brick {
     const pivotIndex = Math.floor(this.cubes.length / 2);
     const pivot = this.cubes[pivotIndex].position;
     // Calculate new positions for each cube after rotation
-    const newPosition = this.cubes.map((cube) => {
+    const newPositions = this.cubes.map((cube) => {
       const x = cube.position[0] - pivot[0];
       const z = cube.position[2] - pivot[2];
       // Rotate 90 degrees around the pivot on the Y axis
       return [pivot[0] + z, cube.position[1], pivot[2] - x];
     });
     // Apply new position if there is no collision
-    this.applyNewPosition(newPosition);
-    if (this.isColliding(newPosition)) {
-      this.correctToBounds();
+    const collisions = this.isColliding(newPositions);
+    if (collisions) {
+      if (collisions.includes("wall")) {
+        console.log("WALL");
+        const correctedPositions = this.correctToStageBounds(newPositions);
+        const collisionsAfterCorrection = this.isColliding(correctedPositions);
+        if (
+          !collisionsAfterCorrection ||
+          !collisionsAfterCorrection.includes("locked")
+        ) {
+          this.applyNewPosition(correctedPositions);
+        }
+      } else {
+        return;
+      }
+    } else {
+      this.applyNewPosition(newPositions);
     }
     this.updateStage();
   }
@@ -138,41 +166,44 @@ export class Brick {
     });
   }
 
-  correctToBounds() {
+  correctToStageBounds(positions: any) {
+    const corrected: any[] = [];
     let minX = Infinity;
     let minZ = Infinity;
     let maxX = -Infinity;
     let maxZ = -Infinity;
-    for (let i = 0; i < this.cubes.length; i++) {
-      maxX = Math.max(maxX, this.cubes[i].position[0]);
-      maxZ = Math.max(maxZ, this.cubes[i].position[2]);
-      minX = Math.min(minX, this.cubes[i].position[0]);
-      minZ = Math.min(minZ, this.cubes[i].position[2]);
+    for (let i = 0; i < positions.length; i++) {
+      corrected[i] = [positions[i][0], positions[i][1], positions[i][2]];
+      maxX = Math.max(maxX, positions[i][0]);
+      maxZ = Math.max(maxZ, positions[i][2]);
+      minX = Math.min(minX, positions[i][0]);
+      minZ = Math.min(minZ, positions[i][2]);
     }
     if (maxX >= this.stage.width) {
       let offsetX = maxX - this.stage.width + 1;
-      for (let i = 0; i < this.cubes.length; i++) {
-        this.cubes[i].position[0] -= offsetX;
+      for (let i = 0; i < positions.length; i++) {
+        corrected[i][0] = positions[i][0] - offsetX;
       }
     }
     if (maxZ >= this.stage.depth) {
       let offsetZ = maxZ - this.stage.depth + 1;
-      for (let i = 0; i < this.cubes.length; i++) {
-        this.cubes[i].position[2] -= offsetZ;
+      for (let i = 0; i < positions.length; i++) {
+        corrected[i][2] = positions[i][2] - offsetZ;
       }
     }
     if (minX < 0) {
       let offsetX = -minX;
-      for (let i = 0; i < this.cubes.length; i++) {
-        this.cubes[i].position[0] += offsetX;
+      for (let i = 0; i < positions.length; i++) {
+        corrected[i][0] = positions[i][0] + offsetX;
       }
     }
     if (minZ < 0) {
       let offsetZ = -minZ;
-      for (let i = 0; i < this.cubes.length; i++) {
-        this.cubes[i].position[2] += offsetZ;
+      for (let i = 0; i < positions.length; i++) {
+        corrected[i][2] = positions[i][2] + offsetZ;
       }
     }
+    return corrected;
   }
 
   create() {
@@ -198,7 +229,10 @@ export class Brick {
         }
       }
     }
-    this.correctToBounds();
+    const correctedPositions = this.correctToStageBounds(
+      this.getCubesPositions(),
+    );
+    this.applyNewPosition(correctedPositions);
     this.updateStage();
   }
 }

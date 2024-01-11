@@ -184,11 +184,9 @@ export class Stage {
     );
   }
 
-  isCollidingCube(x: number, y: number, z: number) {
+  isCollidingCube(x: number, y: number, z: number): Cube["state"] | false {
     if (this.isCubeDefined(x, y, z)) {
-      return ["floor", "wall", "locked"].includes(
-        this.cubes[x][y][z]?.state || "",
-      );
+      return this.cubes[x][y][z]?.state || false;
     }
     return false;
   }
