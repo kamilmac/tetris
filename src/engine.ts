@@ -112,9 +112,16 @@ export class Engine {
   }
 
   lerpTargets() {
-    this.boxes.forEach((box, _) => {
+    this.boxes.forEach((box, i) => {
       if (box === null) {
         return;
+      }
+      if (box._markedForRemove) {
+        box.scale.lerp(new THREE.Vector3(0, 0, 0), 0.2);
+        if (box.scale.x < 0.001) {
+          this.scene?.remove(box);
+          this.boxes[i] = null;
+        }
       }
       if (box._targetPosition && !box._lerpDone) {
         box.position.lerp(box._targetPosition, 0.25);
@@ -143,8 +150,7 @@ export class Engine {
         return;
       }
       if (!this.idsInStage.includes(i)) {
-        this.scene?.remove(box);
-        this.boxes[i] = null;
+        box._markedForRemove = true;
       }
     });
   }
