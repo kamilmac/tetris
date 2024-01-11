@@ -23,8 +23,9 @@ class Game {
   constructor() {
     this.blockCyclesCount = 1;
     this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
-    this.engine = new Engine(this.stage, () => {
-      this.controls = new Controls();
+    new Engine(this.stage, (engine) => {
+      this.engine = engine;
+      this.controls = new Controls(engine);
       this.addBrick();
       this.loop();
     });

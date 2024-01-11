@@ -17,6 +17,10 @@ export class Engine {
   private camera?: THREE.PerspectiveCamera;
   private controls: OrbitControls;
   private scene?: THREE.Scene;
+  private floorCenterX: number;
+  private floorCenterZ: number;
+  private activeCamera: number;
+  private cameraPositions: any;
 
   constructor(stage: Stage, onReady: () => void) {
     this.stage = stage;
@@ -24,6 +28,10 @@ export class Engine {
     this.shadowCubes = [];
     this.idsInStage = [];
     this.cubeObj = undefined;
+    this.floorCenterX = 0;
+    this.floorCenterZ = 0;
+    this.activeCamera = 0;
+    this.cameraPositions = [{}];
 
     new OBJLoader().load(
       cubeObj,
@@ -35,7 +43,7 @@ export class Engine {
         });
         console.log(this.cubeObj);
         this.setup();
-        onReady();
+        onReady(this);
       },
       (xhr: any) => {
         console.log(xhr?.loaded);
@@ -55,15 +63,33 @@ export class Engine {
     document.body.appendChild(this.renderer.domElement);
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const floorCenterX = this.stage.width / 2 - 0.5;
-    const floorCenterZ = this.stage.depth / 2 - 0.5;
+    this.floorCenterX = this.stage.width / 2 - 0.5;
+    this.floorCenterZ = this.stage.depth / 2 - 0.5;
+    this.cameraPositions = [
+      {
+        x: this.floorCenterX,
+        z: this.floorCenterZ + this.stage.depth / 2,
+      },
+      {
+        x: this.floorCenterX - this.stage.width / 2,
+        z: this.floorCenterZ,
+      },
+      {
+        x: this.floorCenterX,
+        z: this.floorCenterZ - this.stage.depth / 2,
+      },
+      {
+        x: this.floorCenterX + this.stage.width / 2,
+        z: this.floorCenterZ,
+      },
+    ];
     this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    this.camera.position.x = floorCenterX;
     this.camera.position.y = 12;
-    this.camera.position.z = floorCenterZ + this.stage.depth / 2;
+    this.camera.position.x = this.floorCenterX;
+    this.camera.position.z = this.floorCenterZ + this.stage.depth / 2;
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.target.set(floorCenterX, 0, floorCenterZ);
+    this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
     this.controls.update();
     this.scene = new THREE.Scene();
     this.renderFloor();
@@ -189,6 +215,39 @@ export class Engine {
       this.scene.add(this.shadowGroup);
     }
     this.shadowCubes = [];
+  }
+
+  cameraRotate(dir: "right") {
+    if (dir === "right") {
+      this.cameraPositions;
+      this.activeCamera += 1;
+      if (this.activeCamera >= this.cameraPositions.length) {
+        this.activeCamera = 0;
+      }
+      console.log(this.activeCamera);
+      this.camera.position.x = this.cameraPositions[this.activeCamera].x;
+      this.camera.position.z = this.cameraPositions[this.activeCamera].z;
+      this.camera.lookAt(
+        new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
+      );
+      // this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
+      this.camera.updateProjectionMatrix();
+    }
+    if (dir === "left") {
+      this.cameraPositions;
+      this.activeCamera -= 1;
+      if (this.activeCamera < 0) {
+        this.activeCamera = this.cameraPositions.length - 1;
+      }
+      console.log(this.activeCamera);
+      this.camera.position.x = this.cameraPositions[this.activeCamera].x;
+      this.camera.position.z = this.cameraPositions[this.activeCamera].z;
+      this.camera.lookAt(
+        new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
+      );
+      // this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
+      this.camera.updateProjectionMatrix();
+    }
   }
 
   render() {

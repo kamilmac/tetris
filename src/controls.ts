@@ -4,7 +4,8 @@ export class Controls {
   private actions: string[];
   private currentKeyUpHandler?: ((event: KeyboardEvent) => void) | null;
 
-  constructor() {
+  constructor(engine) {
+    this.engine = engine;
     this.addControls();
     this.actions = [];
     window.paused = false;
@@ -21,12 +22,20 @@ export class Controls {
         case "ArrowLeft":
         case "h":
         case "a":
-          this.actions.push("left");
+          if (event.shiftKey) {
+            this.actions.push("camera_rotate_left");
+          } else {
+            this.actions.push("left");
+          }
           break;
         case "ArrowRight":
         case "l":
         case "d":
-          this.actions.push("right");
+          if (event.shiftKey) {
+            this.actions.push("camera_rotate_right");
+          } else {
+            this.actions.push("right");
+          }
           break;
         case "ArrowUp":
         case "k":
@@ -75,6 +84,12 @@ export class Controls {
           break;
         case "rotate":
           brick.rotate();
+          break;
+        case "camera_rotate_right":
+          this.engine.cameraRotate("right");
+          break;
+        case "camera_rotate_left":
+          this.engine.cameraRotate("left");
           break;
         default:
           break;
