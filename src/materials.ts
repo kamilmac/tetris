@@ -140,3 +140,12 @@ export const shadowMaterial = new THREE.ShaderMaterial({
   `,
   transparent: true,
 });
+
+export const customMat = new THREE.MeshStandardMaterial({
+  roughness: 0.35,
+  metalness: 0.0,
+  emissive: 0x000000,
+  side: THREE.DoubleSide,
+  flatShading: false,
+  envMapIntensity: 1.0,
+});

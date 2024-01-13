@@ -1,8 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
-import cubeObj from "./cube.obj?url";
-import { cubeMaterial, floorMaterial, shadowMaterial } from "./materials";
+import cubeObj from "./cube_extruded.obj?url";
+import exr from "./exr.exr?url";
+import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
+import { cubeMaterial, customMat, floorMaterial, shadowMaterial } from "./materials";
 import { Stage, Cube } from "./stage";
 
 let tempCounter = 0;
@@ -39,6 +41,7 @@ export class Engine {
         obj.traverse((child: any) => {
           if (child.isMesh) {
             this.cubeObj = child.geometry; // Extract the geometry from each mesh
+            this.cubeObj?.scale(0.5, 0.5, 0.5);
           }
         });
         console.log(this.cubeObj);
@@ -91,8 +94,25 @@ export class Engine {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
     this.controls.update();
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // const pointLight = new THREE.PointLight(0xffffff, 0.5);
+    const shadowLight = new THREE.DirectionalLight(0xffffff, 0.5);
     this.scene = new THREE.Scene();
+    this.scene.add(ambientLight);
+    // this.scene.add(pointLight);
+    // this.scene.add(shadowLight);
     this.renderFloor();
+    let pngCubeRenderTarget, exrCubeRenderTarget, exrBackground;
+    const pmremGenerator = new THREE.PMREMGenerator( this.renderer );
+    new EXRLoader().load( exr, texture => {
+
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+
+      exrCubeRenderTarget = pmremGenerator.fromEquirectangular( texture );
+      this.exrBackground = texture;
+
+    } );
+    pmremGenerator.compileEquirectangularShader();
   }
 
   handleCube(cube: Cube, x: number, y: number, z: number) {
@@ -101,8 +121,9 @@ export class Engine {
     }
     this.idsInStage.push(cube.id);
     if (this.boxes[cube.id]) {
-      this.boxes[cube.id].material.uniforms.u_colorA.value =
-        new THREE.Color().setHex(cube.color);
+      // this.boxes[cube.id].material.uniforms.u_colorA.value =
+      //   new THREE.Color().setHex(cube.color);
+      this.boxes[cube.id].material.color = new THREE.Color().setHex(cube.color);
       this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
       this.boxes[cube.id]._lerpDone = false;
       if (cube.state === "active") {
@@ -111,10 +132,14 @@ export class Engine {
       return;
     }
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const mesh = new THREE.Mesh(geometry, cubeMaterial.clone());
-    mesh.material.uniforms.u_colorA.value = new THREE.Color().setHex(
-      cube.color,
-    );
+    const mesh = new THREE.Mesh(this.cubeObj, customMat.clone());
+    mesh.material.envMapIntensity = 1;
+    mesh.material.envMap = this.exrBackground;
+
+    // mesh.material.uniforms.u_colorA.value = new THREE.Color().setHex(
+    //   cube.color,
+    // );
+    mesh.material.color = new THREE.Color().setHex(cube.color);
     mesh.scale.set(0.95, 0.95, 0.95);
     mesh.position.x = x;
     mesh.position.y = y;
@@ -150,7 +175,7 @@ export class Engine {
         }
       }
       if (box._targetPosition && !box._lerpDone) {
-        box.position.lerp(box._targetPosition, 0.25);
+        box.position.lerp(box._targetPosition, 0.1);
         if (box.position.distanceTo(box._targetPosition) < 0.001) {
           box._lerpDone = true;
         }
