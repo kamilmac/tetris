@@ -33,10 +33,12 @@ export class Cube {
     } else {
       this.targetPosition = new THREE.Vector3(x, y, z);
     }
+    return this;
   }
 
   setScale(scale: number) {
     this.targetScale = new THREE.Vector3(scale, scale, scale);
+    return this;
   }
 
   destroy() {
@@ -70,6 +72,7 @@ export class Cube {
     if (this.destroying && !this.targetScale && !this.targetPosition) {
       this.scene.remove(this.mesh);
       this.mesh = null;
+      return;
     }
     requestAnimationFrame(this.animate);
   };
