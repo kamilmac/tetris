@@ -4,6 +4,7 @@ import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
 import { cubeMaterial, floorMaterial, shadowMaterial } from "./materials";
 import { Stage, Cube } from "../stage";
+import { Cube as Tetrino } from "./cube";
 
 let tempCounter = 0;
 
@@ -113,26 +114,30 @@ export class Engine {
     }
     this.idsInStage.push(cube.id);
     if (this.boxes[cube.id]) {
-      this.boxes[cube.id].material.uniforms.u_colorA.value =
-        new THREE.Color().setHex(cube.color);
-      this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
-      this.boxes[cube.id]._lerpDone = false;
+      this.boxes[cube.id].setColor(cube.color);
+      this.boxes[cube.id].setPosition(x, y, z);
+      // this.boxes[cube.id].material.uniforms.u_colorA.value =
+      //   new THREE.Color().setHex(cube.color);
+      // this.boxes[cube.id]._targetPosition = new THREE.Vector3(x, y, z);
+      // this.boxes[cube.id]._lerpDone = false;
       if (cube.state === "active") {
         this.shadowCubes.push({ ...cube, x, y, z });
       }
       return;
     }
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const mesh = new THREE.Mesh(geometry, cubeMaterial.clone());
-    mesh.material.uniforms.u_colorA.value = new THREE.Color().setHex(
-      cube.color,
-    );
-    mesh.scale.set(0.95, 0.95, 0.95);
-    mesh.position.x = x;
-    mesh.position.y = y;
-    mesh.position.z = z;
-    this.scene.add(mesh);
-    this.boxes[cube.id] = mesh;
+    const box = new Tetrino(cube.color, this.scene);
+    box.setPosition(x, y, z);
+    // const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // const mesh = new THREE.Mesh(geometry, cubeMaterial.clone());
+    // mesh.material.uniforms.u_colorA.value = new THREE.Color().setHex(
+    //   cube.color,
+    // );
+    // mesh.scale.set(0.95, 0.95, 0.95);
+    // mesh.position.x = x;
+    // mesh.position.y = y;
+    // mesh.position.z = z;
+    // this.scene.add(mesh);
+    this.boxes[cube.id] = box;
   }
 
   renderFloor() {
@@ -149,26 +154,26 @@ export class Engine {
     this.scene?.add(mesh);
   }
 
-  lerpTargets() {
-    this.boxes.forEach((box, i) => {
-      if (box === null) {
-        return;
-      }
-      if (box._markedForRemove) {
-        box.scale.lerp(new THREE.Vector3(0, 0, 0), 0.2);
-        if (box.scale.x < 0.001) {
-          this.scene?.remove(box);
-          this.boxes[i] = null;
-        }
-      }
-      if (box._targetPosition && !box._lerpDone) {
-        box.position.lerp(box._targetPosition, 0.25);
-        if (box.position.distanceTo(box._targetPosition) < 0.001) {
-          box._lerpDone = true;
-        }
-      }
-    });
-  }
+  // lerpTargets() {
+  //   this.boxes.forEach((box, i) => {
+  //     if (box === null) {
+  //       return;
+  //     }
+  //     if (box._markedForRemove) {
+  //       box.scale.lerp(new THREE.Vector3(0, 0, 0), 0.2);
+  //       if (box.scale.x < 0.001) {
+  //         this.scene?.remove(box);
+  //         this.boxes[i] = null;
+  //       }
+  //     }
+  //     if (box._targetPosition && !box._lerpDone) {
+  //       box.position.lerp(box._targetPosition, 0.25);
+  //       if (box.position.distanceTo(box._targetPosition) < 0.001) {
+  //         box._lerpDone = true;
+  //       }
+  //     }
+  //   });
+  // }
 
   applyStage() {
     if (!this.scene) {
@@ -183,12 +188,12 @@ export class Engine {
         }
       }
     }
-    this.boxes.forEach((box, i) => {
+    this.boxes.forEach((box, id) => {
       if (box === null) {
         return;
       }
-      if (!this.idsInStage.includes(i)) {
-        box._markedForRemove = true;
+      if (!box.destroying && !this.idsInStage.includes(id)) {
+        box.destroy();
       }
     });
   }
@@ -255,8 +260,8 @@ export class Engine {
       return;
     }
     tempCounter += 0.03;
-    cubeMaterial.uniforms.u_thickness.value =
-      Math.sin(tempCounter) * 0.01 + 0.05;
+    // cubeMaterial.uniforms.u_thickness.value =
+    //   Math.sin(tempCounter) * 0.01 + 0.05;
     if (this.stage.dirty) {
       this.applyStage();
       this.renderShadows();
@@ -265,7 +270,7 @@ export class Engine {
     this.camera.position.x += Math.sin(tempCounter) / 400;
     this.camera.position.z += Math.cos(tempCounter) / 400;
     this.camera.updateProjectionMatrix();
-    this.lerpTargets();
+    // this.lerpTargets();
     this.renderer.render(this.scene, this.camera);
   }
 }
