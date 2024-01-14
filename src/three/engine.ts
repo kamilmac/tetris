@@ -3,7 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
 import { cubeMaterial, floorMaterial, shadowMaterial } from "./materials";
-import { Stage, Cube } from "./stage";
+import { Stage, Cube } from "../stage";
 
 let tempCounter = 0;
 
@@ -22,7 +22,7 @@ export class Engine {
   private activeCamera: number;
   private cameraPositions: any;
 
-  constructor(stage: Stage, onReady: () => void) {
+  constructor(stage: Stage, onReady: (engine: Engine) => void) {
     this.stage = stage;
     this.boxes = [];
     this.shadowCubes = [];
@@ -217,37 +217,25 @@ export class Engine {
     this.shadowCubes = [];
   }
 
-  cameraRotate(dir: "right") {
+  cameraRotate(dir: "right" | "left") {
     if (dir === "right") {
-      this.cameraPositions;
       this.activeCamera += 1;
       if (this.activeCamera >= this.cameraPositions.length) {
         this.activeCamera = 0;
       }
-      console.log(this.activeCamera);
-      this.camera.position.x = this.cameraPositions[this.activeCamera].x;
-      this.camera.position.z = this.cameraPositions[this.activeCamera].z;
-      this.camera.lookAt(
-        new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
-      );
-      // this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
-      this.camera.updateProjectionMatrix();
     }
     if (dir === "left") {
-      this.cameraPositions;
       this.activeCamera -= 1;
       if (this.activeCamera < 0) {
-        this.activeCamera = this.cameraPositions.length - 1;
+        this.activeCamera = this.cakeraPositions.length - 1;
       }
-      console.log(this.activeCamera);
-      this.camera.position.x = this.cameraPositions[this.activeCamera].x;
-      this.camera.position.z = this.cameraPositions[this.activeCamera].z;
-      this.camera.lookAt(
-        new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
-      );
-      // this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
-      this.camera.updateProjectionMatrix();
     }
+    this.camera.position.x = this.cameraPositions[this.activeCamera].x;
+    this.camera.position.z = this.cameraPositions[this.activeCamera].z;
+    this.camera.lookAt(
+      new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
+    );
+    this.camera.updateProjectionMatrix();
   }
 
   render() {

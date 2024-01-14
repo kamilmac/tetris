@@ -1,6 +1,6 @@
 import { Stage } from "./stage";
 import { Brick } from "./brick";
-import { Engine } from "./engine";
+import { Engine } from "./three/engine";
 import { Controls } from "./controls";
 import { CFG } from "./config";
 
@@ -16,18 +16,18 @@ const CYCLE_LENGTH_MS = CFG.cycleTime;
 class Game {
   blockCyclesCount: number;
   stage: Stage;
-  engine: Engine;
+  engine?: Engine;
   controls?: Controls;
   brick?: Brick;
 
   constructor() {
     this.blockCyclesCount = 1;
     this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
-    new Engine(this.stage, (engine) => {
+    new Engine(this.stage, (engine: Engine) => {
       this.engine = engine;
       this.controls = new Controls(engine);
       this.addBrick();
-      this.loop();
+      this.startGame();
     });
   }
 
@@ -43,8 +43,11 @@ class Game {
     this.brick = new Brick(this.stage);
   }
 
-  loop = () => {
-    this.controls?.applyActions(this.brick);
+  startGame = () => {
+    if (!this.brick || !this.engine || !this.controls) {
+      return;
+    }
+    this.controls.applyActions(this.brick);
     this.onCycleBlocks(() => {
       if (window.paused) return;
       this.brick?.moveDown();
@@ -54,7 +57,7 @@ class Game {
       }
     });
     this.engine.render();
-    requestAnimationFrame(this.loop);
+    requestAnimationFrame(this.startGame);
   };
 }
 

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CFG } from "./config";
+import { CFG } from "../config";
 
 export const floorMaterial = new THREE.ShaderMaterial({
   uniforms: {
