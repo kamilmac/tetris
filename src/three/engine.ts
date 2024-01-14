@@ -83,10 +83,22 @@ export class Engine {
         z: this.floorCenterZ,
       },
     ];
-    this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    this.camera.position.y = 12;
-    this.camera.position.x = this.floorCenterX;
-    this.camera.position.z = this.floorCenterZ + this.stage.depth / 2;
+    // this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+    const frustumSize = 12;
+    const aspect = window.innerWidth / window.innerHeight;
+    this.camera = new THREE.OrthographicCamera(
+      (frustumSize * aspect) / -2,
+      (frustumSize * aspect) / 2,
+      frustumSize / 2,
+      frustumSize / -2,
+      1,
+      1000,
+    );
+    // this.camera?.zoom = 10;
+    this.camera.position.y = this.stage.width * 2;
+    this.camera.position.x = this.floorCenterX + this.stage.width;
+    this.camera.position.z = this.floorCenterZ + this.stage.depth;
+    this.camera.zoom = 0.8;
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
@@ -227,7 +239,7 @@ export class Engine {
     if (dir === "left") {
       this.activeCamera -= 1;
       if (this.activeCamera < 0) {
-        this.activeCamera = this.cakeraPositions.length - 1;
+        this.activeCamera = this.cameraPositions.length - 1;
       }
     }
     this.camera.position.x = this.cameraPositions[this.activeCamera].x;
