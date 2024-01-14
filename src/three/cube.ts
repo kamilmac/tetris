@@ -6,8 +6,6 @@ export class Cube {
   positionInitiated: boolean = false;
   targetPosition: THREE.Vector3 | null = null;
   targetScale: THREE.Vector3 | null = null;
-  lerpingPosition: boolean = false;
-  lerpingScale: boolean = false;
   requestId: number | null = null;
   destroying: boolean = false;
 
@@ -34,23 +32,20 @@ export class Cube {
       this.positionInitiated = true;
     } else {
       this.targetPosition = new THREE.Vector3(x, y, z);
-      this.lerpingPosition = true;
     }
   }
 
   setScale(scale: number) {
     this.targetScale = new THREE.Vector3(scale, scale, scale);
-    this.lerpingScale = true;
   }
 
   destroy() {
-    console.log("DESTROY");
     this.destroying = true;
     this.setScale(0);
   }
 
   animate = () => {
-    if (this.targetPosition && this.lerpingPosition) {
+    if (this.targetPosition) {
       this.mesh.position.lerp(this.targetPosition, 0.25);
       if (this.mesh.position.distanceTo(this.targetPosition) < 0.001) {
         this.mesh.position.set(
@@ -58,10 +53,10 @@ export class Cube {
           this.targetPosition.y,
           this.targetPosition.z,
         );
-        this.lerpingPosition = false;
+        this.targetPosition = null;
       }
     }
-    if (this.targetScale && this.lerpingScale) {
+    if (this.targetScale) {
       this.mesh.scale.lerp(this.targetScale, 0.25);
       if (this.mesh.scale.distanceTo(this.targetScale) < 0.001) {
         this.mesh.scale.set(
@@ -69,10 +64,10 @@ export class Cube {
           this.targetScale.y,
           this.targetScale.z,
         );
-        this.lerpingScale = false;
+        this.targetScale = null;
       }
     }
-    if (this.destroying && !this.lerpingScale && !this.lerpingPosition) {
+    if (this.destroying && !this.targetScale && !this.targetPosition) {
       this.scene.remove(this.mesh);
       this.mesh = null;
     }
