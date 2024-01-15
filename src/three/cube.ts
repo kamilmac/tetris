@@ -117,49 +117,41 @@ const cubeMaterial = () =>
       },
     },
     vertexShader: `
-    varying vec2 vUv;
-    varying vec3 vNormal;
-    varying float y;
-    uniform float u_thickness;
+      varying vec2 vUv;
+      varying vec3 vNormal;
 
-    void main() {
-      vUv = uv;
-      vNormal = normal;
-      vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-
-      vec4 viewPosition = viewMatrix * modelPosition;
-      vec4 projectedPosition = projectionMatrix * viewPosition;
-      projectedPosition.y = u_thickness + projectedPosition.y;
-      y = projectedPosition.y;
-      gl_Position = projectedPosition;
-    }
-  `,
+      void main() {
+        vUv = uv;
+        vNormal = normal;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
     fragmentShader: `
-    uniform float u_thickness;
-    varying vec2 vUv;
-    varying vec3 vNormal;
-    uniform vec3 u_color_top_bottom;
-    uniform vec3 u_color_left_right;
-    uniform vec3 u_color_front_back;
+      uniform float u_thickness;
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      uniform vec3 u_color_top_bottom;
+      uniform vec3 u_color_left_right;
+      uniform vec3 u_color_front_back;
 
-    void main() {
-        float thickness = u_thickness;
-        vec3 color;
-        vec3 absNor = abs(vNormal);
-        if (vNormal.x > 0.9) color = u_color_left_right;
-        else if (vNormal.x < -0.9) color = u_color_left_right;
-        else if (vNormal.y > 0.9) color = u_color_top_bottom;
-        else if (vNormal.y < -0.9) color = u_color_top_bottom;
-        else if (vNormal.z > 0.9) color = u_color_front_back;
-        else if (vNormal.z < -0.9) color = u_color_front_back;
-        else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
+      void main() {
+          float thickness = u_thickness;
+          vec3 color;
+          vec3 absNor = abs(vNormal);
+          if (vNormal.x > 0.9) color = u_color_left_right;
+          else if (vNormal.x < -0.9) color = u_color_left_right;
+          else if (vNormal.y > 0.9) color = u_color_top_bottom;
+          else if (vNormal.y < -0.9) color = u_color_top_bottom;
+          else if (vNormal.z > 0.9) color = u_color_front_back;
+          else if (vNormal.z < -0.9) color = u_color_front_back;
+          else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
 
-        if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
-          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-        } else {
-          gl_FragColor = LinearTosRGB(vec4(color, 1.0));
-        }
-    }
-        `,
+          if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+          } else {
+            gl_FragColor = LinearTosRGB(vec4(color, 1.0));
+          }
+      }
+    `,
     transparent: true,
   });

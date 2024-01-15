@@ -107,18 +107,12 @@ export const shadowMaterial = new THREE.ShaderMaterial({
   },
   vertexShader: `
     varying vec2 vUv;
-    varying float y;
-    uniform float u_thickness;
+    varying vec3 vNormal;
 
     void main() {
       vUv = uv;
-      vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-
-      vec4 viewPosition = viewMatrix * modelPosition;
-      vec4 projectedPosition = projectionMatrix * viewPosition;
-      projectedPosition.y = u_thickness + projectedPosition.y;
-      y = projectedPosition.y;
-      gl_Position = projectedPosition;
+      vNormal = normal;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
   fragmentShader: `
