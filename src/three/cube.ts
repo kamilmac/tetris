@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { cubeVariants, CubeType } from "../config";
 
 export class Cube {
   mesh: THREE.Mesh;
@@ -8,20 +9,29 @@ export class Cube {
   targetScale: THREE.Vector3 | null = null;
   requestId: number | null = null;
   destroying: boolean = false;
+  variant: CubeType;
 
-  constructor(color: number, scene: THREE.Scene) {
+  constructor(variant: string, scene: THREE.Scene) {
     this.scene = scene;
     this.mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial());
-    // this.mesh.scale.set(0.85, 0.85, 0.85);
-    this.setColor(color);
+    this.variant = cubeVariants[variant];
+    this.setColor();
     this.scene.add(this.mesh);
     requestAnimationFrame(this.animate);
   }
 
-  setColor(color: number) {
-    this.mesh.material.uniforms.u_colorA.value = new THREE.Color().setHex(
-      color,
-    );
+  setColor() {
+    this.mesh.material.uniforms.u_color_top_bottom.value =
+      this.variant.faceColors.topBottom;
+    this.mesh.material.uniforms.u_color_left_right.value =
+      this.variant.faceColors.leftRight;
+    this.mesh.material.uniforms.u_color_front_back.value =
+      this.variant.faceColors.frontBack;
+  }
+
+  setVariant(newVariant: string) {
+    this.variant = cubeVariants[newVariant];
+    this.setColor();
   }
 
   setPosition(x: number, y: number, z: number) {
@@ -84,11 +94,14 @@ const cubeMaterial = () =>
       u_time: {
         value: 1.0,
       },
-      u_colorA: {
+      u_color_left_right: {
         value: new THREE.Color("rgb(224,222,216)"),
       },
-      u_colorB: {
-        value: new THREE.Color("rgb(58,58,58)"),
+      u_color_front_back: {
+        value: new THREE.Color("rgb(224,222,216)"),
+      },
+      u_color_top_bottom: {
+        value: new THREE.Color("rgb(224,222,216)"),
       },
       u_thickness: {
         value: 0.05,
@@ -114,19 +127,22 @@ const cubeMaterial = () =>
   `,
     fragmentShader: `
     varying vec3 vNormal;
+    uniform vec3 u_color_top_bottom;
+    uniform vec3 u_color_left_right;
+    uniform vec3 u_color_front_back;
 
-void main() {
-    vec3 color;
-    vec3 absNor = abs(vNormal);
-    if (vNormal.x > 0.9) color = vec3(1.0, 0.0, 0.0); // Right: Red
-    else if (vNormal.x < -0.9) color = vec3(0.0, 1.0, 0.0); // Left: Green
-    else if (vNormal.y > 0.9) color = vec3(0.0, 0.0, 1.0); // Top: Blue
-    else if (vNormal.y < -0.9) color = vec3(1.0, 1.0, 0.0); // Bottom: Yellow
-    else if (vNormal.z > 0.9) color = vec3(1.0, 0.0, 1.0); // Front: Magenta
-    else if (vNormal.z < -0.9) color = vec3(0.0, 1.0, 1.0); // Back: Cyan
-    else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
-    gl_FragColor = vec4(color, 1.0);
-}
+    void main() {
+        vec3 color;
+        vec3 absNor = abs(vNormal);
+        if (vNormal.x > 0.9) color = u_color_left_right; // Right: Red
+        else if (vNormal.x < -0.9) color = u_color_left_right; // Left: Green
+        else if (vNormal.y > 0.9) color = u_color_top_bottom; // Top: Blue
+        else if (vNormal.y < -0.9) color = u_color_top_bottom; // Bottom: Yellow
+        else if (vNormal.z > 0.9) color = u_color_front_back; // Front: Magenta
+        else if (vNormal.z < -0.9) color = u_color_front_back; // Back: Cyan
+        else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
+        gl_FragColor = vec4(color, 1.0);
+    }
         `,
     transparent: true,
   });

@@ -76,8 +76,8 @@ export class Stage {
   fillCube(x: number, y: number, z: number, id: number, state: Cube["state"]) {
     let color = CFG.colors.activeCube;
     if (state === "locked") {
-      const l = CFG.colors.lockedRows.length;
-      color = CFG.colors.lockedRows[y % l];
+      const l = CFG.cubes.locked.length;
+      color = CFG.cubes.locked[y % l];
       this.lastLockedY = y;
     }
     if (this.isCubeDefined(x, y, z)) {

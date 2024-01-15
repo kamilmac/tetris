@@ -1,14 +1,12 @@
 import * as THREE from "three";
 const FLOOR_SIZE = 6;
 
-interface Cube {
-  faceColors:
-    | {
-        topBottom: THREE.Color;
-        frontBack: THREE.Color;
-        leftRight: THREE.Color;
-      }
-    | THREE.Color;
+export interface CubeType {
+  faceColors: {
+    topBottom: THREE.Color;
+    frontBack: THREE.Color;
+    leftRight: THREE.Color;
+  };
   border?: {
     thickness: number;
     color: THREE.Color;
@@ -31,12 +29,12 @@ const c = (color: number | string): THREE.Color => {
   return new THREE.Color();
 };
 
-const cubeVariants: Record<string, Cube> = {
+export const cubeVariants: Record<string, CubeType> = {
   dante: {
     faceColors: {
-      topBottom: c("hsl(120, 40%, 20%)"),
-      frontBack: c(0xefefef),
-      leftRight: c(0xefefef),
+      topBottom: c("hsl(120, 40%, 25%)"),
+      frontBack: c("hsl(120, 60%, 15%)"),
+      leftRight: c("hsl(120, 40%, 40%)"),
     },
     border: {
       thickness: 3,
@@ -47,9 +45,9 @@ const cubeVariants: Record<string, Cube> = {
   },
   reda: {
     faceColors: {
-      topBottom: c(0xefefef),
-      frontBack: c(0xefefef),
-      leftRight: c(0xefefef),
+      topBottom: c("hsl(180, 40%, 25%)"),
+      frontBack: c("hsl(180, 60%, 15%)"),
+      leftRight: c("hsl(180, 40%, 40%)"),
     },
     border: {
       thickness: 3,
@@ -60,9 +58,9 @@ const cubeVariants: Record<string, Cube> = {
   },
   polmot: {
     faceColors: {
-      topBottom: c(0xefefef),
-      frontBack: c(0xefefef),
-      leftRight: c(0xefefef),
+      topBottom: c("hsl(249, 40%, 25%)"),
+      frontBack: c("hsl(249, 60%, 15%)"),
+      leftRight: c("hsl(249, 40%, 40%)"),
     },
     border: {
       thickness: 3,
@@ -73,9 +71,9 @@ const cubeVariants: Record<string, Cube> = {
   },
   trolja: {
     faceColors: {
-      topBottom: c(0xefefef),
-      frontBack: c(0xefefef),
-      leftRight: c(0xefefef),
+      topBottom: c("hsl(30, 40%, 25%)"),
+      frontBack: c("hsl(30, 60%, 15%)"),
+      leftRight: c("hsl(30, 40%, 40%)"),
     },
     border: {
       thickness: 3,
@@ -91,8 +89,8 @@ export const CFG = {
     color: 0xefefef,
   },
   cubes: {
-    active: cubeVariants.dante,
-    locked: [cubeVariants.polmot, cubeVariants.reda, cubeVariants.trolja],
+    active: "dante",
+    locked: ["polmot", "reda", "trolja"],
   },
   colors: {
     activeCube: 0xefefef,
