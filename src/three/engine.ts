@@ -61,6 +61,7 @@ export class Engine {
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setClearColor(0xffffff);
     document.body.appendChild(this.renderer.domElement);
     const width = window.innerWidth;
     const height = window.innerHeight;

@@ -12,7 +12,7 @@ export class Cube {
   constructor(color: number, scene: THREE.Scene) {
     this.scene = scene;
     this.mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial());
-    this.mesh.scale.set(0.95, 0.95, 0.95);
+    this.mesh.scale.set(0.85, 0.85, 0.85);
     this.setColor(color);
     this.scene.add(this.mesh);
     requestAnimationFrame(this.animate);
@@ -96,11 +96,13 @@ const cubeMaterial = () =>
     },
     vertexShader: `
     varying vec2 vUv;
+    varying vec3 vNormal;
     varying float y;
     uniform float u_thickness;
 
     void main() {
       vUv = uv;
+      vNormal = normal;
       vec4 modelPosition = modelMatrix * vec4(position, 1.0);
 
       vec4 viewPosition = viewMatrix * modelPosition;
@@ -111,21 +113,20 @@ const cubeMaterial = () =>
     }
   `,
     fragmentShader: `
-    varying vec2 vUv;
-    varying float y;
-    uniform float u_time;
-    uniform float u_thickness;
-    uniform vec3 u_colorA;
-    uniform vec3 u_colorB;
+    varying vec3 vNormal;
 
-    void main() {
-      float thickness = u_thickness;
-      if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
-        gl_FragColor = vec4(u_colorB, 1.0);
-      } else {
-        gl_FragColor = LinearTosRGB(vec4(u_colorA, 1.0));
-      }
-    }
-  `,
+void main() {
+    vec3 color;
+    vec3 absNor = abs(vNormal);
+    if (vNormal.x > 0.9) color = vec3(1.0, 0.0, 0.0); // Right: Red
+    else if (vNormal.x < -0.9) color = vec3(0.0, 1.0, 0.0); // Left: Green
+    else if (vNormal.y > 0.9) color = vec3(0.0, 0.0, 1.0); // Top: Blue
+    else if (vNormal.y < -0.9) color = vec3(1.0, 1.0, 0.0); // Bottom: Yellow
+    else if (vNormal.z > 0.9) color = vec3(1.0, 0.0, 1.0); // Front: Magenta
+    else if (vNormal.z < -0.9) color = vec3(0.0, 1.0, 1.0); // Back: Cyan
+    else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
+    gl_FragColor = vec4(color, 1.0);
+}
+        `,
     transparent: true,
   });
