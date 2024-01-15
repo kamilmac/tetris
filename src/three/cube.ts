@@ -67,7 +67,7 @@ export class Cube {
 
   animate = () => {
     if (this.targetPosition) {
-      this.mesh.position.lerp(this.targetPosition, 0.25);
+      this.mesh.position.lerp(this.targetPosition, 0.22);
       if (this.mesh.position.distanceTo(this.targetPosition) < 0.001) {
         this.mesh.position.set(
           this.targetPosition.x,
@@ -78,7 +78,7 @@ export class Cube {
       }
     }
     if (this.targetScale) {
-      this.mesh.scale.lerp(this.targetScale, 0.25);
+      this.mesh.scale.lerp(this.targetScale, 0.12);
       if (this.mesh.scale.distanceTo(this.targetScale) < 0.001) {
         this.mesh.scale.set(
           this.targetScale.x,

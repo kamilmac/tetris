@@ -97,7 +97,7 @@ export const CFG = {
     lockedRows: [0xff0000, 0x00ff00, 0x0000ff],
     floor: 0xcc8822,
   },
-  cycleTime: 300,
+  cycleTime: 200,
   shapes: [],
   stage: {
     width: FLOOR_SIZE,
