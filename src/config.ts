@@ -7,7 +7,7 @@ export interface CubeType {
     frontBack: THREE.Color;
     leftRight: THREE.Color;
   };
-  border?: {
+  edge?: {
     thickness: number;
     color: THREE.Color;
   };
@@ -36,8 +36,8 @@ export const cubeVariants: Record<string, CubeType> = {
       frontBack: c("hsl(120, 60%, 15%)"),
       leftRight: c("hsl(120, 40%, 40%)"),
     },
-    border: {
-      thickness: 3,
+    edge: {
+      thickness: 5,
       color: c(0x222222),
     },
     scale: 1,
@@ -49,7 +49,7 @@ export const cubeVariants: Record<string, CubeType> = {
       frontBack: c("hsl(180, 60%, 15%)"),
       leftRight: c("hsl(180, 40%, 40%)"),
     },
-    border: {
+    edge: {
       thickness: 3,
       color: c(0x222222),
     },
@@ -62,7 +62,7 @@ export const cubeVariants: Record<string, CubeType> = {
       frontBack: c("hsl(249, 60%, 15%)"),
       leftRight: c("hsl(249, 40%, 40%)"),
     },
-    border: {
+    edge: {
       thickness: 3,
       color: c(0x222222),
     },
@@ -75,7 +75,7 @@ export const cubeVariants: Record<string, CubeType> = {
       frontBack: c("hsl(30, 60%, 15%)"),
       leftRight: c("hsl(30, 40%, 40%)"),
     },
-    border: {
+    edge: {
       thickness: 3,
       color: c(0x222222),
     },

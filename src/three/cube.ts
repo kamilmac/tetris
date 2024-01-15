@@ -16,6 +16,7 @@ export class Cube {
     this.mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial());
     this.variant = cubeVariants[variant];
     this.setColor();
+    this.setThickness();
     this.scene.add(this.mesh);
     requestAnimationFrame(this.animate);
   }
@@ -29,9 +30,17 @@ export class Cube {
       this.variant.faceColors.frontBack;
   }
 
+  setThickness() {
+    if (!this.variant.edge?.thickness) {
+      return;
+    }
+    this.mesh.material.uniforms.u_thickness = this.variant.edge.thickness;
+  }
+
   setVariant(newVariant: string) {
     this.variant = cubeVariants[newVariant];
     this.setColor();
+    this.setThickness();
   }
 
   setPosition(x: number, y: number, z: number) {
@@ -104,7 +113,7 @@ const cubeMaterial = () =>
         value: new THREE.Color("rgb(224,222,216)"),
       },
       u_thickness: {
-        value: 0.05,
+        value: 0.02,
       },
     },
     vertexShader: `
@@ -126,22 +135,30 @@ const cubeMaterial = () =>
     }
   `,
     fragmentShader: `
+    uniform float u_thickness;
+    varying vec2 vUv;
     varying vec3 vNormal;
     uniform vec3 u_color_top_bottom;
     uniform vec3 u_color_left_right;
     uniform vec3 u_color_front_back;
 
     void main() {
+        float thickness = u_thickness;
         vec3 color;
         vec3 absNor = abs(vNormal);
-        if (vNormal.x > 0.9) color = u_color_left_right; // Right: Red
-        else if (vNormal.x < -0.9) color = u_color_left_right; // Left: Green
-        else if (vNormal.y > 0.9) color = u_color_top_bottom; // Top: Blue
-        else if (vNormal.y < -0.9) color = u_color_top_bottom; // Bottom: Yellow
-        else if (vNormal.z > 0.9) color = u_color_front_back; // Front: Magenta
-        else if (vNormal.z < -0.9) color = u_color_front_back; // Back: Cyan
+        if (vNormal.x > 0.9) color = u_color_left_right;
+        else if (vNormal.x < -0.9) color = u_color_left_right;
+        else if (vNormal.y > 0.9) color = u_color_top_bottom;
+        else if (vNormal.y < -0.9) color = u_color_top_bottom;
+        else if (vNormal.z > 0.9) color = u_color_front_back;
+        else if (vNormal.z < -0.9) color = u_color_front_back;
         else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
-        gl_FragColor = vec4(color, 1.0);
+
+        if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
+          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        } else {
+          gl_FragColor = LinearTosRGB(vec4(color, 1.0));
+        }
     }
         `,
     transparent: true,
