@@ -12,7 +12,7 @@ export class Cube {
   constructor(color: number, scene: THREE.Scene) {
     this.scene = scene;
     this.mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial());
-    this.mesh.scale.set(0.85, 0.85, 0.85);
+    // this.mesh.scale.set(0.85, 0.85, 0.85);
     this.setColor(color);
     this.scene.add(this.mesh);
     requestAnimationFrame(this.animate);
