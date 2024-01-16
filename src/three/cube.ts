@@ -14,9 +14,7 @@ export class Cube {
   constructor(variant: string, scene: THREE.Scene) {
     this.scene = scene;
     this.mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial());
-    this.variant = cubeVariants[variant];
-    this.setColor();
-    this.setThickness();
+    this.setVariant(variant);
     this.scene.add(this.mesh);
     requestAnimationFrame(this.animate);
   }
@@ -31,10 +29,10 @@ export class Cube {
   }
 
   setThickness() {
-    if (!this.variant.edge?.thickness) {
-      return;
+    if (this.variant.edge?.thickness) {
+      this.mesh.material.uniforms.u_thickness.value =
+        this.variant.edge.thickness;
     }
-    this.mesh.material.uniforms.u_thickness = this.variant.edge.thickness;
   }
 
   setVariant(newVariant: string) {
@@ -113,7 +111,7 @@ const cubeMaterial = () =>
         value: new THREE.Color("rgb(224,222,216)"),
       },
       u_thickness: {
-        value: 0.02,
+        value: 0.05,
       },
     },
     vertexShader: `

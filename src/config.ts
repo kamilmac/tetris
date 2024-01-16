@@ -37,7 +37,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(120, 40%, 40%)"),
     },
     edge: {
-      thickness: 5,
+      thickness: 0.03,
       color: c(0x222222),
     },
     scale: 1,
@@ -50,7 +50,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(180, 40%, 40%)"),
     },
     edge: {
-      thickness: 3,
+      thickness: 0.03,
       color: c(0x222222),
     },
     scale: 1,
@@ -63,7 +63,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(249, 40%, 40%)"),
     },
     edge: {
-      thickness: 3,
+      thickness: 0.03,
       color: c(0x222222),
     },
     scale: 1,
@@ -76,7 +76,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(30, 40%, 40%)"),
     },
     edge: {
-      thickness: 3,
+      thickness: 0.1,
       color: c(0x222222),
     },
     scale: 1,

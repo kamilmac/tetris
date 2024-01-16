@@ -116,11 +116,11 @@ export class Engine {
     }
     this.idsInStage.push(cube.id);
     if (this.boxes[cube.id]) {
-      this.boxes[cube.id].setPosition(x, y, z);
+      this.boxes[cube.id]?.setPosition(x, y, z);
       if (cube.state === "locked") {
         const l = CFG.cubes.locked.length;
         const v = CFG.cubes.locked[y % l];
-        this.boxes[cube.id].setVariant(v);
+        this.boxes[cube.id]?.setVariant(v);
       }
       if (cube.state === "active") {
         this.shadowCubes.push({ ...cube, x, y, z });
