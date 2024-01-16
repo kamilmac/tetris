@@ -13,7 +13,7 @@ export const shadowMaterial = new THREE.ShaderMaterial({
       value: new THREE.Color("rgb(58,58,58)"),
     },
     u_thickness: {
-      value: 0.15,
+      value: 0.02,
     },
   },
   vertexShader: `

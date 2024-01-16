@@ -4,15 +4,6 @@ import { Engine } from "./three/engine";
 import { Controls } from "./controls";
 import { CFG } from "./config";
 
-// Extend window interface to include paused (if it's globally set elsewhere in your code)
-declare global {
-  interface Window {
-    paused: boolean;
-  }
-}
-
-const CYCLE_LENGTH_MS = CFG.cycleTime;
-
 class Game {
   blockCyclesCount: number;
   stage: Stage;
@@ -27,13 +18,13 @@ class Game {
       this.engine = engine;
       this.controls = new Controls(engine);
       this.addBrick();
-      this.startGame();
+      this.go();
     });
   }
 
   onCycleBlocks(callback: () => void) {
     const t = Math.round(performance.now() / 100) * 100;
-    if (t % (CYCLE_LENGTH_MS * this.blockCyclesCount) === 0) {
+    if (t % (CFG.cycleTime * this.blockCyclesCount) === 0) {
       callback();
       this.blockCyclesCount += 1;
     }
@@ -43,13 +34,12 @@ class Game {
     this.brick = new Brick(this.stage);
   }
 
-  startGame = () => {
+  go = () => {
     if (!this.brick || !this.engine || !this.controls) {
       return;
     }
     this.controls.applyActions(this.brick);
     this.onCycleBlocks(() => {
-      if (window.paused) return;
       this.brick?.moveDown();
       this.stage.checkForFilledLines();
       if (this.brick?.locked) {
@@ -57,7 +47,7 @@ class Game {
       }
     });
     this.engine.render();
-    requestAnimationFrame(this.startGame);
+    requestAnimationFrame(this.go);
   };
 }
 

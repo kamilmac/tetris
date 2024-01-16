@@ -51,7 +51,7 @@ export const floorMaterial = () =>
           discard; // Discard grid lines fragment
         }
 
-        gl_FragColor = vec4(color, edgeFactor); // White for grid lines, black elsewhere
+        gl_FragColor = vec4(0.0, 0.0, 0.0, edgeFactor); // White for grid lines, black elsewhere
       }
     `,
     transparent: true,

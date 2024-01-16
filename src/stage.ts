@@ -1,7 +1,4 @@
-import { CFG } from "./config";
-
 export interface Cube {
-  color: number;
   id: number | null;
   state: "floor" | "wall" | "locked" | "active";
 }
@@ -58,7 +55,6 @@ export class Stage {
 
   getFloorCube(): Cube {
     return {
-      color: 0x724722,
       id: null,
       state: "floor",
     };
@@ -66,7 +62,6 @@ export class Stage {
 
   getWallCube(): Cube {
     return {
-      color: 0x255377,
       id: null,
       state: "wall",
     };
@@ -74,15 +69,11 @@ export class Stage {
 
   // TODO: pass array of cubes instead here
   fillCube(x: number, y: number, z: number, id: number, state: Cube["state"]) {
-    let color = CFG.colors.activeCube;
     if (state === "locked") {
-      const l = CFG.cubes.locked.length;
-      color = CFG.cubes.locked[y % l];
       this.lastLockedY = y;
     }
     if (this.isCubeDefined(x, y, z)) {
       this.cubes[x][y][z] = {
-        color,
         id,
         state,
       };

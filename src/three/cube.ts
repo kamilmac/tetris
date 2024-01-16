@@ -9,7 +9,7 @@ export class Cube {
   targetScale: THREE.Vector3 | null = null;
   requestId: number | null = null;
   destroying: boolean = false;
-  variant: CubeType;
+  variant: CubeType | null = null;
 
   constructor(variant: string, scene: THREE.Scene) {
     this.scene = scene;
@@ -20,6 +20,9 @@ export class Cube {
   }
 
   setColor() {
+    if (!this.variant) {
+      return;
+    }
     this.mesh.material.uniforms.u_color_top_bottom.value =
       this.variant.faceColors.topBottom;
     this.mesh.material.uniforms.u_color_left_right.value =
@@ -29,7 +32,7 @@ export class Cube {
   }
 
   setThickness() {
-    if (!this.variant.edge?.thickness) {
+    if (!this.variant?.edge?.thickness) {
       return;
     }
     this.mesh.material.uniforms.u_thickness.value = this.variant.edge.thickness;
@@ -91,7 +94,7 @@ export class Cube {
       this.mesh = null;
       return;
     }
-    requestAnimationFrame(this.animate);
+    // requestAnimationFrame(this.animate);
   };
 }
 

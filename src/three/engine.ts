@@ -2,13 +2,11 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
-import { cubeMaterial, floorMaterial, shadowMaterial } from "./materials";
+import { shadowMaterial } from "./materials";
 import { Stage, Cube } from "../stage";
 import { Cube as Tetrino } from "./cube";
 import { CFG } from "../config";
 import { Floor } from "./floor";
-
-let tempCounter = 0;
 
 export class Engine {
   private stage: Stage;
@@ -28,7 +26,7 @@ export class Engine {
 
   constructor(stage: Stage, onReady: (engine: Engine) => void) {
     this.stage = stage;
-    this.boxes = [];
+    this.boxes = new Map();
     this.shadowCubes = [];
     this.idsInStage = [];
     this.cubeObj = undefined;
@@ -117,23 +115,22 @@ export class Engine {
     if (!cube?.id || !this.scene) {
       return;
     }
-    this.idsInStage.push(cube.id);
-    if (this.boxes[cube.id]) {
-      this.boxes[cube.id]?.setPosition(x, y, z);
+    if (this.boxes.has(cube.id)) {
+      const box = this.boxes.get(cube.id);
+      box?.setPosition(x, y, z);
       if (cube.state === "locked") {
         const l = CFG.cubes.locked.length;
         const v = CFG.cubes.locked[y % l];
-        this.boxes[cube.id]?.setVariant(v);
+        box.setVariant(v);
       }
       if (cube.state === "active") {
         this.shadowCubes.push({ ...cube, x, y, z });
       }
       return;
     }
-    this.boxes[cube.id] = new Tetrino(CFG.cubes.active, this.scene).setPosition(
-      x,
-      y,
-      z,
+    this.boxes.set(
+      cube.id,
+      new Tetrino(CFG.cubes.active, this.scene).setPosition(x, y, z),
     );
   }
 
@@ -146,18 +143,25 @@ export class Engine {
       for (let y = 0; y < this.stage.height; y++) {
         for (let z = 0; z < this.stage.depth; z++) {
           const cube: Cube = this.stage.cubes[x][y][z];
+          if (cube?.id) {
+            this.idsInStage.push(cube.id);
+          }
           this.handleCube(cube, x, y, z);
         }
       }
     }
-    this.boxes.forEach((box, id) => {
+    for (let [id, box] of this.boxes) {
       if (box === null) {
         return;
       }
       if (!box.destroying && !this.idsInStage.includes(id)) {
         box.destroy();
       }
-    });
+      if (box.mesh === null) {
+        this.boxes.delete(id);
+      }
+    }
+    console.log(this.boxes);
   }
 
   renderShadows() {
@@ -221,14 +225,17 @@ export class Engine {
     if (!this.camera || !this.renderer || !this.scene) {
       return;
     }
-    tempCounter += 0.03;
     if (this.stage.dirty) {
       this.applyStage();
       this.renderShadows();
       this.stage.dirty = false;
     }
-    this.camera.position.x += Math.sin(tempCounter) / 400;
-    this.camera.position.z += Math.cos(tempCounter) / 400;
+    for (let [_, box] of this.boxes) {
+      box?.animate();
+    }
+    // for (let i = 0; i < this.boxes.length; i += 1) {
+    //   this.boxes[i]?.animate();
+    // }
     this.camera.updateProjectionMatrix();
     this.renderer.render(this.scene, this.camera);
   }
