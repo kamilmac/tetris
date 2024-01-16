@@ -29,10 +29,10 @@ export class Cube {
   }
 
   setThickness() {
-    if (this.variant.edge?.thickness) {
-      this.mesh.material.uniforms.u_thickness.value =
-        this.variant.edge.thickness;
+    if (!this.variant.edge?.thickness) {
+      return;
     }
+    this.mesh.material.uniforms.u_thickness.value = this.variant.edge.thickness;
   }
 
   setVariant(newVariant: string) {

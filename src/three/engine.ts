@@ -6,6 +6,7 @@ import { cubeMaterial, floorMaterial, shadowMaterial } from "./materials";
 import { Stage, Cube } from "../stage";
 import { Cube as Tetrino } from "./cube";
 import { CFG } from "../config";
+import { Floor } from "./floor";
 
 let tempCounter = 0;
 
@@ -23,6 +24,7 @@ export class Engine {
   private floorCenterZ: number;
   private activeCamera: number;
   private cameraPositions: any;
+  private floor: Floor | null;
 
   constructor(stage: Stage, onReady: (engine: Engine) => void) {
     this.stage = stage;
@@ -34,6 +36,7 @@ export class Engine {
     this.floorCenterZ = 0;
     this.activeCamera = 0;
     this.cameraPositions = [{}];
+    this.floor = null;
 
     new OBJLoader().load(
       cubeObj,
@@ -107,7 +110,7 @@ export class Engine {
     this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
     this.controls.update();
     this.scene = new THREE.Scene();
-    this.renderFloor();
+    this.floor = new Floor(this.stage.width, this.stage.depth, this.scene);
   }
 
   handleCube(cube: Cube, x: number, y: number, z: number) {
@@ -132,20 +135,6 @@ export class Engine {
       y,
       z,
     );
-  }
-
-  renderFloor() {
-    const floorThickness = 0.1;
-    const geometry = new THREE.BoxGeometry(
-      this.stage.width,
-      floorThickness,
-      this.stage.depth,
-    );
-    const mesh = new THREE.Mesh(geometry, floorMaterial);
-    mesh.position.x = this.stage.width / 2 - 0.5;
-    mesh.position.y = -floorThickness - 0.5;
-    mesh.position.z = this.stage.depth / 2 - 0.5;
-    this.scene?.add(mesh);
   }
 
   applyStage() {
