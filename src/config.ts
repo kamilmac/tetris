@@ -32,25 +32,24 @@ const c = (color: number | string): THREE.Color => {
 export const cubeVariants: Record<string, CubeType> = {
   dante: {
     faceColors: {
-      topBottom: c("hsl(120, 40%, 25%)"),
-      frontBack: c("hsl(120, 60%, 15%)"),
-      leftRight: c("hsl(120, 40%, 40%)"),
+      topBottom: c(0xffffff),
+      frontBack: c(0xffffff),
+      leftRight: c(0xffffff),
     },
     edge: {
-      thickness: 0.02,
+      thickness: 0.03,
       color: c(0x222222),
     },
-    scale: 1,
-    pattern: "A",
+    scale: 0.90,
   },
   reda: {
     faceColors: {
-      topBottom: c("hsl(180, 40%, 25%)"),
-      frontBack: c("hsl(180, 60%, 15%)"),
-      leftRight: c("hsl(180, 40%, 40%)"),
+      topBottom: c("hsl(218, 54%, 58%)"),
+      frontBack: c("hsl(351, 75%, 63%)"),
+      leftRight: c("hsl(351, 75%, 63%)"),
     },
     edge: {
-      thickness: 0.02,
+      thickness: 0.0,
       color: c(0x222222),
     },
     scale: 1,
@@ -58,12 +57,12 @@ export const cubeVariants: Record<string, CubeType> = {
   },
   polmot: {
     faceColors: {
-      topBottom: c("hsl(249, 40%, 25%)"),
-      frontBack: c("hsl(249, 60%, 15%)"),
-      leftRight: c("hsl(249, 40%, 40%)"),
+      frontBack: c("hsl(249, 40%, 25%)"),
+      topBottom: c("hsl(217, 27%, 67%)"),
+      leftRight: c("hsl(34, 87%, 85%)"),
     },
     edge: {
-      thickness: 0.02,
+      thickness: 0.0,
       color: c(0x222222),
     },
     scale: 1,
@@ -76,7 +75,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(30, 40%, 40%)"),
     },
     edge: {
-      thickness: 0.02,
+      thickness: 0.0,
       color: c(0x222222),
     },
     scale: 1,
@@ -97,7 +96,7 @@ export const CFG = {
     lockedRows: [0xff0000, 0x00ff00, 0x0000ff],
     floor: 0xcc8822,
   },
-  cycleTime: 200,
+  cycleTime: 300,
   shapes: [],
   stage: {
     width: FLOOR_SIZE,

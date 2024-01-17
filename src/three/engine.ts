@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
 import { shadowMaterial } from "./materials";
@@ -7,6 +6,7 @@ import { Stage, Cube } from "../stage";
 import { Cube as Tetrino } from "./cube";
 import { CFG } from "../config";
 import { Floor } from "./floor";
+import { Camera } from "./camera";
 
 export class Engine {
   private stage: Stage;
@@ -16,12 +16,7 @@ export class Engine {
   private cubeObj?: THREE.BufferGeometry;
   private renderer?: THREE.WebGLRenderer;
   private camera?: THREE.PerspectiveCamera;
-  private controls: OrbitControls;
   private scene?: THREE.Scene;
-  private floorCenterX: number;
-  private floorCenterZ: number;
-  private activeCamera: number;
-  private cameraPositions: any;
   private floor: Floor | null;
 
   constructor(stage: Stage, onReady: (engine: Engine) => void) {
@@ -32,9 +27,8 @@ export class Engine {
     this.cubeObj = undefined;
     this.floorCenterX = 0;
     this.floorCenterZ = 0;
-    this.activeCamera = 0;
-    this.cameraPositions = [{}];
     this.floor = null;
+    this.camera = null;
 
     new OBJLoader().load(
       cubeObj,
@@ -61,53 +55,13 @@ export class Engine {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
     });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setClearColor(0xffffff);
     document.body.appendChild(this.renderer.domElement);
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    this.floorCenterX = this.stage.width / 2 - 0.5;
-    this.floorCenterZ = this.stage.depth / 2 - 0.5;
-    this.cameraPositions = [
-      {
-        x: this.floorCenterX,
-        z: this.floorCenterZ + this.stage.depth / 2,
-      },
-      {
-        x: this.floorCenterX - this.stage.width / 2,
-        z: this.floorCenterZ,
-      },
-      {
-        x: this.floorCenterX,
-        z: this.floorCenterZ - this.stage.depth / 2,
-      },
-      {
-        x: this.floorCenterX + this.stage.width / 2,
-        z: this.floorCenterZ,
-      },
-    ];
-    // this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    const frustumSize = 12;
-    const aspect = window.innerWidth / window.innerHeight;
-    this.camera = new THREE.OrthographicCamera(
-      (frustumSize * aspect) / -2,
-      (frustumSize * aspect) / 2,
-      frustumSize / 2,
-      frustumSize / -2,
-      1,
-      1000,
-    );
-    // this.camera?.zoom = 10;
-    this.camera.position.y = this.stage.width * 2;
-    this.camera.position.x = this.floorCenterX + this.stage.width;
-    this.camera.position.z = this.floorCenterZ + this.stage.depth;
-    this.camera.zoom = 0.8;
-    this.camera.updateProjectionMatrix();
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
-    this.controls.update();
     this.scene = new THREE.Scene();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setClearColor('hsl(322, 15%, 33%)');
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.camera = new Camera(this.stage, this.renderer);
     this.floor = new Floor(this.stage.width, this.stage.depth, this.scene);
   }
 
@@ -199,27 +153,6 @@ export class Engine {
     this.shadowCubes = [];
   }
 
-  cameraRotate(dir: "right" | "left") {
-    if (dir === "right") {
-      this.activeCamera += 1;
-      if (this.activeCamera >= this.cameraPositions.length) {
-        this.activeCamera = 0;
-      }
-    }
-    if (dir === "left") {
-      this.activeCamera -= 1;
-      if (this.activeCamera < 0) {
-        this.activeCamera = this.cameraPositions.length - 1;
-      }
-    }
-    this.camera.position.x = this.cameraPositions[this.activeCamera].x;
-    this.camera.position.z = this.cameraPositions[this.activeCamera].z;
-    this.camera.lookAt(
-      new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
-    );
-    this.camera.updateProjectionMatrix();
-  }
-
   render() {
     if (!this.camera || !this.renderer || !this.scene) {
       return;
@@ -232,10 +165,7 @@ export class Engine {
     for (let [_, box] of this.boxes) {
       box?.animate();
     }
-    // for (let i = 0; i < this.boxes.length; i += 1) {
-    //   this.boxes[i]?.animate();
-    // }
-    this.camera.updateProjectionMatrix();
-    this.renderer.render(this.scene, this.camera);
+    const cameraPointer = this.camera.animate();
+    this.renderer.render(this.scene, cameraPointer);
   }
 }

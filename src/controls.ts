@@ -86,10 +86,11 @@ export class Controls {
           brick.rotate();
           break;
         case "camera_rotate_right":
-          this.engine.cameraRotate("right");
+          console.log(this.engine)
+          this.engine.camera.rotate("right");
           break;
         case "camera_rotate_left":
-          this.engine.cameraRotate("left");
+          this.engine.camera.rotate("left");
           break;
         default:
           break;
