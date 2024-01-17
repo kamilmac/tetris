@@ -4,7 +4,7 @@ import dashPatternImage from "./dash_pattern.png";
 import kneePatternImage from "./knee_pattern.png";
 
 const loader = new THREE.TextureLoader();
-const texture = loader.load(kneePatternImage);
+const texture = loader.load(dashPatternImage);
 
 export class Cube {
   mesh: THREE.Mesh;
@@ -176,7 +176,7 @@ const cubeMaterial = () =>
         else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
 
         if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
-          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+          gl_FragColor = vec4(0.03, 0.03, 0.03, 1.0);
         } else {
           gl_FragColor = LinearTosRGB(vec4(color, 1.0));
         }

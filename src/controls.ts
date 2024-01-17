@@ -72,6 +72,9 @@ export class Controls {
             this.actions.push(this.cameraCorrection("left"));
           }
           break;
+        case "H":
+          this.actions.push("camera_rotate_left");
+          break;
         case "ArrowRight":
         case "l":
         case "d":
@@ -80,6 +83,9 @@ export class Controls {
           } else {
             this.actions.push(this.cameraCorrection("right"));
           }
+          break;
+        case "L":
+          this.actions.push("camera_rotate_right");
           break;
         case "ArrowUp":
         case "k":

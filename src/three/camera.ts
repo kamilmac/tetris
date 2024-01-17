@@ -51,7 +51,7 @@ export class Camera {
     // );
     this.camera.zoom = 3.10;
     this.setPosition(
-      this.floorCenterX + this.stage.width,
+      this.floorCenterX + this.stage.width -5,
       this.stage.width * 2,
       this.floorCenterZ + this.stage.depth,
     );
@@ -75,13 +75,16 @@ export class Camera {
   lerp() {
     if (this.targetPosition) {
       this.camera.position.lerp(this.targetPosition, 0.08);
-      if (this.camera.position.distanceTo(this.targetPosition) < 0.001) {
+      const cameraDistanceToTarget = this.camera.position.distanceTo(this.targetPosition);
+      if (cameraDistanceToTarget < 0.16) {
+        this.cameraInMotion = false;
+      }
+      if (cameraDistanceToTarget < 0.005) {
         this.camera.position.set(
           this.targetPosition.x,
           this.targetPosition.y,
           this.targetPosition.z,
         );
-        this.cameraInMotion = false;
       }
     }
   }

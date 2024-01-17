@@ -62,21 +62,21 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(13, 100%, 68%)"),
     },
     edge: {
-      thickness: 0.0,
-      color: c(0x222222),
+      thickness: 0.00,
+      color: c(0x888888),
     },
     scale: 1,
     pattern: "A",
   },
   polmot: {
     faceColors: {
-      topBottom: c("hsl(0, 0%, 0%)"),
-      frontBack: c("hsl(0, 0%, 3%)"),
-      leftRight: c("hsl(0, 0%, 10%)"),
+      topBottom: c("hsl(0, 0%, 10%)"),
+      frontBack: c("hsl(0, 0%, 30%)"),
+      leftRight: c("hsl(0, 0%, 40%)"),
     },
     edge: {
-      thickness: 0.0,
-      color: c(0x222222),
+      thickness: 0.00,
+      color: c(0x888888),
     },
     scale: 1,
     pattern: "A",
@@ -88,8 +88,8 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(13, 100%, 86%)"),
     },
     edge: {
-      thickness: 0.0,
-      color: c(0x222222),
+      thickness: 0.00,
+      color: c(0x888888),
     },
     scale: 1,
     pattern: "A",
@@ -102,14 +102,14 @@ export const CFG = {
   },
   cubes: {
     active: "dante",
-    locked: ["dante", "dante_p", "dante"],
+    locked: ["reda", "polmot", "trolja"],
   },
   colors: {
     activeCube: 0xefefef,
     lockedRows: [0xff0000, 0x00ff00, 0x0000ff],
     floor: 0xcc8822,
   },
-  cycleTime: 400,
+  cycleTime: 200,
   shapes: [],
   stage: {
     width: FLOOR_SIZE,

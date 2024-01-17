@@ -31,16 +31,30 @@ class Game {
   }
 
   addBrick() {
+    if (this.stage.lastLockedY > 2) {
+      return;
+    }
     this.brick = new Brick(this.stage);
     this.controls.setBrick(this.brick);
   }
 
   go = () => {
+    if (this.stage.lastLockedY > 2) {
+      if (!this.pa) {
+        this.engine?.attachPhysics();
+        this.pa = true;
+      }
+      this.engine.world?.step(1 / 60);
+      this.engine.gophys()
+      this.controls.applyActions();
+      this.engine.render();
+      requestAnimationFrame(this.go);
+      return;
+    }
     if (!this.brick || !this.engine || !this.controls) {
       return;
     }
     this.controls.applyActions();
-    console.log(this.engine.camera.cameraInMotion)
     this.onCycleBlocks(() => {
       if (!this.engine.camera.cameraInMotion) {
         this.brick?.moveDown();

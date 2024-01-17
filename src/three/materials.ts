@@ -13,7 +13,7 @@ export const shadowMaterial = new THREE.ShaderMaterial({
       value: new THREE.Color("rgb(58,58,58)"),
     },
     u_thickness: {
-      value: 0.02,
+      value: 0.1,
     },
   },
   vertexShader: `
@@ -37,7 +37,7 @@ export const shadowMaterial = new THREE.ShaderMaterial({
     void main() {
       float thickness = u_thickness;
       if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
-        gl_FragColor = vec4(0.1, 0.1, 0.1, 1.0);
+        gl_FragColor = vec4(0.9, 0.9, 0.3, 1.0);
       } else {
         gl_FragColor = LinearTosRGB(vec4(0.1, 0.1, 0.1, 0.0));
       }
