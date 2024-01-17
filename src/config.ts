@@ -21,7 +21,7 @@ const c = (color: number | string): THREE.Color => {
       .replace(/[^0-9,]/g, "")
       .split(",")
       .map((s) => Number(s));
-    return new THREE.Color().setHSL(h / 360, s / 100, l / 100);
+    return new THREE.Color().setHSL(h / 360, s / 100, l / 100, 'srgb');
   }
   if (typeof color === "number") {
     return new THREE.Color().setHex(color);
@@ -42,11 +42,24 @@ export const cubeVariants: Record<string, CubeType> = {
     },
     scale: 0.90,
   },
+  dante_p: {
+    faceColors: {
+      topBottom: c(0xdddddd),
+      frontBack: c(0xdddddd),
+      leftRight: c(0xdddddd),
+    },
+    edge: {
+      thickness: 0.00,
+      color: c(0x666666),
+    },
+    scale: 0.90,
+    pattern: "A",
+  },
   reda: {
     faceColors: {
-      topBottom: c("hsl(218, 54%, 58%)"),
-      frontBack: c("hsl(351, 75%, 63%)"),
-      leftRight: c("hsl(351, 75%, 63%)"),
+      topBottom: c("hsl(13, 100%, 28%)"),
+      frontBack: c("hsl(13, 100%, 48%)"),
+      leftRight: c("hsl(13, 100%, 68%)"),
     },
     edge: {
       thickness: 0.0,
@@ -57,9 +70,9 @@ export const cubeVariants: Record<string, CubeType> = {
   },
   polmot: {
     faceColors: {
-      frontBack: c("hsl(249, 40%, 25%)"),
-      topBottom: c("hsl(217, 27%, 67%)"),
-      leftRight: c("hsl(34, 87%, 85%)"),
+      topBottom: c("hsl(0, 0%, 0%)"),
+      frontBack: c("hsl(0, 0%, 3%)"),
+      leftRight: c("hsl(0, 0%, 10%)"),
     },
     edge: {
       thickness: 0.0,
@@ -70,9 +83,9 @@ export const cubeVariants: Record<string, CubeType> = {
   },
   trolja: {
     faceColors: {
-      topBottom: c("hsl(30, 40%, 25%)"),
-      frontBack: c("hsl(30, 60%, 15%)"),
-      leftRight: c("hsl(30, 40%, 40%)"),
+      topBottom: c("hsl(13, 100%, 48%)"),
+      frontBack: c("hsl(13, 100%, 66%)"),
+      leftRight: c("hsl(13, 100%, 86%)"),
     },
     edge: {
       thickness: 0.0,
@@ -85,18 +98,18 @@ export const cubeVariants: Record<string, CubeType> = {
 
 export const CFG = {
   background: {
-    color: 0xefefef,
+    color: 'hsl(14, 100%, 85%)',
   },
   cubes: {
     active: "dante",
-    locked: ["polmot", "reda", "trolja"],
+    locked: ["dante", "dante_p", "dante"],
   },
   colors: {
     activeCube: 0xefefef,
     lockedRows: [0xff0000, 0x00ff00, 0x0000ff],
     floor: 0xcc8822,
   },
-  cycleTime: 300,
+  cycleTime: 400,
   shapes: [],
   stage: {
     width: FLOOR_SIZE,

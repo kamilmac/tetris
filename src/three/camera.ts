@@ -16,46 +16,46 @@ export class Camera {
     this.activeCamera = 0;
     this.stage = stage;
     this.renderer = renderer;
-    // const width = window.innerWidth;
-    // const height = window.innerHeight;
-    this.floorCenterX = this.stage.width / 2 - 0.5;
     this.floorCenterZ = this.stage.depth / 2 - 0.5;
+    this.floorCenterX = this.stage.width / 2 - 0.5;
     this.cameraPositions = [
       {
-        x: this.floorCenterX + this.stage.width,
+        x: this.floorCenterX + this.stage.width -5,
         z: this.floorCenterZ + this.stage.depth,
       },
       {
         x: this.floorCenterX + this.stage.width,
+        z: this.floorCenterZ - this.stage.depth + 5,
+      },
+      {
+        x: this.floorCenterX - this.stage.width + 5,
         z: this.floorCenterZ - this.stage.depth,
       },
       {
         x: this.floorCenterX - this.stage.width,
-        z: this.floorCenterZ - this.stage.depth,
-      },
-      {
-        x: this.floorCenterX - this.stage.width,
-        z: this.floorCenterZ + this.stage.depth,
+        z: this.floorCenterZ + this.stage.depth -5,
       },
     ];
-    const frustumSize = 12; 
-    const aspect = window.innerWidth / window.innerHeight;
-    // this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    this.camera = new THREE.OrthographicCamera(
-      (frustumSize * aspect) / -2,
-      (frustumSize * aspect) / 2,
-      frustumSize / 2,
-      frustumSize / -2,
-      1,
-      1000,
-    );
+    // const frustumSize = 12; 
+    // const aspect = window.innerWidth / window.innerHeight;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    this.camera = new THREE.PerspectiveCamera(120, width / height, 0.1, 1000);
+    // this.camera = new THREE.OrthographicCamera(
+    //   (frustumSize * aspect) / -2,
+    //   (frustumSize * aspect) / 2,
+    //   frustumSize / 2,
+    //   frustumSize / -2,
+    //   1,
+    //   1000,
+    // );
+    this.camera.zoom = 3.10;
     this.setPosition(
       this.floorCenterX + this.stage.width,
       this.stage.width * 2,
       this.floorCenterZ + this.stage.depth,
     );
     
-    this.camera.zoom = 0.7;
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
@@ -81,11 +81,13 @@ export class Camera {
           this.targetPosition.y,
           this.targetPosition.z,
         );
+        this.cameraInMotion = false;
       }
     }
   }
 
   rotate = (dir: "right" | "left") => {
+    this.cameraInMotion = true;
     if (dir === "right") {
       this.activeCamera += 1;
       if (this.activeCamera >= this.cameraPositions.length) {

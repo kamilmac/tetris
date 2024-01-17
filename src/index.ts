@@ -40,8 +40,11 @@ class Game {
       return;
     }
     this.controls.applyActions();
+    console.log(this.engine.camera.cameraInMotion)
     this.onCycleBlocks(() => {
-      this.brick?.moveDown();
+      if (!this.engine.camera.cameraInMotion) {
+        this.brick?.moveDown();
+      }
       this.stage.checkForFilledLines();
       if (this.brick?.locked) {
         this.addBrick();

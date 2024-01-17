@@ -58,7 +58,7 @@ export class Engine {
     document.body.appendChild(this.renderer.domElement);
     this.scene = new THREE.Scene();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setClearColor('hsl(322, 15%, 33%)');
+    this.renderer.setClearColor(CFG.background.color);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.camera = new Camera(this.stage, this.renderer);
