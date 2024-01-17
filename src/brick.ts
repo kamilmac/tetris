@@ -43,12 +43,12 @@ export class Brick {
 
   move(x: number, z: number) {
     if (this.locked) return;
-    this.clearFromStage();
     const newPosition = this.cubes.map((cube) => [
       cube.position[0] + x,
       cube.position[1],
       cube.position[2] + z,
     ]);
+    this.clearFromStage();
     if (!this.isColliding(newPosition)) {
       this.applyNewPosition(newPosition);
       this.updateStage();
@@ -120,7 +120,7 @@ export class Brick {
       const x = cube.position[0] - pivot[0];
       const z = cube.position[2] - pivot[2];
       // Rotate 90 degrees around the pivot on the Y axis
-      return [pivot[0] + z, cube.position[1], pivot[2] - x];
+      return [pivot[0] - z, cube.position[1], pivot[2] + x];
     });
     // Apply new position if there is no collision
     const collisions = this.isColliding(newPositions);

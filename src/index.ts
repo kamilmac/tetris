@@ -32,13 +32,14 @@ class Game {
 
   addBrick() {
     this.brick = new Brick(this.stage);
+    this.controls.setBrick(this.brick);
   }
 
   go = () => {
     if (!this.brick || !this.engine || !this.controls) {
       return;
     }
-    this.controls.applyActions(this.brick);
+    this.controls.applyActions();
     this.onCycleBlocks(() => {
       this.brick?.moveDown();
       this.stage.checkForFilledLines();
