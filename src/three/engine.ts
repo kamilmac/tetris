@@ -161,7 +161,6 @@ export class Engine {
         this.boxes.delete(id);
       }
     }
-    console.log(this.boxes);
   }
 
   renderShadows() {

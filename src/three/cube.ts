@@ -1,5 +1,10 @@
 import * as THREE from "three";
 import { cubeVariants, CubeType } from "../config";
+import dashPatternImage from "./dash_pattern.png";
+import kneePatternImage from "./knee_pattern.png";
+
+const loader = new THREE.TextureLoader();
+const texture = loader.load(dashPatternImage);
 
 export class Cube {
   mesh: THREE.Mesh;
