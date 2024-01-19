@@ -14,7 +14,7 @@
     "vite": "^3.2.3"
   },
   "dependencies": {
-    "cannon": "github:schteppe/cannon.js",
+    "cannon-es": "^0.20.0",
     "three": "^0.160.0"
   }
 }

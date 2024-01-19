@@ -1,4 +1,4 @@
-import * as CANNON from "cannon";
+import * as CANNON from "cannon-es";
 
 export class Physics {
   world: any;
