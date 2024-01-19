@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import * as CANNON from 'cannon';
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import cubeObj from "./cube.obj?url";
 import { shadowMaterial } from "./materials";
@@ -8,17 +7,20 @@ import { Cube as Tetrino } from "./cube";
 import { CFG } from "../config";
 import { Floor } from "./floor";
 import { Camera } from "./camera";
+import { Physics } from "../physics";
 
 export class Engine {
   private stage: Stage;
-  private boxes: (Tetrino | null)[];
   private shadowCubes: any;
   private idsInStage: number[];
   private cubeObj?: THREE.BufferGeometry;
   private renderer?: THREE.WebGLRenderer;
-  private camera?: THREE.PerspectiveCamera;
   private scene?: THREE.Scene;
   private floor: Floor | null;
+  private physics: Physics;
+  boxes: (Tetrino | null)[];
+  camera?: THREE.PerspectiveCamera;
+  usePhysics: boolean;
 
   constructor(stage: Stage, onReady: (engine: Engine) => void) {
     this.stage = stage;
@@ -30,30 +32,32 @@ export class Engine {
     this.floorCenterZ = 0;
     this.floor = null;
     this.camera = null;
-
-    new OBJLoader().load(
-      cubeObj,
-      (obj: any) => {
-        obj.traverse((child: any) => {
-          if (child.isMesh) {
-            this.cubeObj = child.geometry; // Extract the geometry from each mesh
-          }
-        });
-        console.log(this.cubeObj);
-        this.setup();
-        onReady(this);
-      },
-      (xhr: any) => {
-        console.log(xhr?.loaded);
-      },
-      (error: any) => {
-        console.log("error", error);
-      },
-    );
+    this.physics = null;
+    this.usePhysics = false;
+    this.setup();
+    onReady(this);
+    // new OBJLoader().load(
+    //   cubeObj,
+    //   (obj: any) => {
+    //     obj.traverse((child: any) => {
+    //       if (child.isMesh) {
+    //         this.cubeObj = child.geometry; // Extract the geometry from each mesh
+    //       }
+    //     });
+    //     console.log(this.cubeObj);
+    //     this.setup();
+    //     onReady(this);
+    //   },
+    //   (xhr: any) => {
+    //     console.log(xhr?.loaded);
+    //   },
+    //   (error: any) => {
+    //     console.log("error", error);
+    //   },
+    // );
   }
 
   setup() {
-    this.world = new CANNON.World();
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
     });
@@ -65,6 +69,7 @@ export class Engine {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.camera = new Camera(this.stage, this.renderer);
     this.floor = new Floor(this.stage.width, this.stage.depth, this.scene);
+    this.physics = new Physics();
   }
 
   handleCube(cube: Cube, x: number, y: number, z: number) {
@@ -155,52 +160,30 @@ export class Engine {
     this.shadowCubes = [];
   }
 
-  attachPhysics() {
-    this.world.gravity.set(Math.random() * 2 - 1, -10, Math.random() * 2 - 1); // Set gravity
-    var groundMaterial = new CANNON.Material();
-    var groundBody = new CANNON.Body({
-        mass: 0, // Mass = 0 makes it static
-        material: groundMaterial
-    });
-    var groundShape = new CANNON.Plane();
-    groundBody.addShape(groundShape);
-    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2); // Rotate to match Three.js plane
-    this.world.addBody(groundBody);
-
-    for (let [_, box] of this.boxes) {
-      // box?.mesh.animate();
-      var shape = new CANNON.Box(new CANNON.Vec3(box.mesh.scale.x / 2, box.mesh.scale.y / 2, box.mesh.scale.z / 2));
-      box._body = new CANNON.Body({
-        mass: 10, // Set the mass of the body
-        position: new CANNON.Vec3(box.mesh.position.x, box.mesh.position.y, box.mesh.position.z) // Initial position
-      });
-      box._body.addShape(shape);
-      this.world.addBody(box._body);
+  captureSceneWithPhysics() {
+    if (this.usePhysics) {
+      return;
     }
+    this.physics.attach(this.boxes);
+    this.usePhysics = true;
   }
 
-  gophys() {
-    for (let [_, box] of this.boxes) {
-      box.mesh.position.copy(box._body.position);
-      box.mesh.quaternion.copy(box._body.quaternion);
-    }
-    const cameraPointer = this.camera.animate();
-    this.renderer.render(this.scene, cameraPointer);
-  }
-  
-  render() {
+  animate() {
     if (!this.camera || !this.renderer || !this.scene) {
       return;
     }
-    if (this.stage.dirty) {
-      this.applyStage();
-      this.renderShadows();
-      this.stage.dirty = false;
+    if (!this.usePhysics) {
+      if (this.stage.dirty) {
+        this.applyStage();
+        this.renderShadows();
+        this.stage.dirty = false;
+      }
+      for (let [_, box] of this.boxes) {
+        box?.animate();
+      }
+    } else {
+      this.physics.animate();
     }
-    for (let [_, box] of this.boxes) {
-      box?.animate();
-    }
-    const cameraPointer = this.camera.animate();
-    this.renderer.render(this.scene, cameraPointer);
+    this.renderer.render(this.scene, this.camera.animate());
   }
 }

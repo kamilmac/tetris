@@ -21,7 +21,7 @@ const c = (color: number | string): THREE.Color => {
       .replace(/[^0-9,]/g, "")
       .split(",")
       .map((s) => Number(s));
-    return new THREE.Color().setHSL(h / 360, s / 100, l / 100, 'srgb');
+    return new THREE.Color().setHSL(h / 360, s / 100, l / 100, "srgb");
   }
   if (typeof color === "number") {
     return new THREE.Color().setHex(color);
@@ -40,7 +40,7 @@ export const cubeVariants: Record<string, CubeType> = {
       thickness: 0.03,
       color: c(0x222222),
     },
-    scale: 0.90,
+    scale: 0.9,
   },
   dante_p: {
     faceColors: {
@@ -49,10 +49,10 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c(0xdddddd),
     },
     edge: {
-      thickness: 0.00,
+      thickness: 0.0,
       color: c(0x666666),
     },
-    scale: 0.90,
+    scale: 0.9,
     pattern: "A",
   },
   reda: {
@@ -62,7 +62,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(13, 100%, 68%)"),
     },
     edge: {
-      thickness: 0.00,
+      thickness: 0.0,
       color: c(0x888888),
     },
     scale: 1,
@@ -75,7 +75,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(0, 0%, 40%)"),
     },
     edge: {
-      thickness: 0.00,
+      thickness: 0.0,
       color: c(0x888888),
     },
     scale: 1,
@@ -88,7 +88,7 @@ export const cubeVariants: Record<string, CubeType> = {
       leftRight: c("hsl(13, 100%, 86%)"),
     },
     edge: {
-      thickness: 0.00,
+      thickness: 0.0,
       color: c(0x888888),
     },
     scale: 1,
@@ -98,7 +98,7 @@ export const cubeVariants: Record<string, CubeType> = {
 
 export const CFG = {
   background: {
-    color: 'hsl(14, 100%, 85%)',
+    color: "hsl(14, 100%, 85%)",
   },
   cubes: {
     active: "dante",
@@ -109,12 +109,13 @@ export const CFG = {
     lockedRows: [0xff0000, 0x00ff00, 0x0000ff],
     floor: 0xcc8822,
   },
-  cycleTime: 200,
+  cycleTime: 300,
   shapes: [],
   stage: {
     width: FLOOR_SIZE,
     depth: FLOOR_SIZE,
     height: 8,
+    limit: 4,
   },
   controls: {
     cameraRotateRight: "d",

@@ -5,57 +5,49 @@ import { Controls } from "./controls";
 import { CFG } from "./config";
 
 class Game {
-  blockCyclesCount: number;
+  lastBlockStepTime: number;
   stage: Stage;
   engine?: Engine;
   controls?: Controls;
   brick?: Brick;
 
   constructor() {
-    this.blockCyclesCount = 1;
     this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
     new Engine(this.stage, (engine: Engine) => {
       this.engine = engine;
       this.controls = new Controls(engine);
+      this.lastBlockStepTime = this.getClock();
       this.addBrick();
       this.go();
     });
   }
 
-  onCycleBlocks(callback: () => void) {
-    const t = Math.round(performance.now() / 100) * 100;
-    if (t % (CFG.cycleTime * this.blockCyclesCount) === 0) {
+  getClock() {
+    return Math.round(performance.now() / CFG.cycleTime);
+  }
+
+  onNextStep(callback: () => void) {
+    const t = this.getClock();
+    if (t > this.lastBlockStepTime) {
+      this.lastBlockStepTime = t;
       callback();
-      this.blockCyclesCount += 1;
     }
   }
 
   addBrick() {
-    if (this.stage.lastLockedY > 2) {
-      return;
-    }
     this.brick = new Brick(this.stage);
     this.controls.setBrick(this.brick);
   }
 
   go = () => {
-    if (this.stage.lastLockedY > 2) {
-      if (!this.pa) {
-        this.engine?.attachPhysics();
-        this.pa = true;
-      }
-      this.engine.world?.step(1 / 60);
-      this.engine.gophys()
-      this.controls.applyActions();
-      this.engine.render();
-      requestAnimationFrame(this.go);
-      return;
-    }
-    if (!this.brick || !this.engine || !this.controls) {
-      return;
+    if (this.stage.lastLockedY >= CFG.stage.limit) {
+      this.engine?.captureSceneWithPhysics();
     }
     this.controls.applyActions();
-    this.onCycleBlocks(() => {
+    this.onNextStep(() => {
+      if (this.engine.usePhysics) {
+        return;
+      }
       if (!this.engine.camera.cameraInMotion) {
         this.brick?.moveDown();
       }
@@ -64,7 +56,7 @@ class Game {
         this.addBrick();
       }
     });
-    this.engine.render();
+    this.engine.animate();
     requestAnimationFrame(this.go);
   };
 }
