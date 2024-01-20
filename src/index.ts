@@ -3,6 +3,7 @@ import { Brick } from "./brick";
 import { Engine } from "./three/engine";
 import { Controls } from "./controls";
 import { CFG } from "./config";
+import { appState } from "./state";
 
 class Game {
   lastBlockStepTime: number;
@@ -19,6 +20,9 @@ class Game {
       this.lastBlockStepTime = this.getClock();
       this.addBrick();
       this.go();
+      appState.subscribe((state) => {
+        location.hash = state.score;
+      });
     });
   }
 
