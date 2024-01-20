@@ -3,6 +3,7 @@ import { appState } from "../state";
 
 export class ScoreDisplay extends LitElement {
   score = 0;
+  bestScore = localStorage.getItem("bestScore") || 0;
 
   static get styles() {
     return css`
@@ -23,12 +24,20 @@ export class ScoreDisplay extends LitElement {
   constructor() {
     super();
     appState.subscribe((state) => {
+      if (state.score > this.bestScore) {
+        localStorage.setItem("bestScore", state.score);
+        this.bestScore = state.score;
+      }
       this.score = state.score;
       this.requestUpdate();
     });
   }
 
   render() {
-    return html` <div>Score: ${this.score}</div> `;
+    return html`
+      <div>Score: ${this.score}</div>
+      <br />
+      <div>Best score: ${this.bestScore}</div>
+    `;
   }
 }
