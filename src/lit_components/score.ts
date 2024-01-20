@@ -35,9 +35,22 @@ export class ScoreDisplay extends LitElement {
 
   render() {
     return html`
-      <div>Score: ${this.score}</div>
+      <div>Score: <strong>${this.score}</strong></div>
       <br />
-      <div>Best score: ${this.bestScore}</div>
+      <div>Best score: <strong>${this.bestScore}</strong></div>
+      <br />
+      <br />
+      <br />
+      <div><strong>CONTROLS:</strong></div>
+      <br />
+      <div>Move block: &uarr; &darr; &rarr; &larr; (or WSAD)</div>
+      <br />
+      <div>Rotate block: r</div>
+      <br />
+      <div>
+        Rotate camera: <strong>SHIFT + </strong>&uarr; &darr; &rarr; &larr;
+      </div>
+      <br />
     `;
   }
 }
