@@ -1,5 +1,5 @@
 import * as THREE from "three";
-const FLOOR_SIZE = 7;
+const FLOOR_SIZE = 6;
 
 export interface CubeType {
   faceColors: {

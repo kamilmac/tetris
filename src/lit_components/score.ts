@@ -23,14 +23,14 @@ export class ScoreDisplay extends LitElement {
 
   constructor() {
     super();
-    appState.subscribe((score) => {
+    appState.subscribe("score", (score) => {
       if (score > this.bestScore) {
-        localStorage.setItem("bestScore", score);
+        localStorage.setItem("bestScore", `${score}`);
         this.bestScore = score;
       }
       this.score = score;
       this.requestUpdate();
-    }, "score");
+    });
   }
 
   render() {
