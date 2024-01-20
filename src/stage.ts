@@ -24,10 +24,6 @@ export class Stage {
     this.toBeRemovedCubes = [];
     this.dirty = true;
     this.lastLockedY = 0;
-    appState.subscribe((state) => {
-      console.log("state changed");
-      window.state = state;
-    });
     this.init();
   }
 

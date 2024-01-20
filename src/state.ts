@@ -3,8 +3,8 @@ interface state {
 }
 
 interface sub {
-  prop: keyof state;
-  callback: (state: state[keyof state]) => void;
+  props: (keyof state)[];
+  callback: (state: state) => void;
 }
 
 class State {
@@ -18,10 +18,10 @@ class State {
     this.subs = [];
   }
 
-  subscribe(prop: sub["prop"], callback: sub["callback"]) {
+  subscribe(props: sub["props"], callback: sub["callback"]) {
     this.subs.push({
       callback,
-      prop,
+      props,
     });
   }
 
@@ -35,11 +35,11 @@ class State {
     this.onUpdate("score");
   }
 
-  onUpdate(prop: sub["prop"]) {
+  onUpdate(prop: keyof state) {
     for (let i = 0; i < this.subs.length; i += 1) {
       const s = this.subs[i];
-      if (s.prop === prop) {
-        s.callback(this.state[s.prop]);
+      if (s.props?.includes(prop)) {
+        s.callback(this.state);
       }
     }
   }

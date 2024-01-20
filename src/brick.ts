@@ -126,7 +126,6 @@ export class Brick {
     const collisions = this.isColliding(newPositions);
     if (collisions) {
       if (collisions.includes("wall")) {
-        console.log("WALL");
         const correctedPositions = this.correctToStageBounds(newPositions);
         const collisionsAfterCorrection = this.isColliding(correctedPositions);
         if (

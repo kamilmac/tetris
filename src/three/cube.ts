@@ -40,7 +40,6 @@ export class Cube {
     if (!this.variant?.edge) {
       return;
     }
-    console.log(this.variant.edge.thickness);
     this.mesh.material.uniforms.u_thickness.value = this.variant.edge.thickness;
   }
 
@@ -64,7 +63,9 @@ export class Cube {
   }
 
   setScale() {
-    if (this.destroying) { return; }
+    if (this.destroying) {
+      return;
+    }
     this.targetScale = new THREE.Vector3(
       this.variant?.scale || 1,
       this.variant?.scale || 1,
@@ -75,9 +76,7 @@ export class Cube {
 
   destroy() {
     this.destroying = true;
-    this.targetScale = new THREE.Vector3(
-      0,0,0,
-    );
+    this.targetScale = new THREE.Vector3(0, 0, 0);
   }
 
   animate = () => {
