@@ -51,7 +51,7 @@ export class ScoreDisplay extends LitElement {
         Rotate camera: <strong>SHIFT + </strong>&uarr; &darr; &rarr; &larr;
       </div>
       <br />
-      <div>Accelerate block: <strong>Space</strong>;</div>
+      <div>Accelerate block: <strong>Space</strong></div>
       <br />
       <div>Restart game: <strong>Enter</strong></div>
       <br />
