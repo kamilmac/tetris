@@ -1,4 +1,5 @@
 import { Brick } from "./brick";
+import { appState } from "./state";
 
 export class Controls {
   private actions: string[];
@@ -51,7 +52,8 @@ export class Controls {
           case "down":
             return "left";
         }
-      default: return action;
+      default:
+        return action;
     }
   }
 
@@ -106,6 +108,9 @@ export class Controls {
         case "p":
           window.paused = !window.paused;
           break;
+        case "Enter":
+          this.actions.push("restart");
+          break;
         default:
           break;
       }
@@ -119,7 +124,9 @@ export class Controls {
   }
 
   applyActions() {
-    if (!this.brick) { return; }
+    if (!this.brick) {
+      return;
+    }
     // HACK FOR CRASHING GAME WHILE MULTPLE ACTIONS ARE PRESSED
     this.actions = this.actions.slice(0, 1);
     this.actions.forEach((action) => {
@@ -147,6 +154,9 @@ export class Controls {
           break;
         case "camera_rotate_left":
           this.engine.camera.rotate("left");
+          break;
+        case "restart":
+          window.location.reload();
           break;
         default:
           break;

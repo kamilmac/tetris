@@ -45,11 +45,13 @@ export class ScoreDisplay extends LitElement {
       <br />
       <div>Move block: &uarr; &darr; &rarr; &larr; (or WSAD)</div>
       <br />
-      <div>Rotate block: r</div>
+      <div>Rotate block: <strong>r</strong></div>
       <br />
       <div>
         Rotate camera: <strong>SHIFT + </strong>&uarr; &darr; &rarr; &larr;
       </div>
+      <br />
+      <div>Restart game: <strong>Enter</strong></div>
       <br />
     `;
   }
