@@ -146,7 +146,7 @@ export class Stage {
 
     zLines.forEach((n, index) => {
       if (n) {
-        localScore += 1;
+        localScore += this.width;
         for (let z = 0; z < this.depth; z++) {
           this.setToBeRemovedCube(index, this.lastLockedY, z);
           for (let y = this.lastLockedY + 1; y < this.height; y++) {
@@ -160,7 +160,7 @@ export class Stage {
 
     xLines.forEach((n, index) => {
       if (n) {
-        localScore += 1;
+        localScore += this.depth;
         for (let x = 0; x < this.width; x++) {
           this.setToBeRemovedCube(x, this.lastLockedY, index);
           for (let y = this.lastLockedY + 1; y < this.height; y++) {
@@ -174,7 +174,7 @@ export class Stage {
 
     if (localScore > 0) {
       appState.addToScore(localScore);
-      CFG.cycleTime -= localScore * 10;
+      CFG.cycleTime -= CFG.accelerationFactor;
     }
 
     Object.keys(toBeMovedDown).forEach((key) => {

@@ -3,7 +3,9 @@ import { Brick } from "./brick";
 import { Engine } from "./three/engine";
 import { Controls } from "./controls";
 import { CFG } from "./config";
-import { appState } from "./state";
+import { ScoreDisplay } from "./lit_components/score";
+
+customElements.define("score-display", ScoreDisplay);
 
 class Game {
   lastBlockStepTime: number;
@@ -20,9 +22,6 @@ class Game {
       this.lastBlockStepTime = this.getClock();
       this.addBrick();
       this.go();
-      appState.subscribe((state) => {
-        location.hash = state.score;
-      });
     });
   }
 
