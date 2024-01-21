@@ -43,6 +43,13 @@ class Game {
     }
   }
 
+  resetTempo() {
+    if (this.fastForward) {
+      this.fastForward = false;
+      this.lastBlockStepTime = this.getClock();
+    }
+  }
+
   addBrick() {
     this.brick = new Brick(this.stage);
     this.controls.setBrick(this.brick);
@@ -59,10 +66,7 @@ class Game {
       }
       this.brick?.moveDown();
       if (this.brick?.locked) {
-        if (this.fastForward) {
-          this.fastForward = false;
-          this.lastBlockStepTime = this.getClock();
-        }
+        this.resetTempo();
         this.stage.checkForFilledLines();
         this.addBrick();
       }
