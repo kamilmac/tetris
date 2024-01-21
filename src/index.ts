@@ -13,12 +13,15 @@ class Game {
   engine?: Engine;
   controls?: Controls;
   brick?: Brick;
+  fastForward: boolean = false;
 
   constructor() {
     this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
     new Engine(this.stage, (engine: Engine) => {
       this.engine = engine;
-      this.controls = new Controls(engine);
+      this.controls = new Controls(engine, () => {
+        this.fastForward = true;
+      });
       this.lastBlockStepTime = this.getClock();
       this.addBrick();
       this.go();
@@ -26,7 +29,8 @@ class Game {
   }
 
   getClock() {
-    return Math.round(performance.now() / CFG.cycleTime);
+    const factor = this.fastForward ? 0.1 : 1;
+    return Math.round(performance.now() / (CFG.cycleTime * factor));
   }
 
   onNextStep(callback: () => void) {
@@ -54,8 +58,12 @@ class Game {
         return;
       }
       this.brick?.moveDown();
-      this.stage.checkForFilledLines();
       if (this.brick?.locked) {
+        if (this.fastForward) {
+          this.fastForward = false;
+          this.lastBlockStepTime = this.getClock();
+        }
+        this.stage.checkForFilledLines();
         this.addBrick();
       }
     });

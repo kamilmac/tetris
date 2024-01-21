@@ -6,10 +6,12 @@ export class Controls {
   private currentKeyUpHandler?: ((event: KeyboardEvent) => void) | null;
   activeCamera: number = 0;
   brick?: Brick;
+  onFastForward: () => void;
 
-  constructor(engine) {
+  constructor(engine, onFastForward) {
     this.brick = undefined;
     this.engine = engine;
+    this.onFastForward = onFastForward;
     this.addControls();
     this.actions = [];
     window.paused = false;
@@ -144,7 +146,7 @@ export class Controls {
           this.brick.move(0, 1);
           break;
         case "fall":
-          this.brick.moveDown();
+          this.onFastForward();
           break;
         case "rotate":
           this.brick.rotate();
