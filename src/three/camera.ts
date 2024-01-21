@@ -20,7 +20,7 @@ export class Camera {
     this.floorCenterX = this.stage.width / 2 - 0.5;
     this.cameraPositions = [
       {
-        x: this.floorCenterX + this.stage.width -5,
+        x: this.floorCenterX + this.stage.width - 5,
         z: this.floorCenterZ + this.stage.depth,
       },
       {
@@ -33,10 +33,10 @@ export class Camera {
       },
       {
         x: this.floorCenterX - this.stage.width,
-        z: this.floorCenterZ + this.stage.depth -5,
+        z: this.floorCenterZ + this.stage.depth - 5,
       },
     ];
-    // const frustumSize = 12; 
+    // const frustumSize = 12;
     // const aspect = window.innerWidth / window.innerHeight;
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -49,13 +49,13 @@ export class Camera {
     //   1,
     //   1000,
     // );
-    this.camera.zoom = 3.10;
+    this.camera.zoom = 3.1;
     this.setPosition(
-      this.floorCenterX + this.stage.width -5,
+      this.floorCenterX + this.stage.width - 5,
       this.stage.width * 2,
       this.floorCenterZ + this.stage.depth,
     );
-    
+
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
@@ -75,7 +75,9 @@ export class Camera {
   lerp() {
     if (this.targetPosition) {
       this.camera.position.lerp(this.targetPosition, 0.08);
-      const cameraDistanceToTarget = this.camera.position.distanceTo(this.targetPosition);
+      const cameraDistanceToTarget = this.camera.position.distanceTo(
+        this.targetPosition,
+      );
       if (cameraDistanceToTarget < 0.16) {
         this.cameraInMotion = false;
       }
@@ -107,9 +109,9 @@ export class Camera {
       this.cameraPositions[this.activeCamera].x,
       this.camera.position.y,
       this.cameraPositions[this.activeCamera].z,
-    )
-  }
-  
+    );
+  };
+
   animate() {
     this.lerp();
     this.camera.lookAt(
