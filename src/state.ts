@@ -45,4 +45,5 @@ class State {
   }
 }
 
+console.log(`App version: ${APP_VERSION}`);
 export const appState = new State();
