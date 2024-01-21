@@ -1,6 +1,7 @@
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Stage } from "../stage";
 import * as THREE from "three";
+import { CFG } from "../config";
 
 export class Camera {
   camera: THREE.OrthographicCamera;
@@ -13,6 +14,7 @@ export class Camera {
   targetPosition: THREE.Vector3 | null = null;
 
   constructor(stage: Stage, renderer: THREE.WebGLRenderer) {
+    this.lastRotationTime = 0;
     this.activeCamera = 0;
     this.stage = stage;
     this.renderer = renderer;
@@ -78,20 +80,26 @@ export class Camera {
       const cameraDistanceToTarget = this.camera.position.distanceTo(
         this.targetPosition,
       );
-      if (cameraDistanceToTarget < 0.16) {
-        this.cameraInMotion = false;
-      }
       if (cameraDistanceToTarget < 0.005) {
         this.camera.position.set(
           this.targetPosition.x,
           this.targetPosition.y,
           this.targetPosition.z,
         );
+        this.targetPosition = null;
       }
     }
   }
 
+  doWobble() {
+    const p = performance.now() / 2000;
+    this.camera.position.x += Math.sin(p) / 20;
+    this.camera.position.y += Math.cos(p) / 30;
+    this.camera.position.z += Math.cos(p) / 30;
+  }
+
   rotate = (dir: "right" | "left") => {
+    this.lastRotationTime = performance.now();
     this.cameraInMotion = true;
     if (dir === "right") {
       this.activeCamera += 1;
@@ -113,7 +121,14 @@ export class Camera {
   };
 
   animate() {
+    this.doWobble();
     this.lerp();
+    if (
+      this.cameraInMotion &&
+      performance.now() - this.lastRotationTime > 400
+    ) {
+      this.cameraInMotion = false;
+    }
     this.camera.lookAt(
       new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
     );

@@ -33,7 +33,9 @@ class Game {
     const t = this.getClock();
     if (t > this.lastBlockStepTime) {
       this.lastBlockStepTime = t;
-      callback();
+      if (!this.engine.camera.cameraInMotion) {
+        callback();
+      }
     }
   }
 
@@ -51,9 +53,7 @@ class Game {
       if (this.engine.usePhysics) {
         return;
       }
-      if (!this.engine.camera.cameraInMotion) {
-        this.brick?.moveDown();
-      }
+      this.brick?.moveDown();
       this.stage.checkForFilledLines();
       if (this.brick?.locked) {
         this.addBrick();
