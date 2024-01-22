@@ -8,6 +8,7 @@ import { CFG } from "../config";
 import { Floor } from "./floor";
 import { Camera } from "./camera";
 import { Physics } from "../physics";
+import { Walls } from "./walls";
 
 export class Engine {
   private stage: Stage;
@@ -69,6 +70,7 @@ export class Engine {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.camera = new Camera(this.stage, this.renderer);
     this.floor = new Floor(this.stage.width, this.stage.depth, this.scene);
+    this.walls = new Walls(this.scene, this.camera);
     this.physics = new Physics();
   }
 
@@ -173,6 +175,7 @@ export class Engine {
       return;
     }
     if (!this.usePhysics) {
+      this.walls.animate();
       if (this.stage.dirty) {
         this.applyStage();
         this.renderShadows();
