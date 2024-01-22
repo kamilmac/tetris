@@ -8,7 +8,6 @@ import { CFG } from "../config";
 import { Floor } from "./floor";
 import { Camera } from "./camera";
 import { Physics } from "../physics";
-import { BG } from "./background";
 
 export class Engine {
   private stage: Stage;
@@ -71,7 +70,6 @@ export class Engine {
     this.camera = new Camera(this.stage, this.renderer);
     this.floor = new Floor(this.stage.width, this.stage.depth, this.scene);
     this.physics = new Physics();
-    this.bg = new BG(this.scene, this.camera.camera);
   }
 
   handleCube(cube: Cube, x: number, y: number, z: number) {
@@ -183,7 +181,6 @@ export class Engine {
       for (let [_, box] of this.boxes) {
         box?.animate();
       }
-      this.bg.animate();
     } else {
       this.physics.animate();
     }

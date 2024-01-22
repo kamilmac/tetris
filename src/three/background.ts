@@ -35,8 +35,9 @@ export class BG {
 const material = new THREE.ShaderMaterial({
   uniforms: {
     u_texture: { value: texture },
-    u_mosaicSize: { value: 64.0 },
-    u_rotation: { value: 0 },
+    u_mosaicSize: { value: 100.0 },
+    u_rotation: { value: 0.3 },
+    u_scale: { value: 1.8 },
   },
   vertexShader: `
     varying vec2 vUv;
@@ -50,22 +51,33 @@ const material = new THREE.ShaderMaterial({
     uniform sampler2D u_texture;
     uniform float u_mosaicSize;
     uniform float u_rotation;
+    uniform float u_scale;
     varying vec2 vUv;
 
     void main() {
-      vec2 mosaicRegion = vec2(0.1, 0.1);
+      // Calculate size of the mosaic tile in UV space
+      vec2 mosaicSize = vec2(1.0 / u_mosaicSize);
 
-      // Calculate the rotation matrix
+      // Apply rotation
       float cosRot = cos(u_rotation);
       float sinRot = sin(u_rotation);
       mat2 rotMat = mat2(cosRot, -sinRot, sinRot, cosRot);
-    
-      vec2 mozaicCords = mod(vUv, mosaicRegion);
 
-      mozaicCords = rotMat * (mozaicCords - 0.1) + 0.1;
+      // Scale and rotate coordinates
+      vec2 uv = vUv * u_scale;
+      vec2 rotatedUv = rotMat * (uv - 0.5) + 0.5;
 
-      vec4 tex = texture2D(u_texture, mozaicCords);
-      gl_FragColor = tex;
+      // Snap coordinates to the nearest tile by flooring
+      vec2 snappedUv = floor(rotatedUv / mosaicSize) * mosaicSize;
+
+      // Find the center of each tile
+      vec2 centerUv = snappedUv + mosaicSize * 0.5;
+
+      // Sample the texture at the center point of each tile
+      vec4 texColor = texture2D(u_texture, centerUv);
+
+      // Set the fragment color
+      gl_FragColor = texColor;
     }
   `,
   transparent: true,
