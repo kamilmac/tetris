@@ -8,12 +8,13 @@ export class Floor {
   material: THREE.ShaderMaterial;
   constructor(width: number, depth: number, scene: Scene) {
     const height = 0.1;
-    this.geometry = new THREE.BoxGeometry(width, height, depth);
+    this.geometry = new THREE.PlaneGeometry(width, depth);
     this.material = floorMaterial();
     const mesh = new THREE.Mesh(this.geometry, this.material);
     mesh.position.x = width / 2 - 0.5;
     mesh.position.y = -height - 0.5;
     mesh.position.z = depth / 2 - 0.5;
+    mesh.rotation.x = -Math.PI / 2;
     scene?.add(mesh);
   }
 }
@@ -27,8 +28,10 @@ export const floorMaterial = () =>
     },
     vertexShader: `
       varying vec3 vPosition;
+      varying vec2 vUv;
 
       void main() {
+        vUv = uv;
         vPosition = position;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
@@ -37,21 +40,40 @@ export const floorMaterial = () =>
       uniform float gridSpacing;
       uniform float lineWidth;
       uniform vec3 color;
+      varying vec2 vUv;
       varying vec3 vPosition;
 
       void main() {
-        // Calculate the fraction part of the current position divided by gridSpacing
-        vec3 grid = abs(fract(vPosition.xyz / gridSpacing - 0.5) - 0.5) / lineWidth;
-        // Determine the minimum distance to the closest edge in X and Z
-        float minDist = min(grid.x, grid.z);
-        // Draw grid lines by checking if we are close to an edge
-        float edgeFactor = min(minDist, 1.0);
+        float grid = 6.0;
+        float thickness = 0.04;
+    
+        float t = 1.0 - thickness;
+        float bx = (1.0 - t) / grid;
+    
+        // float xx = 1.0 - vUv.x;
+        // xx = smoothstep(1.0 - bx, 1.0 - bx, xx);
 
-        if(edgeFactor == 1.0) {
-          discard; // Discard grid lines fragment
-        }
+        // float yy = 1.0 - vUv.y;
+        // float by = (1.0 - t) / grid;
+        // yy = smoothstep(1.0 - by, 1.0 - by, yy);
 
-        gl_FragColor = vec4(0.0, 0.0, 0.0, edgeFactor); // White for grid lines, black elsewhere
+        // float xxx = vUv.x;
+        // xxx = smoothstep(1.0 - bx, 1.0 - bx, xxx);
+
+        // float yyy = vUv.y;
+        // yyy = smoothstep(1.0 - by, 1.0 - by, yyy);
+
+        float x = vUv.x - bx;
+        x = fract(x * grid);
+        x = smoothstep(t, t, x);
+    
+        float y = vUv.y - bx;
+        y = fract(y * grid);
+        y = smoothstep(t, t, y);
+        if (x + y < 0.01) {
+          discard;
+        }    
+        gl_FragColor = vec4(x + y, 0, 0, 1);
       }
     `,
     transparent: true,

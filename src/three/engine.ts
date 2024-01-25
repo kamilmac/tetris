@@ -175,17 +175,17 @@ export class Engine {
       return;
     }
     if (!this.usePhysics) {
-      this.walls.animate();
       if (this.stage.dirty) {
         this.applyStage();
         this.renderShadows();
         this.stage.dirty = false;
       }
-      for (let [_, box] of this.boxes) {
-        box?.animate();
-      }
     } else {
       this.physics.animate();
+    }
+    this.walls.animate();
+    for (let [_, box] of this.boxes) {
+      box?.animate();
     }
     this.renderer.render(this.scene, this.camera.animate());
   }
