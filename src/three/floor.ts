@@ -9,7 +9,7 @@ export class Floor {
   constructor(width: number, depth: number, scene: Scene) {
     const height = 0.1;
     this.geometry = new THREE.PlaneGeometry(width, depth);
-    this.material = floorMaterial();
+    this.material = floorMaterial.clone();
     const mesh = new THREE.Mesh(this.geometry, this.material);
     mesh.position.x = width / 2 - 0.5;
     mesh.position.y = -height - 0.5;
@@ -19,14 +19,17 @@ export class Floor {
   }
 }
 
-export const floorMaterial = () =>
-  new THREE.ShaderMaterial({
-    uniforms: {
-      gridSpacing: { value: 1.0 },
-      lineWidth: { value: 0.05 },
-      color: { value: new THREE.Color().setHex(CFG.colors.floor) },
-    },
-    vertexShader: `
+export const floorMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    gridH: { value: 6.0 },
+    gridW: { value: 6.0 },
+    gridSpacing: { value: 1.0 },
+    lineWidth: { value: 0.05 },
+    color: { value: new THREE.Color().setHex(CFG.colors.floor) },
+  },
+  vertexShader: `
+      uniform float gridH;
+      uniform float gridW;
       varying vec3 vPosition;
       varying vec2 vUv;
 
@@ -36,19 +39,21 @@ export const floorMaterial = () =>
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
     `,
-    fragmentShader: `
-      uniform float gridSpacing;
-      uniform float lineWidth;
+  fragmentShader: `
+      uniform float gridH;
+      uniform float gridW;
       uniform vec3 color;
       varying vec2 vUv;
       varying vec3 vPosition;
 
       void main() {
+        float gh = gridH;
+        float gw = gridW;
         float grid = 6.0;
         float thickness = 0.04;
     
         float t = 1.0 - thickness;
-        float bx = (1.0 - t) / grid;
+        float bx = (1.0 - t) / gridH;
     
         // float xx = 1.0 - vUv.x;
         // xx = smoothstep(1.0 - bx, 1.0 - bx, xx);
@@ -64,17 +69,18 @@ export const floorMaterial = () =>
         // yyy = smoothstep(1.0 - by, 1.0 - by, yyy);
 
         float x = vUv.x - bx;
-        x = fract(x * grid);
+        x = fract(x * gw);
         x = smoothstep(t, t, x);
     
         float y = vUv.y - bx;
-        y = fract(y * grid);
+        y = fract(y * gh);
         y = smoothstep(t, t, y);
+
         if (x + y < 0.01) {
           discard;
         }    
         gl_FragColor = vec4(x + y, 0, 0, 1);
       }
     `,
-    transparent: true,
-  });
+  transparent: true,
+});
