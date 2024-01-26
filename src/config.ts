@@ -98,7 +98,10 @@ export const cubeVariants: Record<string, CubeType> = {
 
 export const CFG = {
   background: {
-    color: "hsl(14, 100%, 85%)",
+    color: "hsl(0, 0%,10%)",
+  },
+  enclosue: {
+    color: c("hsl(0, 0%, 14%)"),
   },
   cubes: {
     active: "dante",

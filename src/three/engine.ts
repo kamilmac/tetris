@@ -69,9 +69,17 @@ export class Engine {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.camera = new Camera(this.stage, this.renderer);
-    this.floor = new Floor(this.stage.width, this.stage.depth, this.scene);
-    this.walls = new Walls(this.scene, this.camera);
+    this.floor = new Floor(
+      CFG.stage.width,
+      CFG.stage.depth,
+      CFG.stage.limit,
+      this.scene,
+      this.camera,
+    );
+    // this.walls = new Walls(this.floor, this.camera);
     this.physics = new Physics();
+    // new THREE.ArrowHelper();
+    // this.scene.add(new THREE.AxesHelper(5));
   }
 
   handleCube(cube: Cube, x: number, y: number, z: number) {
@@ -183,7 +191,7 @@ export class Engine {
     } else {
       this.physics.animate();
     }
-    this.walls.animate();
+    this.floor.animate();
     for (let [_, box] of this.boxes) {
       box?.animate();
     }

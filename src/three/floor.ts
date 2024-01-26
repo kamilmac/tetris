@@ -1,86 +1,110 @@
 import * as THREE from "three";
 import { Scene } from "three";
 import { CFG } from "../config";
-import { Stage } from "../stage";
+import { Camera } from "./camera";
 
 export class Floor {
-  geometry: THREE.BoxGeometry;
-  material: THREE.ShaderMaterial;
-  constructor(width: number, depth: number, scene: Scene) {
-    const height = 0.1;
-    this.geometry = new THREE.PlaneGeometry(width, depth);
-    this.material = floorMaterial.clone();
-    const mesh = new THREE.Mesh(this.geometry, this.material);
-    mesh.position.x = width / 2 - 0.5;
-    mesh.position.y = -height - 0.5;
-    mesh.position.z = depth / 2 - 0.5;
-    mesh.rotation.x = -Math.PI / 2;
-    scene?.add(mesh);
+  camera: Camera;
+  // geometry: THREE.BoxGeometry;
+  // material: THREE.ShaderMaterial;
+  constructor(
+    width: number,
+    depth: number,
+    height: number,
+    scene: Scene,
+    camera: Camera,
+  ) {
+    this.camera = camera;
+
+    this.floor = this.renderPlaneGrid(width, depth);
+    this.wallL = this.renderPlaneGrid(width, height);
+    this.wallB = this.renderPlaneGrid(width, height);
+    this.wallR = this.renderPlaneGrid(width, height);
+    this.wallF = this.renderPlaneGrid(width, height);
+
+    this.floor.position.y -= 0.5;
+    scene?.add(this.floor);
+
+    this.wallL.rotation.z = Math.PI / 2;
+    this.wallL.rotation.x = Math.PI / 2;
+    this.wallL.position.y += width / 2;
+    this.wallL.position.x -= 0.5;
+    scene?.add(this.wallL);
+
+    this.wallB.rotation.x = Math.PI / 2;
+    this.wallB.position.y += width / 2;
+    this.wallB.position.z -= 0.5;
+    scene?.add(this.wallB);
+
+    this.wallR.rotation.z = Math.PI / 2;
+    this.wallR.rotation.x = Math.PI / 2;
+    this.wallR.position.y += width / 2;
+    this.wallR.position.x += width - 0.5;
+    scene?.add(this.wallR);
+
+    this.wallF.rotation.x = Math.PI / 2;
+    this.wallF.position.y += width / 2;
+    this.wallF.position.z += width - 0.5;
+    scene?.add(this.wallF);
+  }
+
+  animate() {
+    switch (this.camera.activeCamera) {
+      case 0:
+        this.wallL.visible = true;
+        this.wallB.visible = true;
+        this.wallR.visible = false;
+        this.wallF.visible = false;
+        break;
+      case 1:
+        this.wallL.visible = true;
+        this.wallB.visible = false;
+        this.wallR.visible = false;
+        this.wallF.visible = true;
+        break;
+      case 2:
+        this.wallL.visible = false;
+        this.wallB.visible = false;
+        this.wallR.visible = true;
+        this.wallF.visible = true;
+        break;
+      case 3:
+        this.wallL.visible = false;
+        this.wallB.visible = true;
+        this.wallR.visible = true;
+        this.wallF.visible = false;
+        break;
+      default:
+        break;
+    }
+  }
+
+  renderPlaneGrid(w, h) {
+    const group = new THREE.Group();
+    for (let x = 0; x < w; x += 1) {
+      for (let z = 0; z < h; z += 1) {
+        const p = this.renderPlane();
+        p.position.x = x;
+        p.position.z = z;
+        group.add(p);
+      }
+    }
+    return group;
+  }
+
+  renderPlane() {
+    const scale = 0.95;
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const line = new THREE.Mesh(
+      geometry,
+      new THREE.MeshBasicMaterial({
+        color: CFG.enclosue.color,
+      }),
+    );
+    line.material.side = THREE.DoubleSide;
+    line.material.depthTest = false;
+    line.scale.set(scale, scale, scale);
+    line.rotation.x = Math.PI / 2;
+    return line;
   }
 }
-
-export const floorMaterial = new THREE.ShaderMaterial({
-  uniforms: {
-    gridH: { value: 6.0 },
-    gridW: { value: 6.0 },
-    gridSpacing: { value: 1.0 },
-    lineWidth: { value: 0.05 },
-    color: { value: new THREE.Color().setHex(CFG.colors.floor) },
-  },
-  vertexShader: `
-      uniform float gridH;
-      uniform float gridW;
-      varying vec3 vPosition;
-      varying vec2 vUv;
-
-      void main() {
-        vUv = uv;
-        vPosition = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-  fragmentShader: `
-      uniform float gridH;
-      uniform float gridW;
-      uniform vec3 color;
-      varying vec2 vUv;
-      varying vec3 vPosition;
-
-      void main() {
-        float gh = gridH;
-        float gw = gridW;
-        float grid = 6.0;
-        float thickness = 0.04;
-    
-        float t = 1.0 - thickness;
-        float bx = (1.0 - t) / gridH;
-    
-        // float xx = 1.0 - vUv.x;
-        // xx = smoothstep(1.0 - bx, 1.0 - bx, xx);
-
-        // float yy = 1.0 - vUv.y;
-        // float by = (1.0 - t) / grid;
-        // yy = smoothstep(1.0 - by, 1.0 - by, yy);
-
-        // float xxx = vUv.x;
-        // xxx = smoothstep(1.0 - bx, 1.0 - bx, xxx);
-
-        // float yyy = vUv.y;
-        // yyy = smoothstep(1.0 - by, 1.0 - by, yyy);
-
-        float x = vUv.x - bx;
-        x = fract(x * gw);
-        x = smoothstep(t, t, x);
-    
-        float y = vUv.y - bx;
-        y = fract(y * gh);
-        y = smoothstep(t, t, y);
-
-        if (x + y < 0.01) {
-          discard;
-        }    
-        gl_FragColor = vec4(x + y, 0, 0, 1);
-      }
-    `,
-  transparent: true,
-});
