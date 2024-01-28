@@ -5,6 +5,7 @@ import { Camera } from "./camera";
 
 export class Floor {
   camera: Camera;
+  hideWalls: boolean = false;
   // geometry: THREE.BoxGeometry;
   // material: THREE.ShaderMaterial;
   constructor(
@@ -48,7 +49,18 @@ export class Floor {
     scene?.add(this.wallF);
   }
 
+  hideWalls() {
+    this.hideWalls = true;
+  }
+
   animate() {
+    if (this.hideWalls) {
+      this.wallL.visible = false;
+      this.wallB.visible = false;
+      this.wallR.visible = false;
+      this.wallF.visible = false;
+      return;
+    }
     switch (this.camera.activeCamera) {
       case 0:
         this.wallL.visible = true;

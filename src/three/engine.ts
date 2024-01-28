@@ -190,6 +190,7 @@ export class Engine {
       }
     } else {
       this.physics.animate();
+      this.floor.hideWalls = true;
     }
     this.floor.animate();
     for (let [_, box] of this.boxes) {
