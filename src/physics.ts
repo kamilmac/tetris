@@ -52,7 +52,5 @@ export class Physics {
       box.mesh.position.copy(box._body.position);
       box.mesh.quaternion.copy(box._body.quaternion);
     }
-    // const cameraPointer = this.camera.animate();
-    // this.renderer.render(this.scene, cameraPointer);
   }
 }

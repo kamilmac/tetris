@@ -37,25 +37,6 @@ export class Engine {
     this.usePhysics = false;
     this.setup();
     onReady(this);
-    // new OBJLoader().load(
-    //   cubeObj,
-    //   (obj: any) => {
-    //     obj.traverse((child: any) => {
-    //       if (child.isMesh) {
-    //         this.cubeObj = child.geometry; // Extract the geometry from each mesh
-    //       }
-    //     });
-    //     console.log(this.cubeObj);
-    //     this.setup();
-    //     onReady(this);
-    //   },
-    //   (xhr: any) => {
-    //     console.log(xhr?.loaded);
-    //   },
-    //   (error: any) => {
-    //     console.log("error", error);
-    //   },
-    // );
   }
 
   setup() {
@@ -76,10 +57,7 @@ export class Engine {
       this.scene,
       this.camera,
     );
-    // this.walls = new Walls(this.floor, this.camera);
     this.physics = new Physics();
-    // new THREE.ArrowHelper();
-    // this.scene.add(new THREE.AxesHelper(5));
   }
 
   handleCube(cube: Cube, x: number, y: number, z: number) {

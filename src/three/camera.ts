@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { CFG } from "../config";
 
 export class Camera {
-  camera: THREE.OrthographicCamera;
+  camera: THREE.PerspectiveCamera;
   stage: Stage;
   floorCenterX: number = 0;
   floorCenterZ: number = 0;
@@ -12,6 +12,7 @@ export class Camera {
   controls: OrbitControls;
   renderer: THREE.WebGLRenderer;
   targetPosition: THREE.Vector3 | null = null;
+  cameraInMotion: boolean = false;
 
   constructor(stage: Stage, renderer: THREE.WebGLRenderer) {
     this.lastRotationTime = 0;
@@ -52,17 +53,20 @@ export class Camera {
     //   1000,
     // );
     this.camera.zoom = 3.1;
-    this.setPosition(
-      this.floorCenterX + this.stage.width - 5,
-      this.stage.width * 2,
-      this.floorCenterZ + this.stage.depth,
-    );
-
+    this.initPosition();
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
     this.controls.update();
     return this;
+  }
+
+  initPosition() {
+    this.setPosition(
+      this.floorCenterX + this.stage.width - 5,
+      this.stage.width * 2,
+      this.floorCenterZ + this.stage.depth,
+    );
   }
 
   setPosition(x: number, y: number, z: number) {

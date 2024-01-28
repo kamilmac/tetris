@@ -25,7 +25,7 @@ export class Cube {
   }
 
   setColor() {
-    if (!this.variant) {
+    if (!this.variant || !this.mesh) {
       return;
     }
     this.mesh.material.uniforms.u_color_top_bottom.value =
@@ -37,7 +37,7 @@ export class Cube {
   }
 
   setThickness() {
-    if (!this.variant?.edge) {
+    if (!this.variant?.edge || !this.mesh) {
       return;
     }
     this.mesh.material.uniforms.u_thickness.value = this.variant.edge.thickness;

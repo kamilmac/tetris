@@ -1,5 +1,6 @@
 interface state {
   score: number;
+  inMenu: boolean;
 }
 
 interface sub {
@@ -14,6 +15,7 @@ class State {
   constructor() {
     this.state = {
       score: 0,
+      inMenu: true,
     };
     this.subs = [];
   }
@@ -23,6 +25,7 @@ class State {
       callback,
       props,
     });
+    callback(this.state);
   }
 
   addToScore(amount: number) {
@@ -33,6 +36,11 @@ class State {
   resetScore() {
     this.state.score = 0;
     this.onUpdate("score");
+  }
+
+  changeGameState(gameState: state["gameState"]) {
+    this.state.gameState = gameState;
+    this.onUpdate("gameState");
   }
 
   onUpdate(prop: keyof state) {

@@ -1,20 +1,60 @@
+import { Game } from ".";
 import { Brick } from "./brick";
 import { appState } from "./state";
+import { Engine } from "./three/engine";
+
+const RANDOM_ACTIONS = [
+  "left",
+  "right",
+  "up",
+  "down",
+  "left",
+  "right",
+  "up",
+  "down",
+  "fall",
+  "fall",
+  "rotate",
+  "rotate",
+  "rotate",
+  "rotate",
+  "camera_rotate_right",
+  "camera_rotate_left",
+];
 
 export class Controls {
-  private actions: string[];
+  actions: string[];
   private currentKeyUpHandler?: ((event: KeyboardEvent) => void) | null;
   activeCamera: number = 0;
   brick?: Brick;
   onFastForward: () => void;
+  autoPlay: boolean = false;
+  engine: Engine;
+  game: Game;
 
-  constructor(engine, onFastForward) {
+  constructor(game, engine, onFastForward) {
     this.brick = undefined;
+    this.game = game;
     this.engine = engine;
     this.onFastForward = onFastForward;
     this.addControls();
     this.actions = [];
-    window.paused = false;
+    appState.subscribe(["inMenu"], (state) => {
+      if (state.inMenu) {
+        // this.autoPlay = true;
+      } else {
+        this.autoPlay = false;
+      }
+    });
+  }
+
+  prependRandomAction() {
+    const probablityPerFrame = 0.02;
+    if (Math.random() < probablityPerFrame) {
+      const randomAction =
+        RANDOM_ACTIONS[Math.floor(Math.random() * RANDOM_ACTIONS.length)];
+      this.actions.unshift(randomAction);
+    }
   }
 
   cameraCorrection(action: string) {
@@ -107,9 +147,6 @@ export class Controls {
         case " ":
           this.actions.push("fall");
           break;
-        case "p":
-          window.paused = !window.paused;
-          break;
         case "Enter":
           this.actions.push("restart");
           break;
@@ -129,41 +166,45 @@ export class Controls {
     if (!this.brick) {
       return;
     }
-    // HACK FOR CRASHING GAME WHILE MULTPLE ACTIONS ARE PRESSED
-    this.actions = this.actions.slice(0, 1);
-    this.actions.forEach((action) => {
-      switch (action) {
-        case "left":
-          this.brick.move(-1, 0);
-          break;
-        case "right":
-          this.brick.move(1, 0);
-          break;
-        case "up":
-          this.brick.move(0, -1);
-          break;
-        case "down":
-          this.brick.move(0, 1);
-          break;
-        case "fall":
-          this.onFastForward();
-          break;
-        case "rotate":
-          this.brick.rotate();
-          break;
-        case "camera_rotate_right":
-          this.engine.camera.rotate("right");
-          break;
-        case "camera_rotate_left":
-          this.engine.camera.rotate("left");
-          break;
-        case "restart":
-          window.location.reload();
-          break;
-        default:
-          break;
-      }
-    });
+    if (this.autoPlay) {
+      this.prependRandomAction();
+    }
+    if (!this.actions.length) {
+      return;
+    }
+    const action = this.actions.pop();
+    // pop action from the bottom and remove from original array
+    switch (action) {
+      case "left":
+        this.brick.move(-1, 0);
+        break;
+      case "right":
+        this.brick.move(1, 0);
+        break;
+      case "up":
+        this.brick.move(0, -1);
+        break;
+      case "down":
+        this.brick.move(0, 1);
+        break;
+      case "fall":
+        this.onFastForward();
+        break;
+      case "rotate":
+        this.brick.rotate();
+        break;
+      case "camera_rotate_right":
+        this.engine?.camera?.rotate("right");
+        break;
+      case "camera_rotate_left":
+        this.engine?.camera?.rotate("left");
+        break;
+      case "restart":
+        this.game.resetGame();
+        break;
+      default:
+        break;
+    }
     this.actions = [];
   }
 }

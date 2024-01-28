@@ -4,28 +4,42 @@ import { Engine } from "./three/engine";
 import { Controls } from "./controls";
 import { CFG } from "./config";
 import { ScoreDisplay } from "./lit_components/score";
+import { appState } from "./state";
 
 customElements.define("score-display", ScoreDisplay);
 
 class Game {
-  lastBlockStepTime: number;
   stage: Stage;
+  lastBlockStepTime?: number;
   engine?: Engine;
   controls?: Controls;
   brick?: Brick;
   fastForward: boolean = false;
 
   constructor() {
+    appState.changeGameState("inMenu");
     this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
     new Engine(this.stage, (engine: Engine) => {
       this.engine = engine;
-      this.controls = new Controls(engine, () => {
+      this.controls = new Controls(this, engine, () => {
         this.fastForward = true;
       });
       this.lastBlockStepTime = this.getClock();
       this.addBrick();
       this.go();
     });
+  }
+
+  resetGame() {
+    this.engine.usePhysics = false;
+    this.controls.actions = [];
+    this.engine.camera.activeCamera = 0;
+    this.engine.floor.hideWalls = false;
+    appState.resetScore();
+    this.resetTempo();
+    this.addBrick();
+    this.stage.init();
+    this.engine.camera.initPosition();
   }
 
   getClock() {
@@ -35,9 +49,10 @@ class Game {
 
   onNextStep(callback: () => void) {
     const t = this.getClock();
+    // @ts-ignore
     if (t > this.lastBlockStepTime) {
       this.lastBlockStepTime = t;
-      if (!this.engine.camera.cameraInMotion) {
+      if (!this.engine?.camera?.cameraInMotion) {
         callback();
       }
     }
@@ -52,7 +67,7 @@ class Game {
 
   addBrick() {
     this.brick = new Brick(this.stage);
-    this.controls.setBrick(this.brick);
+    this.controls?.setBrick(this.brick);
   }
 
   go = () => {
