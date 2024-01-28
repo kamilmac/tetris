@@ -58,6 +58,15 @@ export class Engine {
       this.camera,
     );
     this.physics = new Physics();
+    window.addEventListener(
+      "resize",
+      () => {
+        this.camera.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+      },
+      false,
+    );
   }
 
   handleCube(cube: Cube, x: number, y: number, z: number) {
