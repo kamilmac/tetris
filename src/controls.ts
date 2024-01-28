@@ -28,7 +28,7 @@ export class Controls {
   activeCamera: number = 0;
   brick?: Brick;
   onFastForward: () => void;
-  autoPlay: boolean = false;
+  autoPlay: boolean = appState.state.autoplay;
   engine: Engine;
   onResetGame: Game;
 

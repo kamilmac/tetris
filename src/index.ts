@@ -17,7 +17,6 @@ class Game {
   fastForward: boolean = false;
 
   constructor() {
-    // appState.changeGameState("inMenu");
     this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
     new Engine(this.stage, (engine: Engine) => {
       this.engine = engine;
@@ -27,6 +26,7 @@ class Game {
       this.lastBlockStepTime = this.getClock();
       this.addBrick();
       this.go();
+      // this.engine.camera.shiftSceneToRight();
       appState.subscribe(["gameState"], (state) => {
         if (state.gameState === "playing") {
           this.onResetGame();

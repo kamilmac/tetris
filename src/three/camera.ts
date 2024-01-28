@@ -69,6 +69,16 @@ export class Camera {
     );
   }
 
+  // shiftSceneToRight() {
+  //   if (!this.camera) {
+  //     return;
+  //   }
+  //   const w = window.innerWidth;
+  //   const h = window.innerHeight;
+
+  //   this.camera.setViewOffset(w, h, -0.1 * w, h * 0, w, h);
+  // }
+
   setPosition(x: number, y: number, z: number) {
     if (!this.targetPosition) {
       this.camera.position.x = x;

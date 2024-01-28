@@ -29,7 +29,6 @@ class State {
       callback,
       props,
     });
-    callback(this.state);
   }
 
   addToScore(amount: number) {
