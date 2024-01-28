@@ -17,30 +17,34 @@ class Game {
   fastForward: boolean = false;
 
   constructor() {
-    appState.changeGameState("inMenu");
+    // appState.changeGameState("inMenu");
     this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
     new Engine(this.stage, (engine: Engine) => {
       this.engine = engine;
-      this.controls = new Controls(this, engine, () => {
+      this.controls = new Controls(this.onResetGame, engine, () => {
         this.fastForward = true;
       });
       this.lastBlockStepTime = this.getClock();
       this.addBrick();
       this.go();
+      appState.subscribe(["gameState"], (state) => {
+        if (state.gameState === "playing") {
+          this.onResetGame();
+        }
+      });
     });
   }
 
-  resetGame() {
+  onResetGame = () => {
     this.engine.usePhysics = false;
     this.controls.actions = [];
     this.engine.camera.activeCamera = 0;
     this.engine.floor.hideWalls = false;
-    appState.resetScore();
     this.resetTempo();
     this.addBrick();
     this.stage.init();
     this.engine.camera.initPosition();
-  }
+  };
 
   getClock() {
     const factor = this.fastForward ? 0.1 : 1;
@@ -73,6 +77,7 @@ class Game {
   go = () => {
     if (this.stage.lastLockedY >= CFG.stage.limit) {
       this.engine?.captureSceneWithPhysics();
+      appState.changeGameState("gameover");
     }
     this.controls.applyActions();
     this.onNextStep(() => {

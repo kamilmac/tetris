@@ -4,11 +4,10 @@ export class Physics {
   world: any;
   boxes: any;
 
-  constructor() {
-    this.world = new CANNON.World();
-  }
+  constructor() {}
 
   attach(boxes: any) {
+    this.world = new CANNON.World();
     this.boxes = boxes;
     this.world.gravity.set(Math.random() * 2 - 1, -10, Math.random() * 2 - 1); // Set gravity
     var groundMaterial = new CANNON.Material();

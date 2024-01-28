@@ -30,18 +30,18 @@ export class Controls {
   onFastForward: () => void;
   autoPlay: boolean = false;
   engine: Engine;
-  game: Game;
+  onResetGame: Game;
 
-  constructor(game, engine, onFastForward) {
+  constructor(onResetGame, engine, onFastForward) {
     this.brick = undefined;
-    this.game = game;
+    this.onResetGame = onResetGame;
     this.engine = engine;
     this.onFastForward = onFastForward;
     this.addControls();
     this.actions = [];
-    appState.subscribe(["inMenu"], (state) => {
-      if (state.inMenu) {
-        // this.autoPlay = true;
+    appState.subscribe(["autoplay"], (state) => {
+      if (state.autoplay) {
+        this.autoPlay = true;
       } else {
         this.autoPlay = false;
       }
@@ -173,7 +173,6 @@ export class Controls {
       return;
     }
     const action = this.actions.pop();
-    // pop action from the bottom and remove from original array
     switch (action) {
       case "left":
         this.brick.move(-1, 0);
@@ -200,7 +199,7 @@ export class Controls {
         this.engine?.camera?.rotate("left");
         break;
       case "restart":
-        this.game.resetGame();
+        this.onResetGame();
         break;
       default:
         break;
