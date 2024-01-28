@@ -1,6 +1,7 @@
 interface state {
   score: number;
   autoplay: boolean;
+  menu: boolean;
   gameState: "playing" | "gameover";
 }
 
@@ -16,6 +17,7 @@ class State {
   constructor() {
     this.state = {
       score: 0,
+      menu: true,
       autoplay: true,
       gameState: "playing",
     };
@@ -36,8 +38,31 @@ class State {
   }
 
   resetScore() {
+    if (this.state.score === 0) {
+      return;
+    }
     this.state.score = 0;
     this.onUpdate("score");
+  }
+
+  menuOn() {
+    if (this.state.menu) {
+      return;
+    }
+    this.state.menu = true;
+    this.onUpdate("menu");
+  }
+
+  menuOff() {
+    if (!this.state.menu) {
+      return;
+    }
+    this.state.menu = false;
+    this.onUpdate("menu");
+  }
+
+  menuToggle() {
+    this.state.menu ? this.menuOff() : this.menuOn();
   }
 
   changeGameState = (gameState: state["gameState"]) => {
