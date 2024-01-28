@@ -20,7 +20,7 @@ export class Engine {
   private floor: Floor | null;
   private physics: Physics;
   boxes: (Tetrino | null)[];
-  camera?: THREE.PerspectiveCamera;
+  camera?: Camera;
   usePhysics: boolean;
 
   constructor(stage: Stage, onReady: (engine: Engine) => void) {
