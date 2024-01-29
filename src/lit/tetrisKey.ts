@@ -30,9 +30,9 @@ export class TetrisKey extends LitElement {
 
   constructor() {
     super();
+    console.log("Hello");
     document.addEventListener("keydown", (e) => {
       if (e.code === this.code) {
-        console.log(e);
         this.isPressed = true;
         setTimeout(() => {
           this.isPressed = false;
