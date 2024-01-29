@@ -3,10 +3,10 @@ import { Brick } from "./brick";
 import { Engine } from "./three/engine";
 import { Controls } from "./controls";
 import { CFG } from "./config";
-import { ScoreDisplay } from "./lit_components/score";
+import { UI } from "./lit_components/ui";
 import { appState } from "./state";
 
-customElements.define("score-display", ScoreDisplay);
+// customElements.define("tetris-ui", UI);
 
 class Game {
   stage: Stage;

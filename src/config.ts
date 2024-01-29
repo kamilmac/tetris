@@ -1,4 +1,5 @@
 import * as THREE from "three";
+
 const FLOOR_SIZE = 6;
 
 export interface CubeType {
@@ -27,6 +28,49 @@ const c = (color: number | string): THREE.Color => {
     return new THREE.Color().setHex(color);
   }
   return new THREE.Color();
+};
+
+const controls = {
+  left: new KeyboardEvent("keydown", {
+    key: "ArrowLeft",
+    code: "ArrowLeft",
+    shiftKey: false,
+  }),
+  right: new KeyboardEvent("keydown", {
+    key: "ArrowRight",
+    code: "ArrowRight",
+    shiftKey: false,
+  }),
+  up: new KeyboardEvent("keydown", {
+    key: "ArrowUp",
+    code: "ArrowUp",
+    shiftKey: false,
+  }),
+  down: new KeyboardEvent("keydown", {
+    key: "ArrowDown",
+    code: "ArrowDown",
+    shiftKey: false,
+  }),
+  fall: new KeyboardEvent("keydown", {
+    key: " ",
+    code: "Space",
+    shiftKey: false,
+  }),
+  rotate: new KeyboardEvent("keydown", {
+    key: "r",
+    code: "KeyR",
+    shiftKey: false,
+  }),
+  camera_rotate_right: new KeyboardEvent("keydown", {
+    key: "ArrowRight",
+    code: "ArrowRight",
+    shiftKey: true,
+  }),
+  camera_rotate_left: new KeyboardEvent("keydown", {
+    key: "ArrowLeft",
+    code: "ArrowLeft",
+    shiftKey: true,
+  }),
 };
 
 export const cubeVariants: Record<string, CubeType> = {
@@ -121,12 +165,5 @@ export const CFG = {
     height: 8,
     limit: 4,
   },
-  controls: {
-    cameraRotateRight: "d",
-    cameraRotateLeft: "s",
-    moveBlockLeft: "ArrowLeft",
-    moveBlockRight: "ArrowRight",
-    moveBlockDown: "ArrowDown",
-    moveBlockRotate: "ArrowUp",
-  },
+  controls,
 };

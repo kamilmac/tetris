@@ -1,26 +1,5 @@
-import { Game } from ".";
 import { Brick } from "./brick";
-import { appState } from "./state";
 import { Engine } from "./three/engine";
-
-const RANDOM_ACTIONS = [
-  "left",
-  "right",
-  "up",
-  "down",
-  "left",
-  "right",
-  "up",
-  "down",
-  "fall",
-  "fall",
-  "rotate",
-  "rotate",
-  "rotate",
-  "rotate",
-  "camera_rotate_right",
-  "camera_rotate_left",
-];
 
 export class Controls {
   actions: string[];
@@ -28,7 +7,6 @@ export class Controls {
   activeCamera: number = 0;
   brick?: Brick;
   onFastForward: () => void;
-  autoPlay: boolean = appState.state.autoplay;
   engine: Engine;
   onResetGame: Game;
 
@@ -39,22 +17,6 @@ export class Controls {
     this.onFastForward = onFastForward;
     this.addControls();
     this.actions = [];
-    appState.subscribe(["autoplay"], (state) => {
-      if (state.autoplay) {
-        this.autoPlay = true;
-      } else {
-        this.autoPlay = false;
-      }
-    });
-  }
-
-  prependRandomAction() {
-    const probablityPerFrame = 0.02;
-    if (Math.random() < probablityPerFrame) {
-      const randomAction =
-        RANDOM_ACTIONS[Math.floor(Math.random() * RANDOM_ACTIONS.length)];
-      this.actions.unshift(randomAction);
-    }
   }
 
   cameraCorrection(action: string) {
@@ -165,9 +127,6 @@ export class Controls {
   applyActions() {
     if (!this.brick) {
       return;
-    }
-    if (this.autoPlay) {
-      this.prependRandomAction();
     }
     if (!this.actions.length) {
       return;
