@@ -9,6 +9,9 @@ export class TetrisKey extends LitElement {
   @property()
   label?: string;
 
+  @property({ type: Boolean })
+  shift?: boolean = false;
+
   @state()
   isPressed: boolean = false;
 
@@ -30,6 +33,12 @@ export class TetrisKey extends LitElement {
     document.addEventListener("keydown", (e) => {
       if (e.code === this.code) {
         console.log(e);
+        this.isPressed = true;
+        setTimeout(() => {
+          this.isPressed = false;
+        }, 300);
+      }
+      if (this.shift && e.shiftKey) {
         this.isPressed = true;
         setTimeout(() => {
           this.isPressed = false;

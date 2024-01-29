@@ -1,8 +1,8 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { LitElement } from "lit";
+import { customElement } from "lit/decorators.js";
 import { CFG } from "../config";
 
-const RANDOM_ACTIONS = [
+const RANDOM_ACTIONS: (keyof typeof CFG.controls)[] = [
   "left",
   "right",
   "up",

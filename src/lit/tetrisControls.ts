@@ -35,6 +35,7 @@ export class TetrisControls extends LitElement {
       <tetris-key label="Down" code="ArrowDown"></tetris-key>
       <tetris-key label="r" code="KeyR"></tetris-key>
       <tetris-key label="Space" code="Space"></tetris-key>
+      <tetris-key label="Shift" shift></tetris-key>
     `;
   }
 }
