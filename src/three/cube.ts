@@ -1,13 +1,14 @@
 import * as THREE from "three";
 import { cubeVariants, CubeType } from "../config";
+// @ts-ignore
 import dashPatternImage from "./dash_pattern.png";
-import kneePatternImage from "./knee_pattern.png";
+// import kneePatternImage from "./knee_pattern.png";
 
 const loader = new THREE.TextureLoader();
 const texture = loader.load(dashPatternImage);
 
 export class Cube {
-  mesh: THREE.Mesh;
+  mesh: THREE.Mesh | null;
   scene: THREE.Scene;
   positionInitiated: boolean = false;
   targetPosition: THREE.Vector3 | null = null;
@@ -28,11 +29,12 @@ export class Cube {
     if (!this.variant || !this.mesh) {
       return;
     }
-    this.mesh.material.uniforms.u_color_top_bottom.value =
+    const material = this.mesh.material as THREE.ShaderMaterial;
+    material.uniforms.u_color_top_bottom.value =
       this.variant.faceColors.topBottom;
-    this.mesh.material.uniforms.u_color_left_right.value =
+    material.uniforms.u_color_left_right.value =
       this.variant.faceColors.leftRight;
-    this.mesh.material.uniforms.u_color_front_back.value =
+    material.uniforms.u_color_front_back.value =
       this.variant.faceColors.frontBack;
   }
 
@@ -40,7 +42,8 @@ export class Cube {
     if (!this.variant?.edge || !this.mesh) {
       return;
     }
-    this.mesh.material.uniforms.u_thickness.value = this.variant.edge.thickness;
+    const material = this.mesh.material as THREE.ShaderMaterial;
+    material.uniforms.u_thickness.value = this.variant.edge.thickness;
   }
 
   setVariant(newVariant: string) {
@@ -51,7 +54,7 @@ export class Cube {
   }
 
   setPosition(x: number, y: number, z: number) {
-    if (!this.positionInitiated) {
+    if (this.mesh && !this.positionInitiated) {
       this.mesh.position.x = x;
       this.mesh.position.y = y;
       this.mesh.position.z = z;
@@ -80,6 +83,9 @@ export class Cube {
   }
 
   animate = () => {
+    if (!this.mesh) {
+      return;
+    }
     if (this.targetPosition) {
       this.mesh.position.lerp(this.targetPosition, 0.22);
       if (this.mesh.position.distanceTo(this.targetPosition) < 0.001) {
@@ -107,8 +113,8 @@ export class Cube {
       this.mesh = null;
       return;
     }
-    this.mesh.material.uniforms.u_time.value += 0.05;
-    // requestAnimationFrame(this.animate);
+    const material = this.mesh.material as THREE.ShaderMaterial;
+    material.uniforms.u_time.value += 0.05;
   };
 }
 

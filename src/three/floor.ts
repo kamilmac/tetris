@@ -5,9 +5,13 @@ import { Camera } from "./camera";
 
 export class Floor {
   camera: Camera;
-  hideWalls: boolean = false;
-  // geometry: THREE.BoxGeometry;
-  // material: THREE.ShaderMaterial;
+  wallsHidden: boolean;
+  floor: THREE.Group;
+  wallL: THREE.Group;
+  wallB: THREE.Group;
+  wallR: THREE.Group;
+  wallF: THREE.Group;
+
   constructor(
     width: number,
     depth: number,
@@ -15,6 +19,7 @@ export class Floor {
     scene: Scene,
     camera: Camera,
   ) {
+    this.wallsHidden = false;
     this.camera = camera;
 
     this.floor = this.renderPlaneGrid(width, depth);
@@ -50,11 +55,11 @@ export class Floor {
   }
 
   hideWalls() {
-    this.hideWalls = true;
+    this.wallsHidden = true;
   }
 
   animate() {
-    if (this.hideWalls) {
+    if (this.wallsHidden) {
       this.wallL.visible = false;
       this.wallB.visible = false;
       this.wallR.visible = false;
@@ -91,7 +96,7 @@ export class Floor {
     }
   }
 
-  renderPlaneGrid(w, h) {
+  renderPlaneGrid(w: number, h: number) {
     const group = new THREE.Group();
     for (let x = 0; x < w; x += 1) {
       for (let z = 0; z < h; z += 1) {

@@ -1,5 +1,4 @@
 import * as THREE from "three";
-// import { CFG } from "../config";
 
 export const shadowMaterial = new THREE.ShaderMaterial({
   uniforms: {

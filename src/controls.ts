@@ -8,9 +8,13 @@ export class Controls {
   brick?: Brick;
   onFastForward: () => void;
   engine: Engine;
-  onResetGame: Game;
+  onResetGame: () => void;
 
-  constructor(onResetGame, engine, onFastForward) {
+  constructor(
+    onResetGame: () => void,
+    engine: Engine,
+    onFastForward: () => void,
+  ) {
     this.brick = undefined;
     this.onResetGame = onResetGame;
     this.engine = engine;
@@ -19,8 +23,12 @@ export class Controls {
     this.actions = [];
   }
 
+  reset() {
+    this.actions = [];
+  }
+
   cameraCorrection(action: string) {
-    switch (this.engine.camera.activeCamera) {
+    switch (this.engine?.camera?.activeCamera) {
       case 0:
         return action;
       case 1:

@@ -33,14 +33,11 @@ class Game {
   }
 
   onResetGame = () => {
-    this.engine.usePhysics = false;
-    this.controls.actions = [];
-    this.engine.camera.activeCamera = 0;
-    this.engine.floor.hideWalls = false;
+    this.engine?.reset();
+    this.controls?.reset();
     this.resetTempo();
     this.addBrick();
-    this.stage.init();
-    this.engine.camera.initPosition();
+    this.stage.reset();
   };
 
   getClock() {
@@ -76,9 +73,9 @@ class Game {
       this.engine?.captureSceneWithPhysics();
       appState.changeGameState("gameover");
     }
-    this.controls.applyActions();
+    this.controls?.applyActions();
     this.onNextStep(() => {
-      if (this.engine.usePhysics) {
+      if (this.engine?.usePhysics) {
         return;
       }
       this.brick?.moveDown();
@@ -88,7 +85,7 @@ class Game {
         this.addBrick();
       }
     });
-    this.engine.animate();
+    this.engine?.animate();
     requestAnimationFrame(this.go);
   };
 }

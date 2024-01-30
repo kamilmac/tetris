@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
-import cubeObj from "./cube.obj?url";
+// import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
+// import cubeObj from "./cube.obj?url";
 import { shadowMaterial } from "./materials";
 import { Stage, Cube } from "../stage";
 import { Cube as Tetrino } from "./cube";
@@ -8,27 +8,37 @@ import { CFG } from "../config";
 import { Floor } from "./floor";
 import { Camera } from "./camera";
 import { Physics } from "../physics";
-import { Walls } from "./walls";
+// import { Walls } from "./walls";
+
+interface ShadowCube extends Cube {
+  x: number;
+  y: number;
+  z: number;
+}
 
 export class Engine {
   private stage: Stage;
-  private shadowCubes: any;
+  private shadowCubes: ShadowCube[];
   private idsInStage: number[];
-  private cubeObj?: THREE.BufferGeometry;
+  // private cubeObj?: THREE.BufferGeometry;
   private renderer?: THREE.WebGLRenderer;
   private scene?: THREE.Scene;
   private floor: Floor | null;
-  private physics: Physics;
-  boxes: (Tetrino | null)[];
-  camera?: Camera;
+  private physics: Physics | null;
+  floorCenterX: number;
+  floorCenterZ: number;
+  boxes: Map<number, Tetrino | null>;
+  camera?: Camera | null;
   usePhysics: boolean;
+  shadowGroup: THREE.Group;
 
   constructor(stage: Stage, onReady: (engine: Engine) => void) {
     this.stage = stage;
     this.boxes = new Map();
     this.shadowCubes = [];
+    this.shadowGroup = new THREE.Group();
     this.idsInStage = [];
-    this.cubeObj = undefined;
+    // this.cubeObj = undefined;
     this.floorCenterX = 0;
     this.floorCenterZ = 0;
     this.floor = null;
@@ -37,6 +47,16 @@ export class Engine {
     this.usePhysics = false;
     this.setup();
     onReady(this);
+  }
+
+  reset() {
+    if (!this.camera || !this.floor) {
+      return;
+    }
+    this.usePhysics = false;
+    this.camera.activeCamera = 0;
+    this.floor.wallsHidden = false;
+    this.camera.reset();
   }
 
   setup() {
@@ -61,6 +81,9 @@ export class Engine {
     window.addEventListener(
       "resize",
       () => {
+        if (!this.camera || !this.renderer) {
+          return;
+        }
         this.camera.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -79,7 +102,7 @@ export class Engine {
       if (cube.state === "locked") {
         const l = CFG.cubes.locked.length;
         const v = CFG.cubes.locked[y % l];
-        box.setVariant(v);
+        box?.setVariant(v);
       }
       if (cube.state === "active") {
         this.shadowCubes.push({ ...cube, x, y, z });
@@ -100,11 +123,11 @@ export class Engine {
     for (let x = 0; x < this.stage.width; x++) {
       for (let y = 0; y < this.stage.height; y++) {
         for (let z = 0; z < this.stage.depth; z++) {
-          const cube: Cube = this.stage.cubes[x][y][z];
-          if (cube?.id) {
-            this.idsInStage.push(cube.id);
+          const cube = this.stage.cubes[x][y][z];
+          if (cube) {
+            cube.id && this.idsInStage.push(cube.id);
+            this.handleCube(cube, x, y, z);
           }
-          this.handleCube(cube, x, y, z);
         }
       }
     }
@@ -122,6 +145,9 @@ export class Engine {
   }
 
   renderShadows() {
+    if (!this.scene) {
+      return;
+    }
     this.scene.remove(this.shadowGroup);
     this.shadowGroup = new THREE.Group();
     let highestLockedYUnder = -1;
@@ -161,12 +187,12 @@ export class Engine {
     if (this.usePhysics) {
       return;
     }
-    this.physics.attach(this.boxes);
+    this.physics?.attach(this.boxes);
     this.usePhysics = true;
   }
 
   animate() {
-    if (!this.camera || !this.renderer || !this.scene) {
+    if (!this.camera || !this.renderer || !this.scene || !this.floor) {
       return;
     }
     if (!this.usePhysics) {
@@ -176,8 +202,8 @@ export class Engine {
         this.stage.dirty = false;
       }
     } else {
-      this.physics.animate();
-      this.floor.hideWalls = true;
+      this.physics?.animate();
+      this.floor.wallsHidden = true;
     }
     this.floor.animate();
     for (let [_, box] of this.boxes) {

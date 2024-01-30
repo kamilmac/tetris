@@ -1,6 +1,7 @@
 import { LitElement } from "lit";
 import { customElement } from "lit/decorators.js";
 import { CFG } from "../config";
+import { appState } from "../state";
 
 const RANDOM_ACTIONS: (keyof typeof CFG.controls)[] = [
   "left",
@@ -25,7 +26,16 @@ const RANDOM_ACTIONS: (keyof typeof CFG.controls)[] = [
 export class TetrisAI extends LitElement {
   constructor() {
     super();
+    document.addEventListener("keydown", (e) => {
+      console.log(e);
+      if (e.isTrusted) {
+        appState.state.autoplay = false;
+      }
+    });
     setInterval(() => {
+      if (!appState.state.autoplay) {
+        return;
+      }
       const chance = 0.1;
       if (Math.random() < chance) {
         const randomAction =

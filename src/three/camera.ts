@@ -1,7 +1,7 @@
+// @ts-ignore
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Stage } from "../stage";
 import * as THREE from "three";
-import { CFG } from "../config";
 
 export class Camera {
   camera: THREE.PerspectiveCamera;
@@ -13,6 +13,8 @@ export class Camera {
   renderer: THREE.WebGLRenderer;
   targetPosition: THREE.Vector3 | null = null;
   cameraInMotion: boolean = false;
+  activeCamera: number;
+  lastRotationTime: number;
 
   constructor(stage: Stage, renderer: THREE.WebGLRenderer) {
     this.lastRotationTime = 0;
@@ -53,7 +55,7 @@ export class Camera {
     //   1000,
     // );
     this.camera.zoom = 3.1;
-    this.initPosition();
+    this.reset();
     this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
@@ -61,7 +63,7 @@ export class Camera {
     return this;
   }
 
-  initPosition() {
+  reset() {
     this.setPosition(
       this.floorCenterX + this.stage.width - 5,
       this.stage.width * 2,

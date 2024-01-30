@@ -20,15 +20,14 @@ export class Stage {
     this.height = height;
     this.width = width;
     this.depth = depth;
+    this.cubes = [];
+    this.toBeRemovedCubes = [];
+    this.dirty = true;
+    this.lastLockedY = 0;
     this.init();
   }
 
   init() {
-    // Stage.id = 0;
-    this.toBeRemovedCubes = [];
-    this.cubes = [];
-    this.dirty = true;
-    this.lastLockedY = 0;
     for (let x = -1; x < this.width + 1; x++) {
       this.cubes[x] = [];
       for (let y = -1; y < this.height; y++) {
@@ -46,6 +45,14 @@ export class Stage {
         }
       }
     }
+  }
+
+  reset() {
+    this.cubes = [];
+    this.toBeRemovedCubes = [];
+    this.dirty = true;
+    this.lastLockedY = 0;
+    this.init();
   }
 
   getNewID() {
