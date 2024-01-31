@@ -6,6 +6,8 @@ interface BrickCube {
   locked: boolean;
 }
 
+let CREATED_BRICKS = 0;
+
 export class Brick {
   stage: Stage;
   locked: boolean;
@@ -31,7 +33,7 @@ export class Brick {
     this.stage = stage;
     this.locked = false;
     this.cubes = [];
-    this.create();
+    this.createMock();
   }
 
   lock() {
@@ -233,5 +235,36 @@ export class Brick {
     );
     this.applyNewPosition(correctedPositions);
     this.updateStage();
+  }
+
+  createMock() {
+    const shape = Brick.SHAPES[CREATED_BRICKS % Brick.SHAPES.length];
+    const startPosition = [
+      this.stage.width / 2 - 1,
+      this.stage.height - 1,
+      this.stage.depth / 2 - 1,
+    ];
+    for (let x = 0; x < shape.length; x++) {
+      for (let z = 0; z < shape[x].length; z++) {
+        if (shape[x][z] === 1) {
+          const cube = {
+            position: [
+              startPosition[0] + x,
+              startPosition[1],
+              startPosition[2] + z,
+            ],
+            id: this.stage.getNewID(),
+            locked: false,
+          };
+          this.cubes.push(cube);
+        }
+      }
+    }
+    const correctedPositions = this.correctToStageBounds(
+      this.getCubesPositions(),
+    );
+    this.applyNewPosition(correctedPositions);
+    this.updateStage();
+    CREATED_BRICKS += 1;
   }
 }

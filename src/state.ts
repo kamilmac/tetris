@@ -18,7 +18,7 @@ class State {
     this.state = {
       score: 0,
       menu: true,
-      autoplay: true,
+      autoplay: false,
       gameState: "playing",
     };
     this.subs = [];
