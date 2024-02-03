@@ -49,6 +49,6 @@ test("simulation", async ({ page }) => {
   await page.keyboard.press("r");
   await page.waitForTimeout(600);
   expect(await page.screenshot()).toMatchSnapshot("screenshot.png", {
-    threshold: 1.2,
+    maxDiffPixelRatio: 0.03,
   });
 });
