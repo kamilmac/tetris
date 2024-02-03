@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "playwright test",
+    "types": "tsc",
     "check": "biome check --apply ./src",
     "prepare": "husky"
   },
