@@ -1,12 +1,12 @@
 import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 
-@customElement("tetris-controls")
-export class TetrisControls extends LitElement {
-	// score = 0;
-	bestScore = localStorage.getItem("bestScore") || 0;
+@customElement("tetris-legend")
+export class TetrisLegend extends LitElement {
+  // score = 0;
+  bestScore = localStorage.getItem("bestScore") || 0;
 
-	static styles = css`
+  static styles = css`
     :host {
       position: absolute;
       color: white;
@@ -15,8 +15,8 @@ export class TetrisControls extends LitElement {
     }
   `;
 
-	render() {
-		return html`
+  render() {
+    return html`
       <tetris-key label="Left" code="ArrowLeft"></tetris-key>
       <tetris-key label="Right" code="ArrowRight"></tetris-key>
       <tetris-key label="Up" code="ArrowUp"></tetris-key>
@@ -25,5 +25,5 @@ export class TetrisControls extends LitElement {
       <tetris-key label="Space" code="Space"></tetris-key>
       <tetris-key label="Shift" shift></tetris-key>
     `;
-	}
+  }
 }
