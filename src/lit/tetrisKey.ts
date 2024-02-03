@@ -1,21 +1,21 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 @customElement("tetris-key")
 export class TetrisKey extends LitElement {
-  @property()
-  code?: string;
+	@property()
+	code?: string;
 
-  @property()
-  label?: string;
+	@property()
+	label?: string;
 
-  @property({ type: Boolean })
-  shift?: boolean = false;
+	@property({ type: Boolean })
+	shift?: boolean = false;
 
-  @state()
-  isPressed: boolean = false;
+	@state()
+	isPressed = false;
 
-  static styles = css`
+	static styles = css`
     div {
       color: black;
       background-color: blue;
@@ -28,27 +28,27 @@ export class TetrisKey extends LitElement {
     }
   `;
 
-  constructor() {
-    super();
-    console.log("Hello");
-    document.addEventListener("keydown", (e) => {
-      if (e.code === this.code) {
-        this.isPressed = true;
-        setTimeout(() => {
-          this.isPressed = false;
-        }, 300);
-      }
-      if (this.shift && e.shiftKey) {
-        this.isPressed = true;
-        setTimeout(() => {
-          this.isPressed = false;
-        }, 300);
-      }
-    });
-  }
+	constructor() {
+		super();
+		console.log("Hello");
+		document.addEventListener("keydown", (e) => {
+			if (e.code === this.code) {
+				this.isPressed = true;
+				setTimeout(() => {
+					this.isPressed = false;
+				}, 300);
+			}
+			if (this.shift && e.shiftKey) {
+				this.isPressed = true;
+				setTimeout(() => {
+					this.isPressed = false;
+				}, 300);
+			}
+		});
+	}
 
-  render() {
-    const style = this.isPressed ? "background: blue" : "background: white";
-    return html`<div style="${style}">${this.label}</div>`;
-  }
+	render() {
+		const style = this.isPressed ? "background: blue" : "background: white";
+		return html`<div style="${style}">${this.label}</div>`;
+	}
 }

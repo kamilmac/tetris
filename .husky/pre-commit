@@ -1,0 +1,3 @@
+npm run check
+tsc
+npm run test
