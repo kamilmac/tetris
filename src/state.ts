@@ -1,8 +1,17 @@
+type Status =
+	| "loading"
+	| "inMenu"
+	| "countingDown"
+	| "playing"
+	| "pause"
+	| "gameover";
+
 interface state {
 	score: number;
+	bestScore: number;
 	autoplay: boolean;
 	menu: boolean;
-	gameState: "playing" | "gameover";
+	status: Status;
 }
 
 interface sub {
@@ -17,9 +26,10 @@ class State {
 	constructor() {
 		this.state = {
 			score: 0,
+			bestScore: parseInt(localStorage.getItem("bestScore") || "0"),
 			menu: true,
-			autoplay: false,
-			gameState: "playing",
+			autoplay: true,
+			status: "loading",
 		};
 		this.subs = [];
 	}
@@ -33,6 +43,11 @@ class State {
 
 	addToScore(amount: number) {
 		this.state.score += amount;
+		if (this.state.score > this.state.bestScore) {
+			this.state.bestScore = this.state.score;
+			localStorage.setItem("bestScore", this.state.score.toString());
+			this.onUpdate("bestScore");
+		}
 		this.onUpdate("score");
 	}
 
@@ -44,38 +59,12 @@ class State {
 		this.onUpdate("score");
 	}
 
-	menuOn() {
-		if (this.state.menu) {
+	changeStatus = (status: Status) => {
+		if (this.state.status === status) {
 			return;
 		}
-		this.state.menu = true;
-		this.onUpdate("menu");
-	}
-
-	menuOff() {
-		if (!this.state.menu) {
-			return;
-		}
-		this.state.menu = false;
-		this.onUpdate("menu");
-	}
-
-	menuToggle() {
-		this.state.menu ? this.menuOff() : this.menuOn();
-	}
-
-	changeGameState = (gameState: state["gameState"]) => {
-		if (this.state.gameState === gameState) {
-			return;
-		}
-		this.state.gameState = gameState;
-		this.onUpdate("gameState");
-		if (this.state.autoplay && gameState === "gameover") {
-			setTimeout(() => {
-				this.changeGameState("playing");
-				appState.resetScore();
-			}, 3000);
-		}
+		this.state.status = status;
+		this.onUpdate("status");
 	};
 
 	onUpdate(prop: keyof state) {

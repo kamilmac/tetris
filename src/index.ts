@@ -24,11 +24,6 @@ class Game {
 			this.addBrick();
 			this.go();
 			// this.engine.camera.shiftSceneToRight();
-			appState.subscribe(["gameState"], (state) => {
-				if (state.gameState === "playing") {
-					this.onResetGame();
-				}
-			});
 		});
 	}
 
@@ -71,7 +66,7 @@ class Game {
 	go = () => {
 		if (this.stage.lastLockedY >= CFG.stage.limit) {
 			this.engine?.captureSceneWithPhysics();
-			appState.changeGameState("gameover");
+			appState.changeStatus("gameover");
 		}
 		this.controls?.applyActions();
 		this.onNextStep(() => {
