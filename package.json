@@ -8,12 +8,17 @@
     "prebuild": "tsc",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "playwright test"
+    "test": "playwright test",
+    "types": "tsc",
+    "check": "biome check --apply ./src",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.5.3",
     "@playwright/test": "^1.41.1",
     "@types/node": "^20.11.11",
     "@types/three": "^0.160.0",
+    "husky": "^9.0.10",
     "typescript": "^4.6.4",
     "vite": "^3.2.3"
   },
