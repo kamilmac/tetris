@@ -29,7 +29,7 @@ class State {
 			bestScore: parseInt(localStorage.getItem("bestScore") || "0"),
 			menu: true,
 			autoplay: true,
-			status: "loading",
+			status: "inMenu",
 		};
 		this.subs = [];
 	}

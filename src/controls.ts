@@ -1,4 +1,5 @@
 import { Brick } from "./brick";
+import { appState } from "./state";
 import { Engine } from "./three/engine";
 
 export class Controls {
@@ -82,6 +83,9 @@ export class Controls {
 		}
 
 		const keyUpHandler = (event: KeyboardEvent) => {
+			if (appState.state.status !== "playing" && event.isTrusted) {
+				return;
+			}
 			switch (event.key) {
 				case "ArrowLeft":
 				case "h":

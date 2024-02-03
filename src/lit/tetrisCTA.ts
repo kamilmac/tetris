@@ -18,13 +18,12 @@ export class TetrisCTA extends LitElement {
 
 	handleClick() {
 		appState.changeStatus("playing");
-		console.log("click handled");
 	}
 
 	render() {
 		return html`
       <h3>Press to start playing!</h3>
-      <button @click=${this.handleClick}>Play</button>
+      <div data-test="cta-play" @click=${this.handleClick}>PLAY</div>
     `;
 	}
 }

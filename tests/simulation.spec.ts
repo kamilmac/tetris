@@ -3,6 +3,9 @@ import { test, expect } from "@playwright/test";
 test("simulation", async ({ page }) => {
   await page.goto("http://localhost:5173");
 
+  // trigger click on eleement with attribute data-test "cta-play"
+  await page.waitForSelector('[data-test="cta-play"]');
+  await page.click('[data-test="cta-play"]');
   await page.waitForTimeout(300);
   await page.keyboard.press("r");
   await page.waitForTimeout(100);
@@ -13,7 +16,7 @@ test("simulation", async ({ page }) => {
   await page.keyboard.press("ArrowDown");
   await page.waitForTimeout(200);
   await page.keyboard.press("Space");
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(300);
   await page.keyboard.press("r");
   await page.waitForTimeout(200);
   await page.keyboard.press("ArrowLeft");
@@ -21,7 +24,7 @@ test("simulation", async ({ page }) => {
   await page.keyboard.press("ArrowLeft");
   await page.waitForTimeout(200);
   await page.keyboard.press("r");
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(300);
   await page.keyboard.press("Space");
   await page.waitForTimeout(400);
   await page.keyboard.press("r");
@@ -31,7 +34,7 @@ test("simulation", async ({ page }) => {
   await page.keyboard.press("ArrowLeft");
   await page.waitForTimeout(200);
   await page.keyboard.press("r");
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(300);
   await page.keyboard.press("Space");
   await page.waitForTimeout(400);
   await page.keyboard.press("r");
@@ -40,10 +43,6 @@ test("simulation", async ({ page }) => {
   await page.waitForTimeout(200);
   await page.keyboard.press("ArrowLeft");
   await page.waitForTimeout(200);
-  await page.keyboard.press("r");
-  await page.waitForTimeout(400);
-  await page.keyboard.press("r");
-  await page.waitForTimeout(400);
   await page.keyboard.press("r");
   await page.waitForTimeout(400);
   await page.keyboard.press("r");

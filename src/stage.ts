@@ -48,10 +48,10 @@ export class Stage {
 	}
 
 	reset() {
+		this.lastLockedY = 0;
 		this.cubes = [];
 		this.toBeRemovedCubes = [];
 		this.dirty = true;
-		this.lastLockedY = 0;
 		this.init();
 	}
 

@@ -2,6 +2,7 @@ import * as THREE from "three";
 // @ts-ignore
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Stage } from "../stage";
+import { appState } from "../state";
 
 export class Camera {
 	camera: THREE.PerspectiveCamera;
@@ -60,6 +61,13 @@ export class Camera {
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
 		this.controls.update();
+		appState.subscribe(["status"], (state) => {
+			if (["inMenu"].includes(state.status)) {
+				this.shiftSceneToRight();
+			} else {
+				this.centerOnScene();
+			}
+		});
 	}
 
 	reset() {
@@ -70,15 +78,25 @@ export class Camera {
 		);
 	}
 
-	// shiftSceneToRight() {
-	//   if (!this.camera) {
-	//     return;
-	//   }
-	//   const w = window.innerWidth;
-	//   const h = window.innerHeight;
+	shiftSceneToRight() {
+		if (!this.camera) {
+			return;
+		}
+		const w = window.innerWidth;
+		const h = window.innerHeight;
 
-	//   this.camera.setViewOffset(w, h, -0.1 * w, h * 0, w, h);
-	// }
+		this.camera.setViewOffset(w, h, -0.2 * w, h * 0, w, h);
+	}
+
+	centerOnScene() {
+		if (!this.camera) {
+			return;
+		}
+		const w = window.innerWidth;
+		const h = window.innerHeight;
+
+		this.camera.setViewOffset(w, h, 0, 0, w, h);
+	}
 
 	setPosition(x: number, y: number, z: number) {
 		if (!this.targetPosition) {

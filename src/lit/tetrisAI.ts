@@ -26,14 +26,14 @@ const RANDOM_ACTIONS: (keyof typeof CFG.controls)[] = [
 export class TetrisAI extends LitElement {
 	constructor() {
 		super();
-		document.addEventListener("keydown", (e) => {
-			console.log(e);
-			if (e.isTrusted) {
-				appState.state.autoplay = false;
-			}
-		});
+		// document.addEventListener("keydown", (e) => {
+		//   console.log(e);
+		//   if (e.isTrusted) {
+		//     appState.state.autoplay = false;
+		//   }
+		// });
 		setInterval(() => {
-			if (!appState.state.autoplay) {
+			if (appState.state.status !== "inMenu") {
 				return;
 			}
 			const chance = 0.1;
