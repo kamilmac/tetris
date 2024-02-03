@@ -3,7 +3,7 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("tetris-logo")
 export class TetrisLogo extends LitElement {
-  static styles = css`
+	static styles = css`
     :host {
       position: absolute;
       color: white;
@@ -12,7 +12,7 @@ export class TetrisLogo extends LitElement {
     }
   `;
 
-  render() {
-    return html``;
-  }
+	render() {
+		return html``;
+	}
 }
