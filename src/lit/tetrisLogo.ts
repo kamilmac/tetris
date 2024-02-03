@@ -7,6 +7,12 @@ export class TetrisLogo extends LitElement {
     :host {
       position: absolute;
       color: white;
+      top: 0;
+      left: 0;
+      color: white;
+      width: 200px;
+      height: 150px;
+      background: pink;
     }
     div {
     }

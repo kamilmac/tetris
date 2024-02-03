@@ -9,6 +9,9 @@ export class TetrisLegend extends LitElement {
 	static styles = css`
     :host {
       position: absolute;
+      height: 200px;
+      top: calc(40% - 100px);
+      left: 300px;
       color: white;
     }
     div {
