@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("has title", async ({ page }) => {
+test("simulation", async ({ page }) => {
   await page.goto("http://localhost:5173");
 
   await page.waitForTimeout(300);
