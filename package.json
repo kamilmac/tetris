@@ -8,9 +8,10 @@
     "prebuild": "tsc",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "playwright test",
+    "check-apply": "biome check --apply ./src",
+    "check": "biome check ./src",
     "types": "tsc",
-    "check": "biome check --apply ./src",
+    "test": "playwright test",
     "prepare": "husky"
   },
   "devDependencies": {
