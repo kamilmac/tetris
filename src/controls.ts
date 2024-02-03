@@ -127,9 +127,6 @@ export class Controls {
 				case " ":
 					this.actions.push("fall");
 					break;
-				case "Enter":
-					this.actions.push("restart");
-					break;
 				default:
 					break;
 			}
@@ -174,9 +171,6 @@ export class Controls {
 				break;
 			case "camera_rotate_left":
 				this.engine?.camera?.rotate("left");
-				break;
-			case "restart":
-				this.onResetGame();
 				break;
 			default:
 				break;

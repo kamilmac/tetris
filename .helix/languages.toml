@@ -1,5 +1,4 @@
  [[language]]
  name = "typescript"
  language-servers = [ "ts", "biome", "gpt"]
- formatter = { command = 'npx', args = ["prettier", "--parser", "typescript"] }
- auto-format = true
+ auto-format = false

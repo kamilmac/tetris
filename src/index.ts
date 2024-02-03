@@ -36,13 +36,13 @@ class Game {
 		this.engine?.reset();
 		this.controls?.reset();
 		this.resetTempo();
-		this.addBrick();
 		this.stage.reset();
+		this.addBrick();
 	};
 
 	getClock() {
 		const factor = this.fastForward ? 0.1 : 1;
-		return Math.round(performance.now() / (CFG.cycleTime * factor));
+		return Math.round(performance.now() / (this.stage.cycleTime * factor));
 	}
 
 	onNextStep(callback: () => void) {

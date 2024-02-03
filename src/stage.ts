@@ -15,6 +15,7 @@ export class Stage {
 	toBeRemovedCubes: number[];
 	dirty: boolean;
 	lastLockedY: number;
+	cycleTime: number;
 
 	constructor(height = 24, width = 12, depth = 12) {
 		this.height = height;
@@ -24,6 +25,7 @@ export class Stage {
 		this.toBeRemovedCubes = [];
 		this.dirty = true;
 		this.lastLockedY = 0;
+		this.cycleTime = CFG.cycleTime;
 		this.init();
 	}
 
@@ -48,10 +50,11 @@ export class Stage {
 	}
 
 	reset() {
-		this.lastLockedY = 0;
 		this.cubes = [];
 		this.toBeRemovedCubes = [];
 		this.dirty = true;
+		this.lastLockedY = 0;
+		this.cycleTime = CFG.cycleTime;
 		this.init();
 	}
 
@@ -178,7 +181,7 @@ export class Stage {
 
 		if (localScore > 0) {
 			appState.addToScore(localScore);
-			CFG.cycleTime -= CFG.accelerationFactor;
+			this.cycleTime -= CFG.accelerationFactor;
 		}
 
 		for (const key of Object.keys(toBeMovedDown)) {
