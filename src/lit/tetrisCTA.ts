@@ -17,7 +17,7 @@ export class TetrisCTA extends LitElement {
 
 	render() {
 		return html`
-      <h3>Hello, World!</h3>
+      <h3>Hello, Tetrino master!</h3>
       <button>CTA placeholder</button>
     `;
 	}
