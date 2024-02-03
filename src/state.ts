@@ -4,7 +4,7 @@ type Status =
 	| "countingDown"
 	| "playing"
 	| "pause"
-	| "gameover";
+	| "gameOver";
 
 interface state {
 	score: number;

@@ -66,7 +66,7 @@ class Game {
 	go = () => {
 		if (this.stage.lastLockedY >= CFG.stage.limit) {
 			this.engine?.captureSceneWithPhysics();
-			appState.changeStatus("gameover");
+			appState.changeStatus("gameOver");
 		}
 		this.controls?.applyActions();
 		this.onNextStep(() => {

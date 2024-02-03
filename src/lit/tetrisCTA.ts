@@ -1,5 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
+import { appState } from "../state";
 
 @customElement("tetris-cta")
 export class TetrisCTA extends LitElement {
@@ -15,10 +16,15 @@ export class TetrisCTA extends LitElement {
     }
   `;
 
+	handleClick() {
+		appState.changeStatus("playing");
+		console.log("click handled");
+	}
+
 	render() {
 		return html`
-      <h3>Hello, Tetrino master!</h3>
-      <button>CTA placeholder</button>
+      <h3>Press to start playing!</h3>
+      <button @click=${this.handleClick}>Play</button>
     `;
 	}
 }
