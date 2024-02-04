@@ -42,11 +42,13 @@ export class Camera {
 				z: this.floorCenterZ + this.stage.depth - 5,
 			},
 		];
-		// const frustumSize = 12;
-		// const aspect = window.innerWidth / window.innerHeight;
 		const width = window.innerWidth;
 		const height = window.innerHeight;
 		this.camera = new THREE.PerspectiveCamera(120, width / height, 0.1, 1000);
+		this.camera.zoom = 3.1;
+
+		// const aspect = window.innerWidth / window.innerHeight;
+		// const frustumSize = 12;
 		// this.camera = new THREE.OrthographicCamera(
 		//   (frustumSize * aspect) / -2,
 		//   (frustumSize * aspect) / 2,
@@ -55,7 +57,8 @@ export class Camera {
 		//   1,
 		//   1000,
 		// );
-		this.camera.zoom = 3.1;
+		// this.camera.zoom = 0.8;
+
 		this.reset();
 		this.camera.updateProjectionMatrix();
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
