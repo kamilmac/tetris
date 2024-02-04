@@ -69,17 +69,19 @@ class Game {
 	}
 
 	processEndGame() {
-		if (!this.engine?.usePhysics && this.stage.lastLockedY >= CFG.stage.limit) {
+		const isOverLimit = this.stage.lastLockedY >= CFG.stage.limit;
+		const isPlaying = appState.state.status === "playing";
+		const isInMenu = appState.state.status === "inMenu";
+		const isPhysicsActive = (this.engine?.physics?.timeActive || 0) > 3000;
+
+		if (!this.engine?.usePhysics && isOverLimit) {
 			this.engine?.captureSceneWithPhysics();
-			if (appState.state.status === "playing") {
+			if (isPlaying) {
 				appState.changeStatus("gameOver");
 			}
 		}
-		if (
-			appState.state.status === "inMenu" &&
-			this.stage.lastLockedY >= CFG.stage.limit &&
-			(this.engine?.physics?.timeActive || 0) > 3000
-		) {
+
+		if (isInMenu && isOverLimit && isPhysicsActive) {
 			this.onResetGame();
 		}
 	}
