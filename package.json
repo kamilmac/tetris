@@ -8,12 +8,11 @@
     "prebuild": "tsc",
     "build": "vite build",
     "preview": "vite preview",
-    "check-apply": "biome check --apply ./src",
-    "check": "biome check ./src",
-    "types": "tsc",
+    "check-apply": "tsc && biome check --apply ./src",
+    "check": "tsc && biome check ./src",
     "test": "playwright test",
-    "test-update": "playwright test --update-snapshots",
     "test-ui": "playwright test --ui",
+    "test-update": "playwright test --update-snapshots",
     "prepare": "husky"
   },
   "devDependencies": {
