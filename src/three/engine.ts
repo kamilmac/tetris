@@ -24,7 +24,7 @@ export class Engine {
 	private renderer?: THREE.WebGLRenderer;
 	private scene?: THREE.Scene;
 	private floor: Floor | null;
-	private physics: Physics | null;
+	physics: Physics | null;
 	floorCenterX: number;
 	floorCenterZ: number;
 	boxes: Map<number, Tetrino | null>;

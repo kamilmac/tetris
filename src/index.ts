@@ -68,13 +68,23 @@ class Game {
 		this.controls?.setBrick(this.brick);
 	}
 
-	go = () => {
-		if (this.stage.lastLockedY >= CFG.stage.limit) {
+	processEndGame() {
+		if (!this.engine?.usePhysics && this.stage.lastLockedY >= CFG.stage.limit) {
+			this.engine?.captureSceneWithPhysics();
 			if (appState.state.status === "playing") {
 				appState.changeStatus("gameOver");
 			}
-			this.engine?.captureSceneWithPhysics();
 		}
+		if (
+			appState.state.status === "inMenu" &&
+			this.stage.lastLockedY >= CFG.stage.limit &&
+			(this.engine?.physics?.timeActive || 0) > 3000
+		) {
+			this.onResetGame();
+		}
+	}
+
+	go = () => {
 		this.controls?.applyActions();
 		this.onNextStep(() => {
 			if (this.engine?.usePhysics) {
@@ -88,6 +98,7 @@ class Game {
 			}
 		});
 		this.engine?.animate();
+		this.processEndGame();
 		requestAnimationFrame(this.go);
 	};
 }

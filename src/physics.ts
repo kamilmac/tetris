@@ -4,13 +4,18 @@ export class Physics {
 	world: CANNON.World | null;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	boxes: any;
+	timeActive: number;
+	startTime?: number;
 
 	constructor() {
 		this.world = null;
+		this.timeActive = 0;
 	}
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	attach(boxes: any) {
+		this.timeActive = 0;
+		this.startTime = performance.now();
 		this.world = new CANNON.World();
 		this.boxes = boxes;
 		this.world.gravity.set(Math.random() * 2 - 1, -10, Math.random() * 2 - 1); // Set gravity
@@ -51,6 +56,10 @@ export class Physics {
 
 	animate() {
 		this.world?.step(1 / 60);
+		if (this.startTime === undefined) {
+			return;
+		}
+		this.timeActive = performance.now() - this.startTime;
 		for (const [_, box] of this.boxes) {
 			box.mesh.position.copy(box._body.position);
 			box.mesh.quaternion.copy(box._body.quaternion);
