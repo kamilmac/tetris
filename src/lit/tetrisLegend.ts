@@ -14,7 +14,8 @@ export class TetrisLegend extends LitElement {
       top: calc(40% - 100px);
       color: white;
     }
-    div {
+    .arrows {
+    	background: red;
     }
   `;
 
@@ -34,10 +35,12 @@ export class TetrisLegend extends LitElement {
 		const style = this.folded ? "left:0" : "left:300px";
 		return html`
       <div class="container" style="${style}">
-        <tetris-key label="Left" code="ArrowLeft"></tetris-key>
-        <tetris-key label="Right" code="ArrowRight"></tetris-key>
-        <tetris-key label="Up" code="ArrowUp"></tetris-key>
-        <tetris-key label="Down" code="ArrowDown"></tetris-key>
+      	<div class="arrows">
+	        <tetris-key label="Up" code="ArrowUp"></tetris-key>
+					<tetris-key label="Left" code="ArrowLeft"></tetris-key>
+	        <tetris-key label="Down" code="ArrowDown"></tetris-key>
+	        <tetris-key label="Right" code="ArrowRight"></tetris-key>
+      	</div>
         <tetris-key label="r" code="KeyR"></tetris-key>
         <tetris-key label="Space" code="Space"></tetris-key>
         <tetris-key label="Shift" shift></tetris-key>

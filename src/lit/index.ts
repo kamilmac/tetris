@@ -4,7 +4,6 @@ import "./tetrisAI";
 import "./tetrisCTA";
 import "./tetrisKey";
 import "./tetrisLegend";
-import "./tetrisLogo";
 import "./tetrisScore";
 
 @customElement("tetris-lit")

@@ -42,6 +42,9 @@ class State {
 	}
 
 	addToScore(amount: number) {
+		if (this.state.status !== "playing") {
+			return;
+		}
 		this.state.score += amount;
 		if (this.state.score > this.state.bestScore) {
 			this.state.bestScore = this.state.score;
@@ -62,6 +65,9 @@ class State {
 	changeStatus = (status: Status) => {
 		if (this.state.status === status) {
 			return;
+		}
+		if (status === "playing") {
+			this.resetScore();
 		}
 		this.state.status = status;
 		this.onUpdate("status");

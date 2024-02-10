@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("simulation", async ({ page }) => {
-  await page.goto("http://localhost:5173");
+  await page.goto("/");
 
   // trigger click on eleement with attribute data-test "cta-play"
   await page.waitForSelector('[data-test="cta-play"]');
