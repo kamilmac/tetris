@@ -3,6 +3,12 @@ import { Scene } from "three";
 import { CFG, TPane } from "../config";
 import { Camera } from "./camera";
 
+// @ts-ignore
+import pattern1 from "../patterns/Porous White.jpg";
+
+const loader = new THREE.TextureLoader();
+const texture = loader.load(pattern1);
+
 export class Floor {
 	camera: Camera;
 	wallsHidden: boolean;
@@ -64,27 +70,42 @@ export class Floor {
 		for (let i = 0; i < this.floor.children.length; i++) {
 			const p = this.floor.children[i] as THREE.Mesh;
 			const material = p.material as THREE.MeshBasicMaterial;
-			material.color.set(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_color.value = new THREE.Color(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_factor.value = CFG.enclosure.noiseFactor;
 		}
 		for (let i = 0; i < this.wallL.children.length; i++) {
 			const p = this.wallL.children[i] as THREE.Mesh;
 			const material = p.material as THREE.MeshBasicMaterial;
-			material.color.set(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_color.value = new THREE.Color(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_factor.value = CFG.enclosure.noiseFactor;
 		}
 		for (let i = 0; i < this.wallB.children.length; i++) {
 			const p = this.wallB.children[i] as THREE.Mesh;
 			const material = p.material as THREE.MeshBasicMaterial;
-			material.color.set(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_color.value = new THREE.Color(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_factor.value = CFG.enclosure.noiseFactor;
 		}
 		for (let i = 0; i < this.wallR.children.length; i++) {
 			const p = this.wallR.children[i] as THREE.Mesh;
 			const material = p.material as THREE.MeshBasicMaterial;
-			material.color.set(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_color.value = new THREE.Color(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_factor.value = CFG.enclosure.noiseFactor;
 		}
 		for (let i = 0; i < this.wallF.children.length; i++) {
 			const p = this.wallF.children[i] as THREE.Mesh;
 			const material = p.material as THREE.MeshBasicMaterial;
-			material.color.set(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_color.value = new THREE.Color(CFG.enclosure.color);
+			// @ts-ignore
+			material.uniforms.u_factor.value = CFG.enclosure.noiseFactor;
 		}
 	};
 
@@ -142,12 +163,9 @@ export class Floor {
 	renderPlane() {
 		const scale = 0.95;
 		const geometry = new THREE.PlaneGeometry(1, 1);
-		const line = new THREE.Mesh(
-			geometry,
-			new THREE.MeshBasicMaterial({
-				color: CFG.enclosure.color,
-			}),
-		);
+		const line = new THREE.Mesh(geometry, floorMaterial());
+		line.material.uniforms.u_color.value = new THREE.Color(CFG.enclosure.color);
+		line.material.uniforms.u_factor.value = CFG.enclosure.noiseFactor;
 		line.material.side = THREE.DoubleSide;
 		line.material.depthTest = false;
 		line.scale.set(scale, scale, scale);
@@ -155,3 +173,37 @@ export class Floor {
 		return line;
 	}
 }
+
+const floorMaterial = () =>
+	new THREE.ShaderMaterial({
+		uniforms: {
+			u_color: { value: new THREE.Color(0x000000) },
+			u_factor: { value: 0.3 },
+			u_texture: { value: texture },
+		},
+		vertexShader: `
+      varying vec2 vUv;
+      varying vec3 vNormal;
+
+      void main() {
+        vUv = uv;
+        vNormal = normal;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+		`,
+		fragmentShader: `
+      varying vec2 vUv;
+			uniform sampler2D u_texture;
+			uniform vec3 u_color;
+			uniform float u_factor;
+
+			void main() {
+				vec3 color;
+        vec2 scaledUV = vUv;
+        vec4 texColor = texture2D(u_texture, scaledUV);
+        float mixFactor = texColor.r;
+        color = mix(u_color + u_factor, u_color, mixFactor);
+        gl_FragColor = LinearTosRGB(vec4(color, 1.0));
+			}			
+		`,
+	});

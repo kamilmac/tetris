@@ -7,6 +7,10 @@ import pattern3 from "../patterns/Abstract Point Noise Background.jpg";
 // @ts-ignore
 import pattern4 from "../patterns/Barcode Product Label.jpg";
 // @ts-ignore
+import pattern6 from "../patterns/Black Striped Background Vector.jpg";
+// @ts-ignore
+import pattern5 from "../patterns/Ink Brush Grid Pattern.jpg";
+// @ts-ignore
 import pattern1 from "../patterns/Porous White.jpg";
 // @ts-ignore
 import dashPatternImage from "./dash_pattern.png";
@@ -23,6 +27,8 @@ const patterns = [
 	loader.load(pattern2),
 	loader.load(pattern3),
 	loader.load(pattern4),
+	loader.load(pattern5),
+	loader.load(pattern6),
 ];
 
 export class Cube {

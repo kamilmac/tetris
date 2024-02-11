@@ -124,6 +124,7 @@ export const CFG = {
 	},
 	enclosure: {
 		color: "#cccccc",
+		noiseFactor: 0.3,
 	},
 	cubes: {
 		active: "dante",
@@ -211,6 +212,12 @@ if (TPane) {
 		title: "Enclosure",
 	});
 	enclosure.addBinding(CFG.enclosure, "color");
+	enclosure.addBinding(CFG.enclosure, "noiseFactor", {
+		min: -1.0,
+		max: 1.0,
+		step: 0.01,
+		label: "Pattern factor",
+	});
 
 	const general = TPane.addFolder({
 		title: "General",
@@ -221,7 +228,7 @@ if (TPane) {
 	createCubeVariantBinding("reda");
 	createCubeVariantBinding("trolja");
 
-	TPane.importState(JSON.parse(sessionStorage.getItem("tpstate") || "{}"));
+	// TPane.importState(JSON.parse(sessionStorage.getItem("tpstate") || "{}"));
 
 	TPane.on("change", () => {
 		const state = TPane.exportState();
