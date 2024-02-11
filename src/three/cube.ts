@@ -1,11 +1,29 @@
 import * as THREE from "three";
 import { CubeType, TPane, cubeVariants } from "../config";
 // @ts-ignore
+import pattern2 from "../patterns/Abstract Dotted Background.jpg";
+// @ts-ignore
+import pattern3 from "../patterns/Abstract Point Noise Background.jpg";
+// @ts-ignore
+import pattern4 from "../patterns/Barcode Product Label.jpg";
+// @ts-ignore
+import pattern1 from "../patterns/Porous White.jpg";
+// @ts-ignore
 import dashPatternImage from "./dash_pattern.png";
-// import kneePatternImage from "./knee_pattern.png";
+// @ts-ignore
+import kneePatternImage from "./knee_pattern.png";
 
 const loader = new THREE.TextureLoader();
-const texture = loader.load(dashPatternImage);
+// const texture = loader.load(dashPatternImage);
+
+const patterns = [
+	loader.load(dashPatternImage),
+	loader.load(kneePatternImage),
+	loader.load(pattern1),
+	loader.load(pattern2),
+	loader.load(pattern3),
+	loader.load(pattern4),
+];
 
 export class Cube {
 	mesh: THREE.Mesh | null;
@@ -28,6 +46,7 @@ export class Cube {
 
 	onTweakPaneChange = () => {
 		this.setColor();
+		this.setPattern();
 		this.setThickness();
 		this.setScale();
 	};
@@ -48,6 +67,31 @@ export class Cube {
 		);
 	}
 
+	setPattern() {
+		if (!this.variant || !this.mesh) {
+			return;
+		}
+		const material = this.mesh.material as THREE.ShaderMaterial;
+		material.uniforms.u_pattern_factor.value = this.variant.patternFactor;
+		material.uniforms.u_pattern_scale.value = this.variant.patternScale;
+		material.uniforms.u_random_offset.value = new THREE.Vector2(
+			Math.random() * this.variant.patternPositionRandomness,
+			Math.random() * this.variant.patternPositionRandomness,
+		);
+		if (this.variant.patternFaceConfig.includes("V")) {
+			material.uniforms.u_pattern_face_v.value = 1.0;
+		} else {
+			material.uniforms.u_pattern_face_v.value = 0.0;
+		}
+		if (this.variant.patternFaceConfig.includes("H")) {
+			material.uniforms.u_pattern_face_h.value = 1.0;
+		} else {
+			material.uniforms.u_pattern_face_h.value = 0.0;
+		}
+		material.uniforms.u_texture.value =
+			patterns[Math.min(this.variant.pattern, patterns.length - 1)];
+	}
+
 	setThickness() {
 		if (!this.variant?.edge || !this.mesh) {
 			return;
@@ -59,6 +103,7 @@ export class Cube {
 	setVariant(newVariant: string) {
 		this.variant = cubeVariants[newVariant];
 		this.setColor();
+		this.setPattern();
 		this.setThickness();
 		this.setScale();
 	}
@@ -131,8 +176,12 @@ export class Cube {
 const cubeMaterial = () =>
 	new THREE.ShaderMaterial({
 		uniforms: {
-			u_texture: { value: texture },
-			u_pattern_color: { value: new THREE.Color("hsl(217, 37%, 14%)") },
+			u_texture: { value: patterns[3] },
+			u_pattern_factor: { value: 2.0 },
+			u_pattern_scale: { value: 1.0 },
+			u_pattern_face_h: { value: 0.0 },
+			u_pattern_face_v: { value: 0.0 },
+			u_random_offset: { value: new THREE.Vector2(0, 0) },
 			u_time: {
 				value: 1.0,
 			},
@@ -168,27 +217,41 @@ const cubeMaterial = () =>
       uniform vec3 u_color_top_bottom;
       uniform vec3 u_color_left_right;
       uniform vec3 u_color_front_back;
-      uniform vec3 u_pattern_color;
+      uniform float u_pattern_factor;
+      uniform float u_pattern_scale;
+      uniform float u_pattern_face_h;
+      uniform float u_pattern_face_v;
+      uniform vec2 u_random_offset;
 
       void main() {
-        float uvScale = sin(u_time) * 0.01 + 0.6;
-        vec2 scaledUV = vUv * uvScale + uvScale * 0.5;
+        float uvScale = u_pattern_scale;
+        vec2 scaledUV = vUv * uvScale + u_random_offset;
         vec4 texColor = texture2D(u_texture, scaledUV);
         float thickness = u_thickness;
         vec3 color;
         vec3 absNor = abs(vNormal);
 
+        float mixFactor = texColor.r; // Assuming the texture is grayscale
+
         if (vNormal.x > 0.9) color = u_color_left_right;
         else if (vNormal.x < -0.9) color = u_color_left_right;
-        else if (vNormal.y > 0.9) {
-          color = u_color_top_bottom;
-          float mixFactor = texColor.r; // Assuming the texture is grayscale
-          color = mix(u_color_front_back, u_color_top_bottom, mixFactor);
-        }
+        else if (vNormal.y > 0.9) color = u_color_top_bottom;
         else if (vNormal.y < -0.9) color = u_color_top_bottom;
         else if (vNormal.z > 0.9) color = u_color_front_back;
         else if (vNormal.z < -0.9) color = u_color_front_back;
         else color = vec3(1.0, 1.0, 1.0); // Shouldn't happen; set to White
+
+				if (u_pattern_face_h == 1.0) {
+					if (vNormal.x > 0.9 || vNormal.x < -0.9 || vNormal.z > 0.9 || vNormal.z < -0.9) {
+		        color = mix(color + u_pattern_factor, color, mixFactor);
+					}
+        }
+
+				if (u_pattern_face_v == 1.0) {
+					if (vNormal.y > 0.9 || vNormal.y < -0.9 || vNormal.z > 0.9 || vNormal.z < -0.9) {
+		        color = mix(color + u_pattern_factor, color, mixFactor);
+					}
+        }
 
         if (vUv.y < thickness || vUv.y > 1.0 - thickness || vUv.x < thickness || vUv.x > 1.0 - thickness) {
           gl_FragColor = vec4(0.03, 0.03, 0.03, 1.0);

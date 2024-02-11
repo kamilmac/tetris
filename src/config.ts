@@ -14,7 +14,11 @@ export interface CubeType {
 		color: string;
 	};
 	scale: number;
-	pattern: "A" | "B" | "C" | "";
+	pattern: number;
+	patternScale: number;
+	patternFaceConfig: "V" | "H" | "VH";
+	patternPositionRandomness: number;
+	patternFactor: number;
 }
 
 const controls = {
@@ -71,7 +75,11 @@ export const cubeVariants: Record<string, CubeType> = {
 			thickness: 0.3,
 			color: "#222222",
 		},
-		pattern: "",
+		pattern: 0,
+		patternFactor: 2.0,
+		patternScale: 1.0,
+		patternPositionRandomness: 0.0,
+		patternFaceConfig: "V",
 		scale: 0.9,
 	},
 	reda: {
@@ -85,7 +93,11 @@ export const cubeVariants: Record<string, CubeType> = {
 			color: "#888888",
 		},
 		scale: 1,
-		pattern: "A",
+		pattern: 0,
+		patternFactor: 2.0,
+		patternScale: 1.0,
+		patternPositionRandomness: 0.0,
+		patternFaceConfig: "V",
 	},
 	trolja: {
 		faceColors: {
@@ -98,7 +110,11 @@ export const cubeVariants: Record<string, CubeType> = {
 			color: "#888888",
 		},
 		scale: 1,
-		pattern: "A",
+		pattern: 1,
+		patternFactor: 2.0,
+		patternScale: 1.0,
+		patternPositionRandomness: 0.0,
+		patternFaceConfig: "V",
 	},
 };
 
@@ -148,16 +164,39 @@ const createCubeVariantBinding = (variant: string) => {
 	});
 	f.addBinding(cubeVariants[variant].edge, "thickness", {
 		min: 0,
-		max: 0.5,
-		value: 0.01,
+		max: 0.2,
+		step: 0.01,
 		label: "Edge thickness",
 	});
 	f.addBinding(cubeVariants[variant], "pattern", {
+		min: 0,
+		max: 16,
+		step: 1,
+		label: "Pattern",
+	});
+	f.addBinding(cubeVariants[variant], "patternFactor", {
+		min: -1.0,
+		max: 1.0,
+		step: 0.01,
+		label: "Pattern factor",
+	});
+	f.addBinding(cubeVariants[variant], "patternScale", {
+		min: 0.005,
+		max: 1.0,
+		step: 0.005,
+		label: "Pattern scale",
+	});
+	f.addBinding(cubeVariants[variant], "patternPositionRandomness", {
+		min: 0.0,
+		max: 1.0,
+		value: 0.005,
+		label: "Pattern randomness",
+	});
+	f.addBinding(cubeVariants[variant], "patternFaceConfig", {
 		options: {
-			none: "",
-			A: "A",
-			B: "B",
-			C: "C",
+			V: "V",
+			H: "H",
+			VH: "VH",
 		},
 	});
 	f.addBinding(cubeVariants[variant], "scale", {
@@ -182,7 +221,7 @@ if (TPane) {
 	createCubeVariantBinding("reda");
 	createCubeVariantBinding("trolja");
 
-	// TPane.importState(JSON.parse(sessionStorage.getItem('tpstate') || '{}'));
+	TPane.importState(JSON.parse(sessionStorage.getItem("tpstate") || "{}"));
 
 	TPane.on("change", () => {
 		const state = TPane.exportState();
