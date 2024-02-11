@@ -1,34 +1,21 @@
-import * as THREE from "three";
+import { Pane } from "tweakpane";
+import { isTweakPaneActive } from "./utils/utils";
 
 const FLOOR_SIZE = 6;
 
 export interface CubeType {
 	faceColors: {
-		topBottom: THREE.Color;
-		frontBack: THREE.Color;
-		leftRight: THREE.Color;
+		topBottom: string;
+		frontBack: string;
+		leftRight: string;
 	};
-	edge?: {
+	edge: {
 		thickness: number;
-		color: THREE.Color;
+		color: string;
 	};
-	scale?: number;
-	pattern?: "A" | "B" | "C";
+	scale: number;
+	pattern: "A" | "B" | "C" | "";
 }
-
-const c = (color: number | string): THREE.Color => {
-	if (typeof color === "string") {
-		const [h, s, l] = color
-			.replace(/[^0-9,]/g, "")
-			.split(",")
-			.map((s) => Number(s));
-		return new THREE.Color().setHSL(h / 360, s / 100, l / 100, "srgb");
-	}
-	if (typeof color === "number") {
-		return new THREE.Color().setHex(color);
-	}
-	return new THREE.Color();
-};
 
 const controls = {
 	left: new KeyboardEvent("keydown", {
@@ -76,64 +63,39 @@ const controls = {
 export const cubeVariants: Record<string, CubeType> = {
 	dante: {
 		faceColors: {
-			topBottom: c(0xffffff),
-			frontBack: c(0xffffff),
-			leftRight: c(0xffffff),
+			topBottom: "#ffffff",
+			frontBack: "#ffffff",
+			leftRight: "#ffffff",
 		},
 		edge: {
-			thickness: 0.03,
-			color: c(0x222222),
+			thickness: 0.3,
+			color: "#222222",
 		},
+		pattern: "",
 		scale: 0.9,
-	},
-	dante_p: {
-		faceColors: {
-			topBottom: c(0xdddddd),
-			frontBack: c(0xdddddd),
-			leftRight: c(0xdddddd),
-		},
-		edge: {
-			thickness: 0.0,
-			color: c(0x666666),
-		},
-		scale: 0.9,
-		pattern: "A",
 	},
 	reda: {
 		faceColors: {
-			topBottom: c("hsl(13, 100%, 28%)"),
-			frontBack: c("hsl(13, 100%, 48%)"),
-			leftRight: c("hsl(13, 100%, 68%)"),
+			topBottom: "#dddddd",
+			frontBack: "#888888",
+			leftRight: "#dddddd",
 		},
 		edge: {
 			thickness: 0.0,
-			color: c(0x888888),
-		},
-		scale: 1,
-		pattern: "A",
-	},
-	polmot: {
-		faceColors: {
-			topBottom: c("hsl(0, 0%, 10%)"),
-			frontBack: c("hsl(0, 0%, 30%)"),
-			leftRight: c("hsl(0, 0%, 40%)"),
-		},
-		edge: {
-			thickness: 0.0,
-			color: c(0x888888),
+			color: "#888888",
 		},
 		scale: 1,
 		pattern: "A",
 	},
 	trolja: {
 		faceColors: {
-			topBottom: c("hsl(13, 100%, 48%)"),
-			frontBack: c("hsl(13, 100%, 66%)"),
-			leftRight: c("hsl(13, 100%, 86%)"),
+			topBottom: "#dddddd",
+			frontBack: "#dddddd",
+			leftRight: "#dddddd",
 		},
 		edge: {
 			thickness: 0.0,
-			color: c(0x888888),
+			color: "#888888",
 		},
 		scale: 1,
 		pattern: "A",
@@ -142,19 +104,18 @@ export const cubeVariants: Record<string, CubeType> = {
 
 export const CFG = {
 	background: {
-		color: "hsl(0, 0%,10%)",
+		color: "#333333",
 	},
-	enclosue: {
-		color: c("hsl(0, 0%, 14%)"),
+	enclosure: {
+		color: "#cccccc",
 	},
 	cubes: {
 		active: "dante",
-		locked: ["reda", "polmot", "trolja"],
+		locked: ["reda", "trolja"],
 	},
-	colors: {
-		activeCube: 0xefefef,
-		lockedRows: [0xff0000, 0x00ff00, 0x0000ff],
-		floor: 0xcc8822,
+	shadow: {
+		thickness: 0.02,
+		color: "#444444",
 	},
 	cycleTime: 440,
 	accelerationFactor: 15,
@@ -167,3 +128,64 @@ export const CFG = {
 	},
 	controls,
 };
+
+export const TPane = isTweakPaneActive()
+	? new Pane({ title: "Styling" })
+	: null;
+
+const createCubeVariantBinding = (variant: string) => {
+	if (!TPane) {
+		return;
+	}
+	const f = TPane.addFolder({
+		title: `Cube ${variant}`,
+	});
+	f.addBinding(cubeVariants[variant].faceColors, "leftRight");
+	f.addBinding(cubeVariants[variant].faceColors, "topBottom");
+	f.addBinding(cubeVariants[variant].faceColors, "frontBack");
+	f.addBinding(cubeVariants[variant].edge, "color", {
+		label: "Edge color",
+	});
+	f.addBinding(cubeVariants[variant].edge, "thickness", {
+		min: 0,
+		max: 0.5,
+		value: 0.01,
+		label: "Edge thickness",
+	});
+	f.addBinding(cubeVariants[variant], "pattern", {
+		options: {
+			none: "",
+			A: "A",
+			B: "B",
+			C: "C",
+		},
+	});
+	f.addBinding(cubeVariants[variant], "scale", {
+		min: 0.6,
+		max: 1.0,
+		value: 0.01,
+	});
+};
+
+if (TPane) {
+	const enclosure = TPane.addFolder({
+		title: "Enclosure",
+	});
+	enclosure.addBinding(CFG.enclosure, "color");
+
+	const general = TPane.addFolder({
+		title: "General",
+	});
+	general.addBinding(CFG.background, "color", { label: "Background" });
+
+	createCubeVariantBinding("dante");
+	createCubeVariantBinding("reda");
+	createCubeVariantBinding("trolja");
+
+	// TPane.importState(JSON.parse(sessionStorage.getItem('tpstate') || '{}'));
+
+	TPane.on("change", () => {
+		const state = TPane.exportState();
+		sessionStorage.setItem("tpstate", JSON.stringify(state));
+	});
+}

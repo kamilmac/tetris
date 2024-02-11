@@ -46,6 +46,9 @@ class Game {
 	}
 
 	onNextStep(callback: () => void) {
+		if (appState.state.status === "pause") {
+			return;
+		}
 		const t = this.getClock();
 		// @ts-ignore
 		if (t > this.lastBlockStepTime) {

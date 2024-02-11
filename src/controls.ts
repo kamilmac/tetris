@@ -83,7 +83,10 @@ export class Controls {
 		}
 
 		const keyUpHandler = (event: KeyboardEvent) => {
-			if (appState.state.status !== "playing" && event.isTrusted) {
+			if (
+				!["playing", "pause"].includes(appState.state.status) &&
+				event.isTrusted
+			) {
 				return;
 			}
 			switch (event.key) {
@@ -127,6 +130,9 @@ export class Controls {
 				case " ":
 					this.actions.push("fall");
 					break;
+				case "p":
+					this.actions.push("pause");
+					break;
 				default:
 					break;
 			}
@@ -165,6 +171,13 @@ export class Controls {
 				break;
 			case "rotate":
 				this.brick.rotate();
+				break;
+			case "pause":
+				if (appState.state.status === "playing") {
+					appState.changeStatus("pause");
+				} else if (appState.state.status === "pause") {
+					appState.changeStatus("playing");
+				}
 				break;
 			case "camera_rotate_right":
 				this.engine?.camera?.rotate("right");

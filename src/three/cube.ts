@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CubeType, cubeVariants } from "../config";
+import { CubeType, TPane, cubeVariants } from "../config";
 // @ts-ignore
 import dashPatternImage from "./dash_pattern.png";
 // import kneePatternImage from "./knee_pattern.png";
@@ -22,20 +22,30 @@ export class Cube {
 		this.mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial());
 		this.setVariant(variant);
 		this.scene.add(this.mesh);
+		TPane?.on("change", this.onTweakPaneChange);
 		requestAnimationFrame(this.animate);
 	}
+
+	onTweakPaneChange = () => {
+		this.setColor();
+		this.setThickness();
+		this.setScale();
+	};
 
 	setColor() {
 		if (!this.variant || !this.mesh) {
 			return;
 		}
 		const material = this.mesh.material as THREE.ShaderMaterial;
-		material.uniforms.u_color_top_bottom.value =
-			this.variant.faceColors.topBottom;
-		material.uniforms.u_color_left_right.value =
-			this.variant.faceColors.leftRight;
-		material.uniforms.u_color_front_back.value =
-			this.variant.faceColors.frontBack;
+		material.uniforms.u_color_top_bottom.value = new THREE.Color().setStyle(
+			this.variant.faceColors.topBottom,
+		);
+		material.uniforms.u_color_left_right.value = new THREE.Color().setStyle(
+			this.variant.faceColors.leftRight,
+		);
+		material.uniforms.u_color_front_back.value = new THREE.Color().setStyle(
+			this.variant.faceColors.frontBack,
+		);
 	}
 
 	setThickness() {

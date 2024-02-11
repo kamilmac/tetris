@@ -1,14 +1,11 @@
 import * as THREE from "three";
-import { CFG } from "../config";
+import { CFG, TPane } from "../config";
 import { Physics } from "../physics";
 import { Cube, Stage } from "../stage";
 import { Camera } from "./camera";
 import { Cube as Tetrino } from "./cube";
 import { Floor } from "./floor";
-// import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
-// import cubeObj from "./cube.obj?url";
 import { shadowMaterial } from "./materials";
-// import { Walls } from "./walls";
 
 interface ShadowCube extends Cube {
 	x: number;
@@ -20,7 +17,6 @@ export class Engine {
 	private stage: Stage;
 	private shadowCubes: ShadowCube[];
 	private idsInStage: number[];
-	// private cubeObj?: THREE.BufferGeometry;
 	private renderer?: THREE.WebGLRenderer;
 	private scene?: THREE.Scene;
 	private floor: Floor | null;
@@ -38,7 +34,6 @@ export class Engine {
 		this.shadowCubes = [];
 		this.shadowGroup = new THREE.Group();
 		this.idsInStage = [];
-		// this.cubeObj = undefined;
 		this.floorCenterX = 0;
 		this.floorCenterZ = 0;
 		this.floor = null;
@@ -46,8 +41,13 @@ export class Engine {
 		this.physics = null;
 		this.usePhysics = false;
 		this.setup();
+		TPane?.on("change", this.onTweakPaneChange);
 		onReady(this);
 	}
+
+	onTweakPaneChange = () => {
+		this.renderer?.setClearColor(CFG.background.color);
+	};
 
 	reset() {
 		if (!this.camera || !this.floor) {

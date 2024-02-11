@@ -18,6 +18,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
     "@playwright/test": "^1.41.1",
+    "@tweakpane/core": "^2.0.3",
     "@types/node": "^20.11.11",
     "@types/three": "^0.160.0",
     "husky": "^9.0.10",
@@ -27,6 +28,7 @@
   "dependencies": {
     "cannon-es": "^0.20.0",
     "lit": "^3.1.1",
-    "three": "^0.160.0"
+    "three": "^0.160.0",
+    "tweakpane": "^4.0.3"
   }
 }

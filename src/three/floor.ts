@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { Scene } from "three";
-import { CFG } from "../config";
+import { CFG, TPane } from "../config";
 import { Camera } from "./camera";
 
 export class Floor {
@@ -52,11 +52,41 @@ export class Floor {
 		this.wallF.position.y += width / 2;
 		this.wallF.position.z += width - 0.5;
 		scene?.add(this.wallF);
+
+		TPane?.on("change", this.onTweakPaneChange);
 	}
 
 	hideWalls() {
 		this.wallsHidden = true;
 	}
+
+	onTweakPaneChange = () => {
+		for (let i = 0; i < this.floor.children.length; i++) {
+			const p = this.floor.children[i] as THREE.Mesh;
+			const material = p.material as THREE.MeshBasicMaterial;
+			material.color.set(CFG.enclosure.color);
+		}
+		for (let i = 0; i < this.wallL.children.length; i++) {
+			const p = this.wallL.children[i] as THREE.Mesh;
+			const material = p.material as THREE.MeshBasicMaterial;
+			material.color.set(CFG.enclosure.color);
+		}
+		for (let i = 0; i < this.wallB.children.length; i++) {
+			const p = this.wallB.children[i] as THREE.Mesh;
+			const material = p.material as THREE.MeshBasicMaterial;
+			material.color.set(CFG.enclosure.color);
+		}
+		for (let i = 0; i < this.wallR.children.length; i++) {
+			const p = this.wallR.children[i] as THREE.Mesh;
+			const material = p.material as THREE.MeshBasicMaterial;
+			material.color.set(CFG.enclosure.color);
+		}
+		for (let i = 0; i < this.wallF.children.length; i++) {
+			const p = this.wallF.children[i] as THREE.Mesh;
+			const material = p.material as THREE.MeshBasicMaterial;
+			material.color.set(CFG.enclosure.color);
+		}
+	};
 
 	animate() {
 		if (this.wallsHidden) {
@@ -115,7 +145,7 @@ export class Floor {
 		const line = new THREE.Mesh(
 			geometry,
 			new THREE.MeshBasicMaterial({
-				color: CFG.enclosue.color,
+				color: CFG.enclosure.color,
 			}),
 		);
 		line.material.side = THREE.DoubleSide;
