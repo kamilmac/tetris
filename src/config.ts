@@ -116,6 +116,23 @@ export const cubeVariants: Record<string, CubeType> = {
 		patternPositionRandomness: 0.0,
 		patternFaceConfig: "V",
 	},
+	havre: {
+		faceColors: {
+			topBottom: "#dddddd",
+			frontBack: "#dddddd",
+			leftRight: "#dddddd",
+		},
+		edge: {
+			thickness: 0.0,
+			color: "#888888",
+		},
+		scale: 1,
+		pattern: 1,
+		patternFactor: 2.0,
+		patternScale: 1.0,
+		patternPositionRandomness: 0.0,
+		patternFaceConfig: "V",
+	},
 };
 
 export const CFG = {
@@ -128,7 +145,7 @@ export const CFG = {
 	},
 	cubes: {
 		active: "dante",
-		locked: ["reda", "trolja"],
+		locked: ["reda", "trolja", "havre"],
 	},
 	shadow: {
 		thickness: 0.02,
@@ -227,8 +244,9 @@ if (TPane) {
 	createCubeVariantBinding("dante");
 	createCubeVariantBinding("reda");
 	createCubeVariantBinding("trolja");
+	createCubeVariantBinding("havre");
 
-	// TPane.importState(JSON.parse(sessionStorage.getItem("tpstate") || "{}"));
+	TPane.importState(JSON.parse(sessionStorage.getItem("tpstate") || "{}"));
 
 	TPane.on("change", () => {
 		const state = TPane.exportState();
