@@ -155,7 +155,6 @@ export class Engine {
 		for (const sc of this.shadowCubes) {
 			const geometry = new THREE.BoxGeometry(1, 1, 1);
 			const mesh = new THREE.Mesh(geometry, shadowMaterial);
-			mesh.scale.set(0.95, 0.95, 0.95);
 			if (sc.y < lowestShadowCubeY) {
 				lowestShadowCubeY = sc.y;
 			}
