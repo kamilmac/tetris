@@ -37,7 +37,6 @@ export class Cube {
 	positionInitiated = false;
 	targetPosition: THREE.Vector3 | null = null;
 	targetScale: THREE.Vector3 | null = null;
-	requestId: number | null = null;
 	destroying = false;
 	variant: CubeType | null = null;
 

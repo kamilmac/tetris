@@ -33,7 +33,7 @@ export class TetrisAI extends LitElement {
 		//   }
 		// });
 		setInterval(() => {
-			if (appState.state.status !== "inMenu") {
+			if (appState.state.status !== "inDemo") {
 				return;
 			}
 			const chance = 0.1;

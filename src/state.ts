@@ -1,6 +1,6 @@
 type Status =
 	| "loading"
-	| "inMenu"
+	| "inDemo"
 	| "countingDown"
 	| "playing"
 	| "pause"
@@ -29,7 +29,7 @@ class State {
 			bestScore: parseInt(localStorage.getItem("bestScore") || "0"),
 			menu: true,
 			autoplay: true,
-			status: "inMenu",
+			status: "inDemo",
 		};
 		this.subs = [];
 	}

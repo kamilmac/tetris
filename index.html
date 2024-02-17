@@ -4,16 +4,69 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <title>Tetris</title>
     <style>
-      body {
+      html, body {
         margin: 0;
+        padding: 0;
+        background: #1A1B26;
+      }
+      .splash {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #1A1B26;
+        z-index: 1000;
+      }
+      .tnt {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        transform: scale(0.25);
+        transform-origin: bottom left;
+        z-index: 1000;
+      }
+      @keyframes rotate {
+        from {
+          transform: rotate(0);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .lemon {
+        position: absolute;
+        animation: rotate 1s linear infinite;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px);
       }
     </style>
   </head>
   <body>
+    <script>
+      const interval = setInterval(() => {
+        const splash = document.querySelector('.splash');
+        if (window.__READY__) {
+          clearInterval(interval);
+          setTimeout(() => {
+            splash.style.visibility = 'hidden';
+          }, 500)
+        }
+      }, 50)
+    </script>
     <tetris-lit></tetris-lit>
     <script type="module" src="/src/index.ts"></script>
     <script type="module" src="/src/lit/index.ts"></script>
+    <script type="module" src="/src/react/index.tsx"></script>
+    <div class="splash">
+      <img class="lemon" src="/public/lemon.png"></img>
+    </div>
+    <div id="react-root"></div>
+    <img class="tnt" src="/public/tnt.png"></img>
   </body>
 </html>

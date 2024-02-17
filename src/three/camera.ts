@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Stage } from "../stage";
 import { appState } from "../state";
+import { Bridge } from "../utils/bridge";
 
 export class Camera {
 	camera: THREE.PerspectiveCamera;
@@ -28,25 +29,48 @@ export class Camera {
 			{
 				x: this.floorCenterX + this.stage.width - 5,
 				z: this.floorCenterZ + this.stage.depth,
+				pointer: {
+					x: this.stage.width - 0.5,
+					z: this.stage.depth - 0.5,
+				},
 			},
 			{
 				x: this.floorCenterX + this.stage.width,
 				z: this.floorCenterZ - this.stage.depth + 5,
+				pointer: {
+					x: this.stage.width - 0.5,
+					z: this.stage.depth - 0.5 - 6,
+				},
 			},
 			{
 				x: this.floorCenterX - this.stage.width + 5,
 				z: this.floorCenterZ - this.stage.depth,
+				pointer: {
+					x: this.stage.width - 0.5 - 6,
+					z: this.stage.depth - 0.5 - 6,
+				},
 			},
 			{
 				x: this.floorCenterX - this.stage.width,
 				z: this.floorCenterZ + this.stage.depth - 5,
+				pointer: {
+					x: this.stage.width - 0.5 - 6,
+					z: this.stage.depth - 0.5,
+				},
 			},
 		];
 		const width = window.innerWidth;
 		const height = window.innerHeight;
 		this.camera = new THREE.PerspectiveCamera(120, width / height, 0.1, 1000);
-		this.camera.zoom = 3.1;
+		this.camera.zoom = 2.5;
 
+		appState.subscribe(["status"], (state) => {
+			if (state.status === "inDemo") {
+				this.camera.zoom = 2.5;
+			} else {
+				this.camera.zoom = 3.1;
+			}
+		});
 		// const aspect = window.innerWidth / window.innerHeight;
 		// const frustumSize = 12;
 		// this.camera = new THREE.OrthographicCamera(
@@ -64,13 +88,6 @@ export class Camera {
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		this.controls.target.set(this.floorCenterX, 0, this.floorCenterZ);
 		this.controls.update();
-		appState.subscribe(["status"], (state) => {
-			if (["inMenu"].includes(state.status)) {
-				this.shiftSceneToRight();
-			} else {
-				this.centerOnScene();
-			}
-		});
 	}
 
 	reset() {
@@ -79,16 +96,6 @@ export class Camera {
 			this.stage.width * 2,
 			this.floorCenterZ + this.stage.depth,
 		);
-	}
-
-	shiftSceneToRight() {
-		if (!this.camera) {
-			return;
-		}
-		const w = window.innerWidth;
-		const h = window.innerHeight;
-
-		this.camera.setViewOffset(w, h, -0.2 * w, h * 0, w, h);
 	}
 
 	centerOnScene() {
@@ -168,6 +175,11 @@ export class Camera {
 		this.camera.lookAt(
 			new THREE.Vector3(this.floorCenterX, 0, this.floorCenterZ),
 		);
+		const p = this.cameraPositions[this.activeCamera];
+		const pos = new THREE.Vector3(p.pointer.x, -0.5, p.pointer.z);
+		const v = pos.project(this.camera);
+		Bridge.set('stage_x', (v.x * 0.5 + 0.5) * window.innerWidth);
+		Bridge.set('stage_y', -(v.y * 0.5 - 0.5) * window.innerHeight);
 		this.camera.updateProjectionMatrix();
 		return this.camera;
 	}

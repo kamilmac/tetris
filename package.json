@@ -20,14 +20,20 @@
     "@playwright/test": "^1.41.1",
     "@tweakpane/core": "^2.0.3",
     "@types/node": "^20.11.11",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
     "@types/three": "^0.160.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "husky": "^9.0.10",
     "typescript": "^4.6.4",
-    "vite": "^3.2.3"
+    "vite": "^3.2.3",
+    "vite-tsconfig-paths": "^4.3.1"
   },
   "dependencies": {
     "cannon-es": "^0.20.0",
     "lit": "^3.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "three": "^0.160.0",
     "tweakpane": "^4.0.3"
   }

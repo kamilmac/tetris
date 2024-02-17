@@ -10,10 +10,6 @@ import "./tetrisScore";
 export class TetrisLit extends LitElement {
 	render() {
 		return html`
-      <tetris-logo></tetris-logo>
-      <tetris-legend></tetris-legend>
-      <tetris-score></tetris-score>
-      <tetris-cta></tetris-cta>
       <tetris-ai></tetris-ai>
     `;
 	}

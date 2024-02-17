@@ -6,6 +6,7 @@ import { Camera } from "./camera";
 import { Cube as Tetrino } from "./cube";
 import { Floor } from "./floor";
 import { shadowMaterial } from "./materials";
+import { Bridge } from "../utils/bridge";
 
 interface ShadowCube extends Cube {
 	x: number;
@@ -205,8 +206,22 @@ export class Engine {
 			this.floor.wallsHidden = true;
 		}
 		this.floor.animate();
+		let firstActiveBox = null;
 		for (const [_, box] of this.boxes) {
 			box?.animate();
+			if (box?.variant?.edge.thickness && !firstActiveBox) {
+				firstActiveBox = box;
+			}
+		}
+		if (firstActiveBox) {
+			const pos = firstActiveBox.mesh?.getWorldPosition(new THREE.Vector3());
+			if (pos) {
+				pos.z += 0.45;
+				pos.y += 0.45;
+				const v = pos.project(this.camera.camera);
+				Bridge.set('active_box_x', (v.x * 0.5 + 0.5) * window.innerWidth);
+				Bridge.set('active_box_y', -(v.y * 0.5 - 0.5) * window.innerHeight);
+			}
 		}
 		this.renderer.render(this.scene, this.camera.animate());
 	}

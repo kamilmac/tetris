@@ -14,6 +14,7 @@ class Game {
 	fastForward = false;
 
 	constructor() {
+		window.__READY__ = true;
 		this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
 		new Engine(this.stage, (engine: Engine) => {
 			this.engine = engine;
@@ -23,7 +24,6 @@ class Game {
 			this.lastBlockStepTime = this.getClock();
 			this.addBrick();
 			this.go();
-			this.engine?.camera?.shiftSceneToRight();
 			appState.subscribe(["status"], (state) => {
 				if (state.status === "playing") {
 					this.onResetGame();
@@ -74,7 +74,7 @@ class Game {
 	processEndGame() {
 		const isOverLimit = this.stage.lastLockedY >= CFG.stage.limit;
 		const isPlaying = appState.state.status === "playing";
-		const isInMenu = appState.state.status === "inMenu";
+		const isInMenu = appState.state.status === "inDemo";
 		const isPhysicsActive = (this.engine?.physics?.timeActive || 0) > 3000;
 
 		if (!this.engine?.usePhysics && isOverLimit) {
