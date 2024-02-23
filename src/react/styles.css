@@ -1,0 +1,27 @@
+@keyframes scaleDown {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.3);
+    opacity: 0.35;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.hidden {
+  animation: fadeOut 0.15s ease-out both;
+}
+
+.scaledDown {
+  animation: scaleDown 0.15s ease-in both;
+}

@@ -5,6 +5,12 @@ import { Stage } from "./stage";
 import { appState } from "./state";
 import { Engine } from "./three/engine";
 
+declare global {
+	interface Window {
+		__READY__: boolean;
+	}
+}
+
 class Game {
 	stage: Stage;
 	lastBlockStepTime?: number;

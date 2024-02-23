@@ -69,6 +69,7 @@ export class Engine {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setClearColor(CFG.background.color);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
+		
 		this.renderer.outputColorSpace = THREE.SRGBColorSpace;
 		this.camera = new Camera(this.stage, this.renderer);
 		this.floor = new Floor(

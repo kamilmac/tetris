@@ -66,9 +66,9 @@ export class Camera {
 
 		appState.subscribe(["status"], (state) => {
 			if (state.status === "inDemo") {
-				this.camera.zoom = 2.5;
+				this.camera._targetZoom = 2.5;
 			} else {
-				this.camera.zoom = 3.1;
+				this.camera._targetZoom = 3.3;
 			}
 		});
 		// const aspect = window.innerWidth / window.innerHeight;
@@ -166,6 +166,9 @@ export class Camera {
 	animate() {
 		this.doWobble();
 		this.lerp();
+		if (this.camera._targetZoom - this.camera.zoom > 0.01) { 
+			this.camera.zoom += (this.camera._targetZoom - this.camera.zoom) / 10;
+		}
 		if (
 			this.cameraInMotion &&
 			performance.now() - this.lastRotationTime > 400

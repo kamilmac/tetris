@@ -38,7 +38,6 @@ export class TetrisCTA extends LitElement {
 	constructor() {
 		super();
 		appState.subscribe(["status"], (state) => {
-			console.log({ state });
 			if (state.status === "inDemo") {
 				this.activeVariant = "play";
 			} else if (state.status === "gameOver") {

@@ -24,7 +24,6 @@ export class TetrisScore extends LitElement {
 	constructor() {
 		super();
 		appState.subscribe(["score", "bestScore"], (state) => {
-			console.log("yo", state);
 			this.score = state.score;
 			this.bestScore = state.bestScore;
 			this.requestUpdate();
@@ -33,8 +32,8 @@ export class TetrisScore extends LitElement {
 
 	render() {
 		return html`
-				<div>${this.score}</div>
-				<div>${this.bestScore}</div>
-			`;
+			<div>${this.score}</div>
+			<div>${this.bestScore}</div>
+		`;
 	}
 }
