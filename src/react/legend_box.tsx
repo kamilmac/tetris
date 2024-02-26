@@ -2,7 +2,6 @@ import * as React from "react";
 import { Bridge } from "../utils/bridge";
 import { Text } from "./text";
 
-
 interface LegendBoxProps {
 	children: React.ReactNode;
 	publishPosition: string;

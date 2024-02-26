@@ -11,19 +11,24 @@ const getScoreString = (score: number) => {
 }
 
 export const Score = () => {
-	const [score, setScore] = React.useState('_');
+	const [score, setScore] = React.useState(0);
 	const [bestScore, setBestScore] = React.useState(localStorage.getItem('bestScore') || 0);
-
+	const [isDemo, setIsdemo] = React.useState(true);
 
 	React.useEffect(() => {
-		appState.subscribe(['score', 'status', 'bestScore'], (state) => {
-			if (state.status !== 'playing') {
-				return;
-			}
+		appState.subscribe(['score', 'bestScore'], (state) => {
 			setBestScore(state.bestScore);
 			setScore(state.score);
 		});	
+		appState.subscribe(['status'], (state) => {
+			if (state.status !== 'inDemo') {
+				setIsdemo(false);
+			}
+		});
 	}, []);
+
+	const scoreString = getScoreString(score);
+	const bestScoreString = getScoreString(bestScore);
 
 	return (
 		<div
@@ -37,12 +42,16 @@ export const Score = () => {
 				overflow: "hidden",
 			}}
 		>
-			<Text size="18px" mono>
-				{ getScoreString(score) }
-			</Text>
+			{
+				!isDemo && (
+					<Text size="18px" mono>
+						{ scoreString }
+					</Text>
+				)
+			}
 			<Fire />
 			<Text size="18px" mono>
-				{ getScoreString(bestScore) }
+				{ bestScoreString }
 			</Text>
 			<div
 				style={{
