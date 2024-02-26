@@ -59,7 +59,7 @@ const App = () => {
 						dots={2}
 						publishPosition="legend2"
 						w={220}
-						h={128}
+						h={124}
 						x={0.7}
 						y={0.4}
 					>
