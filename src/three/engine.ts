@@ -51,10 +51,11 @@ export class Engine {
 	};
 
 	reset() {
-		if (!this.camera || !this.floor) {
+		if (!this.camera || !this.floor || !this.physics) {
 			return;
 		}
 		this.usePhysics = false;
+		this.physics.timeActive = 0;
 		this.camera.activeCamera = 0;
 		this.floor.wallsHidden = false;
 		this.camera.reset();

@@ -80,7 +80,7 @@ class Game {
 	processEndGame() {
 		const isOverLimit = this.stage.lastLockedY >= CFG.stage.limit;
 		const isPlaying = appState.state.status === "playing";
-		const isInMenu = appState.state.status === "inDemo";
+		const isInDemo = appState.state.status === "inDemo";
 		const isPhysicsActive = (this.engine?.physics?.timeActive || 0) > 3000;
 
 		if (!this.engine?.usePhysics && isOverLimit) {
@@ -90,7 +90,7 @@ class Game {
 			}
 		}
 
-		if (isInMenu && isOverLimit && isPhysicsActive) {
+		if (isInDemo && isOverLimit && isPhysicsActive) {
 			this.onResetGame();
 		}
 	}
