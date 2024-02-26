@@ -1,8 +1,30 @@
 import * as React from "react";
+import { appState } from "../state";
 import { Fire } from "./icons";
 import { Text } from "./text";
 
+const getScoreString = (score: number) => {
+	const scoreString = String(score);
+	const scoreStringLength = 4;
+	const reminderString = new Array(scoreStringLength - scoreString.length).fill('_');
+	return [...reminderString, ...scoreString].join('');
+}
+
 export const Score = () => {
+	const [score, setScore] = React.useState('_');
+	const [bestScore, setBestScore] = React.useState(localStorage.getItem('bestScore') || 0);
+
+
+	React.useEffect(() => {
+		appState.subscribe(['score', 'status', 'bestScore'], (state) => {
+			if (state.status !== 'playing') {
+				return;
+			}
+			setBestScore(state.bestScore);
+			setScore(state.score);
+		});	
+	}, []);
+
 	return (
 		<div
 			style={{
@@ -16,11 +38,11 @@ export const Score = () => {
 			}}
 		>
 			<Text size="18px" mono>
-				____
+				{ getScoreString(score) }
 			</Text>
 			<Fire />
 			<Text size="18px" mono>
-				_136
+				{ getScoreString(bestScore) }
 			</Text>
 			<div
 				style={{

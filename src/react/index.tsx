@@ -14,7 +14,6 @@ const App = () => {
 
 	const onClick = () => {
     if (["inDemo", "gameOver"].includes(appState.state.status)) {
-    	console.log('YO')
 			setShowLegend(false);
 			setTimeout(() => {
 				appState.changeStatus("playing");
