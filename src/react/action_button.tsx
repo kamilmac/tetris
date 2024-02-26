@@ -7,8 +7,64 @@ import { appState } from "../state";
 let scale = 1;
 let dir = +1;
 
+const Variants = {
+	inDemo: {
+		icon: Control,
+		label: () => (
+			<div>
+				<Text color="#F16883" size={18}>[ </Text>
+				<Text color="#FFFFFF80">
+					Press
+				</Text>
+				<Text> </Text>
+				<Text color="#FFFFFFCC" size={16}>
+					<b>ENTER</b>
+				</Text>
+				<Text> </Text>
+				<Text color="#FFFFFF80">
+					to
+				</Text>
+				<Text> </Text>
+				<Text color="#FFFFFFCC">
+					<b>take control</b>
+				</Text>
+				<Text color="#F16883" size={18}> ]</Text>
+			</div>
+		)
+	},
+	gameOver: {
+		icon: Control,
+		label: () => (
+			<div>
+				<Text color="#F16883" size={18}>[ </Text>
+				<Text color="#FFFFFF80">
+					Press
+				</Text>
+				<Text> </Text>
+				<Text color="#FFFFFFCC" size={16}>
+					<b>ENTER</b>
+				</Text>
+				<Text> </Text>
+				<Text color="#FFFFFF80">
+					to
+				</Text>
+				<Text> </Text>
+				<Text color="#FFFFFFCC">
+					<b>Go Again!</b>
+				</Text>
+				<Text color="#F16883" size={18}> ]</Text>
+			</div>
+		)
+	},
+	mini: {
+		icon: null,
+		label: null,
+		minimized: true,
+	},
+};
+
 export const ActionButton = (props) => {
-  const [buttonState, setButtonState] = React.useState('maximized');
+  const [buttonState, setButtonState] = React.useState('inDemo');
 	const ref = React.useRef<React.LegacyRef<HTMLDivElement>>(null);
 	const frameId = React.useRef<number | null>(null);
 
@@ -29,7 +85,9 @@ export const ActionButton = (props) => {
 	React.useEffect(() => {
     appState.subscribe(["status"], (state) => {
       if (state.status === "playing") {
-        setButtonState('minimized');
+        setButtonState('mini');
+      } else if (state.status === "gameOver") {
+        setButtonState('gameOver');
       }
     });
 		frameId.current = requestAnimationFrame(animate);
@@ -56,7 +114,7 @@ export const ActionButton = (props) => {
 			}}
 		>
 			<div
-        className={ buttonState === 'minimized' ? "scaledDown" : "" }
+        className={ buttonState === 'mini' ? "scaledDown" : "" }
 				style={{
 					width: 60,
 					height: 60,
@@ -71,29 +129,14 @@ export const ActionButton = (props) => {
         onPointerUp={props.onAction}
 			>
         {
-          buttonState !== 'minimized' &&
-            <Control />
+          buttonState !== 'mini' &&
+            Variants[buttonState]?.icon()
         }
 			</div>
-			<div>
-				<Text color="#F16883" size={18}>[ </Text>
-				<Text color="#FFFFFF80">
-					Press
-				</Text>
-				<Text> </Text>
-				<Text color="#FFFFFFCC" size={16}>
-					<b>ENTER</b>
-				</Text>
-				<Text> </Text>
-				<Text color="#FFFFFF80">
-					to
-				</Text>
-				<Text> </Text>
-				<Text color="#FFFFFFCC">
-					<b>take control</b>
-				</Text>
-				<Text color="#F16883" size={18}> ]</Text>
-			</div>
+      {
+        buttonState !== 'mini' &&
+          Variants[buttonState]?.label()
+      }
 		</div>
 	);
 };

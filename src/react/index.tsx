@@ -12,8 +12,9 @@ import './styles.css';
 const App = () => {
 	const [showLegend, setShowLegend] = React.useState(true);
 
-	const onAction = () => {
-    if (appState.state.status === "inDemo") {
+	const onClick = () => {
+    if (["inDemo", "gameOver"].includes(appState.state.status)) {
+    	console.log('YO')
 			setShowLegend(false);
 			setTimeout(() => {
 				appState.changeStatus("playing");
@@ -73,7 +74,7 @@ const App = () => {
 					</LegendBox>
 				</div>
 			}
-			<ActionButton onAction={onAction} />
+			<ActionButton onAction={onClick} />
 			<Score />
 		</>
 	);
