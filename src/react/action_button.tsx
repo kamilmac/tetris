@@ -14,13 +14,12 @@ export const ActionButton = (props) => {
 
 	const animate = () => {
 		if (ref.current) {
-			scale += dir * 0.001;
-			if (scale > 1.02) {
+			scale += dir * 0.002;
+			if (scale > 1.03) {
 				dir = -1;
-			} else if (scale < 0.98) {
+			} else if (scale < 0.97) {
 				dir = 1;
 			}
-
 			ref.current.style.transform = `scale(${scale})`;
 		}
 		frameId.current = requestAnimationFrame(animate);

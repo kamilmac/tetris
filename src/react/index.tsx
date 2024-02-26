@@ -2,7 +2,7 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { Key, LegendBox } from "./legend_box";
 import { Text } from "./text";
-import { SvgLine } from "./SvgLine";
+import { SvgLine } from "./svg_line";
 import { ActionButton } from "./action_button";
 import { Score } from "./score";
 import { appState } from "../state";
