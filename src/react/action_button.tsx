@@ -117,9 +117,7 @@ export const ActionButton = (props: Props) => {
 						animation: 'rotate 1.2s linear infinite',
 						width: 66,
 					  height: 66,
-					  background: `conic-gradient(
-					    from 90deg,
-					    rgb(26 27 38), rgb(26 27 38), rgb(41 43 61), rgb(203 50 90), rgb(242 104 131), rgb(249 147 78), rgb(57 112 192), #22345e)`,
+						background: "conic-gradient(from 90deg, rgb(249 146 76), rgb(203 50 90), rgb(57 112 193), rgb(249 146 76))",
 					  margin: 10,
 					  borderRadius: '50%',
 					  position: 'absolute',
