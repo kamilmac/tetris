@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { CubeType, TPane, cubeVariants } from "../config";
 // @ts-ignore
-import pattern1 from "../patterns/Porous White.jpg";
+import pattern1 from "../patterns/porous.jpg";
 
 const loader = new THREE.TextureLoader();
 

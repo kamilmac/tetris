@@ -4,7 +4,7 @@ import { CFG, TPane } from "../config";
 import { Camera } from "./camera";
 
 // @ts-ignore
-import pattern1 from "../patterns/Porous White.jpg";
+import pattern1 from "../patterns/porous.jpg";
 
 const loader = new THREE.TextureLoader();
 const texture = loader.load(pattern1);
