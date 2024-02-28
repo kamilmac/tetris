@@ -46,22 +46,22 @@ export const Score = () => {
 			}}
 		>
 			{!isDemo && (
-				<Text size={22} mono>
+				<Text size={24} mono>
 					{scoreString}
 				</Text>
 			)}
 			<Fire />
-			<Text size={22} mono>
+			<Text size={24} mono>
 				{bestScoreString}
 			</Text>
 			<div
 				style={{
 					position: "absolute",
-					right: -4,
-					bottom: 12,
+					right: -5,
+					bottom: 10,
 				}}
 			>
-				<Text size={9} color="#FFFFFFDD">
+				<Text size={10} color="#FFFFFFDD">
 					BEST SCORE
 				</Text>
 			</div>
