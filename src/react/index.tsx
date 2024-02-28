@@ -37,11 +37,11 @@ const App = () => {
 						dots={1}
 						publishPosition="legend1"
 						w={220}
-						h={148}
+						h={156}
 						x={0.18}
 						y={0.15}
 					>
-						<Text>
+						<Text size={15}>
 							Use <Key label="←" />
 							<Key label="↑" />
 							<Key label="→" />
@@ -57,21 +57,21 @@ const App = () => {
 						hook="left"
 						dots={2}
 						publishPosition="legend2"
-						w={180}
-						h={124}
+						w={174}
+						h={128}
 						x={0.7}
 						y={0.5}
 					>
-						<Text>
+						<Text size={15}>
 							Press <Key label="shift" w={3} />
-							<Text color="#F16883" size={12}>
+							<Text color="#F16883" size={13}>
 								{" "}
 								+{" "}
 							</Text>
 							<Key label="→" />
 							<br />
 							or <Key label="shift" w={3} />
-							<Text color="#F16883" size={12}>
+							<Text color="#F16883" size={13}>
 								{" "}
 								+{" "}
 							</Text>

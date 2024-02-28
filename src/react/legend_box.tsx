@@ -81,7 +81,7 @@ export const LegendBox = (props: LegendBoxProps) => {
 							display: "flex",
 						}}
 					>
-						<Text size={10} color="#FFFFFF99">
+						<Text size={11} color="#FFFFFF99">
 							{props.header.toUpperCase()}
 						</Text>
 					</div>
@@ -111,10 +111,10 @@ export const Key = (props: KeyProps) => {
 				justifyContent: "center",
 				alignItems: "center",
 				margin: "0 2px",
-				padding: 2,
+				padding: 3,
 			}}
 		>
-			<Text size={12}>{props.label}</Text>
+			<Text size={13}>{props.label}</Text>
 		</div>
 	);
 };

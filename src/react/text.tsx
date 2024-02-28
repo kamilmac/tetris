@@ -12,10 +12,10 @@ export const Text = (props: TextProps) => {
 		<span
 			style={{
 				fontFamily: props.mono ? "monospace, monospace" : '"Lato", sans-serif',
-				fontWeight: 400,
+				fontWeight: 300,
 				letterSpacing: 1.03,
 				lineHeight: 1.65,
-				fontSize: props.size || 14,
+				fontSize: props.size || 15,
 				fontStyle: "normal",
 				color: props.color || "#FFFFFF",
 			}}

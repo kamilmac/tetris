@@ -19,8 +19,8 @@ export const RunningMen = () => {
 export const Fire = () => {
 	return (
 		<svg
-			width="28"
-			height="28"
+			width="32"
+			height="32"
 			viewBox="0 0 23 23"
 			fill="none"
 			role="img"

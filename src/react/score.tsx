@@ -43,26 +43,25 @@ export const Score = () => {
 				height: 60,
 				display: "flex",
 				gap: 12,
-				overflow: "hidden",
 			}}
 		>
 			{!isDemo && (
-				<Text size={18} mono>
+				<Text size={22} mono>
 					{scoreString}
 				</Text>
 			)}
 			<Fire />
-			<Text size={18} mono>
+			<Text size={22} mono>
 				{bestScoreString}
 			</Text>
 			<div
 				style={{
 					position: "absolute",
-					right: 0,
-					bottom: 20,
+					right: -4,
+					bottom: 12,
 				}}
 			>
-				<Text size={7} color="#FFFFFFDD">
+				<Text size={9} color="#FFFFFFDD">
 					BEST SCORE
 				</Text>
 			</div>
