@@ -16,6 +16,7 @@ const RANDOM_ACTIONS: (keyof typeof CFG.controls)[] = [
 	"down",
 	"fall",
 	"fall",
+	"fall",
 	"rotate",
 	"rotate",
 	"rotate",
@@ -39,5 +40,5 @@ export const initAI = () => {
 			}
 			document.dispatchEvent(event);
 		}
-	}, 40);
+	}, 30);
 };
