@@ -79,6 +79,7 @@ export const ActionButton = (props: Props) => {
 			} else if (scale < 0.97) {
 				dir = 1;
 			}
+			// @ts-ignore
 			ref.current.style.transform = `scale(${scale})`;
 		}
 		frameId.current = requestAnimationFrame(animate);
@@ -134,16 +135,19 @@ export const ActionButton = (props: Props) => {
 					alignItems: "center",
 					cursor: "pointer",
 				}}
+				// @ts-ignore
 				ref={ref}
         onPointerUp={props.onAction}
 			>
         {
           buttonState !== 'mini' &&
+					// @ts-ignore
             Variants[buttonState]?.icon()
         }
 			</div>
       {
         buttonState !== 'mini' &&
+				// @ts-ignore
           Variants[buttonState]?.label()
       }
 		</div>

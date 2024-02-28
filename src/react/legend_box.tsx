@@ -23,6 +23,7 @@ export const LegendBox = (props: LegendBoxProps) => {
 			const n = performance.now() / 1600;
 			const tx = Math.cos(n) * 12 + window.innerWidth * props.x;
 			const ty = Math.sin(n) * 12 + window.innerHeight * props.y;
+			// @ts-ignore
 			ref.current.style.transform =
 				`translate3d(${tx}px, ${ty}px, 0)`;
 			Bridge.set(
@@ -43,22 +44,9 @@ export const LegendBox = (props: LegendBoxProps) => {
 		};
 	}, []);
 
-	const Dots = Array.from({ length: props.dots }).map((_, i) => (
-		<div
-			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-			key={i}
-			style={{
-				background: "#FFFFFF90",
-				width: 5,
-				height: 5,
-				borderRadius: "50%",
-				margin: "0 2px",
-			}}
-		/>
-	));
-
 	return (
 		<div
+			// @ts-ignore
 			ref={ref}
 			style={{
 				position: "absolute",
@@ -127,7 +115,7 @@ export const Key = (props: KeyProps) => {
 				padding: 2,
 			}}
 		>
-			<Text size="12px">{props.label}</Text>
+			<Text size={ 12 }>{props.label}</Text>
 		</div>
 	);
 };

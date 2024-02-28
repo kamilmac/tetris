@@ -10,7 +10,11 @@ export class Camera {
 	stage: Stage;
 	floorCenterX = 0;
 	floorCenterZ = 0;
-	cameraPositions: { x: number; z: number }[] = [];
+	cameraPositions: {
+		x: number;
+		z: number;
+		pointer: { x: number; z: number }
+	}[];
 	controls: OrbitControls;
 	renderer: THREE.WebGLRenderer;
 	targetPosition: THREE.Vector3 | null = null;
@@ -66,8 +70,10 @@ export class Camera {
 
 		appState.subscribe(["status"], (state) => {
 			if (state.status === "inDemo") {
+				// @ts-ignore
 				this.camera._targetZoom = 2.5;
 			} else {
+				// @ts-ignore
 				this.camera._targetZoom = 3.3;
 			}
 		});
@@ -166,7 +172,9 @@ export class Camera {
 	animate() {
 		this.doWobble();
 		this.lerp();
+		// @ts-ignore
 		if (this.camera._targetZoom - this.camera.zoom > 0.01) { 
+		// @ts-ignore
 			this.camera.zoom += (this.camera._targetZoom - this.camera.zoom) / 10;
 		}
 		if (

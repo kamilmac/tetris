@@ -13,7 +13,6 @@
     "test": "playwright test",
     "test-ui": "playwright test --ui",
     "test-update": "playwright test --update-snapshots",
-    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
@@ -24,7 +23,6 @@
     "@types/react-dom": "^18.2.19",
     "@types/three": "^0.160.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "husky": "^9.0.10",
     "typescript": "^4.6.4",
     "vite": "^3.2.3",
     "vite-tsconfig-paths": "^4.3.1"

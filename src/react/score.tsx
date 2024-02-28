@@ -12,7 +12,7 @@ const getScoreString = (score: number) => {
 
 export const Score = () => {
 	const [score, setScore] = React.useState(0);
-	const [bestScore, setBestScore] = React.useState(localStorage.getItem('bestScore') || 0);
+	const [bestScore, setBestScore] = React.useState(Number(localStorage.getItem('bestScore')) || 0);
 	const [isDemo, setIsdemo] = React.useState(true);
 
 	React.useEffect(() => {
@@ -44,13 +44,13 @@ export const Score = () => {
 		>
 			{
 				!isDemo && (
-					<Text size="18px" mono>
+					<Text size={ 18 } mono>
 						{ scoreString }
 					</Text>
 				)
 			}
 			<Fire />
-			<Text size="18px" mono>
+			<Text size={ 18 } mono>
 				{ bestScoreString }
 			</Text>
 			<div
@@ -60,7 +60,7 @@ export const Score = () => {
 					bottom: 20,
 				}}
 			>
-				<Text size="7px" color="#FFFFFFDD">
+				<Text size={ 7 } color="#FFFFFFDD">
 					BEST SCORE
 				</Text>
 			</div>
