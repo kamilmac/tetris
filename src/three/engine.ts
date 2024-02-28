@@ -65,7 +65,8 @@ export class Engine {
 		this.renderer = new THREE.WebGLRenderer({
 			antialias: true,
 		});
-		document.body.appendChild(this.renderer.domElement);
+		const canvasRoot = document.getElementById("canvas-root");
+		canvasRoot?.appendChild(this.renderer.domElement);
 		this.scene = new THREE.Scene();
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setClearColor(CFG.background.color);

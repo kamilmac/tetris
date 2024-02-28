@@ -102,7 +102,7 @@ export const ActionButton = (props) => {
 			style={{
 				position: "absolute",
 				bottom: 30,
-				left: window.innerWidth * 0.5 - 130,
+				left: 'calc(50% - 130px)',
 				display: "flex",
 				flexDirection: "column",
 				justifyContent: "center",
