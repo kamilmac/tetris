@@ -66,15 +66,15 @@ export class Camera {
 		const width = window.innerWidth;
 		const height = window.innerHeight;
 		this.camera = new THREE.PerspectiveCamera(120, width / height, 0.1, 1000);
-		this.camera.zoom = 2.5;
+		this.camera.zoom = 2.4;
 
 		appState.subscribe(["status"], (state) => {
 			if (state.status === "inDemo") {
 				// @ts-ignore
-				this.camera._targetZoom = 2.5;
+				this.camera._targetZoom = 2.4;
 			} else {
 				// @ts-ignore
-				this.camera._targetZoom = 3.3;
+				this.camera._targetZoom = 3.0;
 			}
 		});
 		// const aspect = window.innerWidth / window.innerHeight;

@@ -38,7 +38,7 @@ const App = () => {
 						publishPosition="legend1"
 						w={220}
 						h={148}
-						x={0.15}
+						x={0.10}
 						y={0.15}
 					>
 						<Text>
@@ -59,7 +59,7 @@ const App = () => {
 						publishPosition="legend2"
 						w={220}
 						h={124}
-						x={0.7}
+						x={0.8}
 						y={0.4}
 					>
 						<Text>

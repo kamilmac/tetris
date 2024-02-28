@@ -11,9 +11,6 @@ const Variants = {
 		icon: Control,
 		label: () => (
 			<div>
-				<Text color="#F16883" size={18}>
-					[{" "}
-				</Text>
 				<Text color="#FFFFFF80">Press</Text>
 				<Text> </Text>
 				<Text color="#FFFFFFCC" size={16}>
@@ -25,10 +22,6 @@ const Variants = {
 				<Text color="#FFFFFFCC">
 					<b>take control</b>
 				</Text>
-				<Text color="#F16883" size={18}>
-					{" "}
-					]
-				</Text>
 			</div>
 		),
 	},
@@ -36,9 +29,6 @@ const Variants = {
 		icon: Control,
 		label: () => (
 			<div>
-				<Text color="#F16883" size={18}>
-					[{" "}
-				</Text>
 				<Text color="#FFFFFF80">Press</Text>
 				<Text> </Text>
 				<Text color="#FFFFFFCC" size={16}>
@@ -49,10 +39,6 @@ const Variants = {
 				<Text> </Text>
 				<Text color="#FFFFFFCC">
 					<b>Go Again!</b>
-				</Text>
-				<Text color="#F16883" size={18}>
-					{" "}
-					]
 				</Text>
 			</div>
 		),
@@ -82,7 +68,7 @@ export const ActionButton = (props: Props) => {
 				dir = 1;
 			}
 			// @ts-ignore
-			ref.current.style.transform = `scale(${scale})`;
+			// ref.current.style.transform = `scale(${scale})`;
 		}
 		frameId.current = requestAnimationFrame(animate);
 	};
@@ -125,17 +111,33 @@ export const ActionButton = (props: Props) => {
 				gap: 20,
 			}}
 		>
+			{ buttonState !== 'mini' && (
+				<div
+					style={{
+						animation: 'rotate 1s linear infinite',
+						width: 66,
+					  height: 66,
+					  background: `conic-gradient(
+					    from 90deg,
+					    #994699, #774998, #5151d3, #3c941e, #dede38, #c9922e, #ef607d, violet)`,
+					  margin: 10,
+					  borderRadius: '50%',
+					  position: 'absolute',
+					  bottom: 40,
+					}}
+				/>
+			)}
 			<div
-				className={buttonState === "mini" ? "scaledDown" : ""}
 				style={{
 					width: 60,
 					height: 60,
 					borderRadius: "50%",
-					background: "#CB325A",
+					background: "#1A1B26",
 					display: "flex",
 					justifyContent: "center",
 					alignItems: "center",
 					cursor: "pointer",
+					zIndex: 1,
 				}}
 				// @ts-ignore
 				ref={ref}
