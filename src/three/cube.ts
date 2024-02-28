@@ -1,34 +1,12 @@
 import * as THREE from "three";
 import { CubeType, TPane, cubeVariants } from "../config";
 // @ts-ignore
-import pattern2 from "../patterns/Abstract Dotted Background.jpg";
-// @ts-ignore
-import pattern3 from "../patterns/Abstract Point Noise Background.jpg";
-// @ts-ignore
-import pattern4 from "../patterns/Barcode Product Label.jpg";
-// @ts-ignore
-import pattern6 from "../patterns/Black Striped Background Vector.jpg";
-// @ts-ignore
-import pattern5 from "../patterns/Ink Brush Grid Pattern.jpg";
-// @ts-ignore
 import pattern1 from "../patterns/Porous White.jpg";
-// @ts-ignore
-import dashPatternImage from "./dash_pattern.png";
-// @ts-ignore
-import kneePatternImage from "./knee_pattern.png";
 
 const loader = new THREE.TextureLoader();
-// const texture = loader.load(dashPatternImage);
 
 const patterns = [
-	loader.load(dashPatternImage),
-	loader.load(kneePatternImage),
 	loader.load(pattern1),
-	loader.load(pattern2),
-	loader.load(pattern3),
-	loader.load(pattern4),
-	loader.load(pattern5),
-	loader.load(pattern6),
 ];
 
 export class Cube {
@@ -181,7 +159,7 @@ export class Cube {
 const cubeMaterial = () =>
 	new THREE.ShaderMaterial({
 		uniforms: {
-			u_texture: { value: patterns[3] },
+			u_texture: { value: patterns[0] },
 			u_pattern_factor: { value: 2.0 },
 			u_pattern_scale: { value: 1.0 },
 			u_pattern_face_h: { value: 0.0 },

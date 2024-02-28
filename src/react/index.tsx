@@ -57,7 +57,7 @@ const App = () => {
 						hook="left"
 						dots={2}
 						publishPosition="legend2"
-						w={220}
+						w={180}
 						h={124}
 						x={0.7}
 						y={0.5}

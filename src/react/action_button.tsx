@@ -99,7 +99,7 @@ export const ActionButton = (props: Props) => {
 		<div
 			style={{
 				position: "absolute",
-				bottom: 30,
+				bottom: 48,
 				left: "calc(50% - 130px)",
 				display: "flex",
 				flexDirection: "column",
@@ -114,12 +114,12 @@ export const ActionButton = (props: Props) => {
 			{ buttonState !== 'mini' && (
 				<div
 					style={{
-						animation: 'rotate 1s linear infinite',
+						animation: 'rotate 1.2s linear infinite',
 						width: 66,
 					  height: 66,
 					  background: `conic-gradient(
 					    from 90deg,
-					    #994699, #774998, #5151d3, #3c941e, #dede38, #c9922e, #ef607d, violet)`,
+					    rgb(26 27 38), rgb(26 27 38), rgb(41 43 61), rgb(203 50 90), rgb(242 104 131), rgb(249 147 78), rgb(57 112 192), #22345e)`,
 					  margin: 10,
 					  borderRadius: '50%',
 					  position: 'absolute',

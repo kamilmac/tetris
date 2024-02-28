@@ -77,17 +77,6 @@ export class Camera {
 				this.camera._targetZoom = 3.0;
 			}
 		});
-		// const aspect = window.innerWidth / window.innerHeight;
-		// const frustumSize = 12;
-		// this.camera = new THREE.OrthographicCamera(
-		//   (frustumSize * aspect) / -2,
-		//   (frustumSize * aspect) / 2,
-		//   frustumSize / 2,
-		//   frustumSize / -2,
-		//   1,
-		//   1000,
-		// );
-		// this.camera.zoom = 0.8;
 
 		this.reset();
 		this.camera.updateProjectionMatrix();
