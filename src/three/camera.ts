@@ -13,7 +13,7 @@ export class Camera {
 	cameraPositions: {
 		x: number;
 		z: number;
-		pointer: { x: number; z: number }
+		pointer: { x: number; z: number };
 	}[];
 	controls: OrbitControls;
 	renderer: THREE.WebGLRenderer;
@@ -173,8 +173,8 @@ export class Camera {
 		this.doWobble();
 		this.lerp();
 		// @ts-ignore
-		if (this.camera._targetZoom - this.camera.zoom > 0.01) { 
-		// @ts-ignore
+		if (this.camera._targetZoom - this.camera.zoom > 0.01) {
+			// @ts-ignore
 			this.camera.zoom += (this.camera._targetZoom - this.camera.zoom) / 10;
 		}
 		if (
@@ -189,8 +189,8 @@ export class Camera {
 		const p = this.cameraPositions[this.activeCamera];
 		const pos = new THREE.Vector3(p.pointer.x, -0.5, p.pointer.z);
 		const v = pos.project(this.camera);
-		Bridge.set('stage_x', (v.x * 0.5 + 0.5) * window.innerWidth);
-		Bridge.set('stage_y', -(v.y * 0.5 - 0.5) * window.innerHeight);
+		Bridge.set("stage_x", (v.x * 0.5 + 0.5) * window.innerWidth);
+		Bridge.set("stage_y", -(v.y * 0.5 - 0.5) * window.innerHeight);
 		this.camera.updateProjectionMatrix();
 		return this.camera;
 	}

@@ -1,41 +1,36 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import { Key, LegendBox } from "./legend_box";
-import { Text } from "./text";
-import { SvgLine } from "./svg_line";
-import { ActionButton } from "./action_button";
-import { Score } from "./score";
 import { appState } from "../state";
+import { ActionButton } from "./action_button";
+import { Key, LegendBox } from "./legend_box";
+import { Score } from "./score";
+import { SvgLine } from "./svg_line";
+import { Text } from "./text";
 
-import './styles.css';
 import { initAI } from "./ai";
+import "./styles.css";
 
 const App = () => {
 	const [showLegend, setShowLegend] = React.useState(true);
 
 	const onAction = () => {
-    if (["inDemo", "gameOver"].includes(appState.state.status)) {
+		if (["inDemo", "gameOver"].includes(appState.state.status)) {
 			setShowLegend(false);
 			setTimeout(() => {
 				appState.changeStatus("playing");
 			}, 200);
-    }
-  };
+		}
+	};
 
-  React.useEffect(() => {
-  	initAI();
-  }, []);
+	React.useEffect(() => {
+		initAI();
+	}, []);
 
 	return (
 		<>
 			{
-				<div
-					className={ showLegend ? "" : "hidden" }
-				>
-					<SvgLine
-						subPositionStart="legend1"
-						subPositionEnd="active_box"
-					/>
+				<div className={showLegend ? "" : "hidden"}>
+					<SvgLine subPositionStart="legend1" subPositionEnd="active_box" />
 					<LegendBox
 						header="Movement Controls"
 						hook="right"
@@ -50,14 +45,13 @@ const App = () => {
 							Use <Key label="←" />
 							<Key label="↑" />
 							<Key label="→" />
-							<Key label="↓" /> keys to move piece and <Key label="r" /> to rotate.
-							<br />Hit <Key label="space" w={5} /> to drop it.
+							<Key label="↓" /> keys to move piece and <Key label="r" /> to
+							rotate.
+							<br />
+							Hit <Key label="space" w={5} /> to drop it.
 						</Text>
 					</LegendBox>
-					<SvgLine
-						subPositionStart="legend2"
-						subPositionEnd="stage"
-					/>
+					<SvgLine subPositionStart="legend2" subPositionEnd="stage" />
 					<LegendBox
 						header="Stage Rotation"
 						hook="left"
@@ -70,10 +64,19 @@ const App = () => {
 					>
 						<Text>
 							Press <Key label="shift" w={3} />
-							<Text color="#F16883" size={12}> + </Text>
-							<Key label="→" /><br />or <Key label="shift" w={3} />
-							<Text color="#F16883" size={12}> + </Text>
-							<Key label="←" /> <br />to rotate stage.
+							<Text color="#F16883" size={12}>
+								{" "}
+								+{" "}
+							</Text>
+							<Key label="→" />
+							<br />
+							or <Key label="shift" w={3} />
+							<Text color="#F16883" size={12}>
+								{" "}
+								+{" "}
+							</Text>
+							<Key label="←" /> <br />
+							to rotate stage.
 						</Text>
 					</LegendBox>
 				</div>

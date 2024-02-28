@@ -2,11 +2,11 @@ import * as THREE from "three";
 import { CFG, TPane } from "../config";
 import { Physics } from "../physics";
 import { Cube, Stage } from "../stage";
+import { Bridge } from "../utils/bridge";
 import { Camera } from "./camera";
 import { Cube as Tetrino } from "./cube";
 import { Floor } from "./floor";
 import { shadowMaterial } from "./materials";
-import { Bridge } from "../utils/bridge";
 
 interface ShadowCube extends Cube {
 	x: number;
@@ -51,7 +51,7 @@ export class Engine {
 	};
 
 	reset() {
-		if (!this.camera || !this.floor || !this.physics) {
+		if (!this.camera || !this.floor || !this.physics) {
 			return;
 		}
 		this.usePhysics = false;
@@ -71,7 +71,7 @@ export class Engine {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setClearColor(CFG.background.color);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
-		
+
 		this.renderer.outputColorSpace = THREE.SRGBColorSpace;
 		this.camera = new Camera(this.stage, this.renderer);
 		this.floor = new Floor(
@@ -222,8 +222,8 @@ export class Engine {
 				pos.z += 0.45;
 				pos.y += 0.45;
 				const v = pos.project(this.camera.camera);
-				Bridge.set('active_box_x', (v.x * 0.5 + 0.5) * window.innerWidth);
-				Bridge.set('active_box_y', -(v.y * 0.5 - 0.5) * window.innerHeight);
+				Bridge.set("active_box_x", (v.x * 0.5 + 0.5) * window.innerWidth);
+				Bridge.set("active_box_y", -(v.y * 0.5 - 0.5) * window.innerHeight);
 			}
 		}
 		this.renderer.render(this.scene, this.camera.animate());

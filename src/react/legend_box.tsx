@@ -24,8 +24,7 @@ export const LegendBox = (props: LegendBoxProps) => {
 			const tx = Math.cos(n) * 12 + window.innerWidth * props.x;
 			const ty = Math.sin(n) * 12 + window.innerHeight * props.y;
 			// @ts-ignore
-			ref.current.style.transform =
-				`translate3d(${tx}px, ${ty}px, 0)`;
+			ref.current.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
 			Bridge.set(
 				`${props.publishPosition}_x`,
 				tx + (props.hook === "right" ? props.w + 12 : 0),
@@ -83,7 +82,7 @@ export const LegendBox = (props: LegendBoxProps) => {
 						}}
 					>
 						<Text size={10} color="#FFFFFF99">
-							{props.header.toUpperCase() }
+							{props.header.toUpperCase()}
 						</Text>
 					</div>
 					{props.children}
@@ -115,7 +114,7 @@ export const Key = (props: KeyProps) => {
 				padding: 2,
 			}}
 		>
-			<Text size={ 12 }>{props.label}</Text>
+			<Text size={12}>{props.label}</Text>
 		</div>
 	);
 };

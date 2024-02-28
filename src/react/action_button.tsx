@@ -1,7 +1,7 @@
 import * as React from "react";
+import { appState } from "../state";
 import { Control } from "./icons";
 import { Text } from "./text";
-import { appState } from "../state";
 
 let scale = 1;
 let dir = +1;
@@ -11,49 +11,51 @@ const Variants = {
 		icon: Control,
 		label: () => (
 			<div>
-				<Text color="#F16883" size={18}>[ </Text>
-				<Text color="#FFFFFF80">
-					Press
+				<Text color="#F16883" size={18}>
+					[{" "}
 				</Text>
+				<Text color="#FFFFFF80">Press</Text>
 				<Text> </Text>
 				<Text color="#FFFFFFCC" size={16}>
 					<b>ENTER</b>
 				</Text>
 				<Text> </Text>
-				<Text color="#FFFFFF80">
-					to
-				</Text>
+				<Text color="#FFFFFF80">to</Text>
 				<Text> </Text>
 				<Text color="#FFFFFFCC">
 					<b>take control</b>
 				</Text>
-				<Text color="#F16883" size={18}> ]</Text>
+				<Text color="#F16883" size={18}>
+					{" "}
+					]
+				</Text>
 			</div>
-		)
+		),
 	},
 	gameOver: {
 		icon: Control,
 		label: () => (
 			<div>
-				<Text color="#F16883" size={18}>[ </Text>
-				<Text color="#FFFFFF80">
-					Press
+				<Text color="#F16883" size={18}>
+					[{" "}
 				</Text>
+				<Text color="#FFFFFF80">Press</Text>
 				<Text> </Text>
 				<Text color="#FFFFFFCC" size={16}>
 					<b>ENTER</b>
 				</Text>
 				<Text> </Text>
-				<Text color="#FFFFFF80">
-					to
-				</Text>
+				<Text color="#FFFFFF80">to</Text>
 				<Text> </Text>
 				<Text color="#FFFFFFCC">
 					<b>Go Again!</b>
 				</Text>
-				<Text color="#F16883" size={18}> ]</Text>
+				<Text color="#F16883" size={18}>
+					{" "}
+					]
+				</Text>
 			</div>
-		)
+		),
 	},
 	mini: {
 		icon: null,
@@ -67,7 +69,7 @@ interface Props {
 }
 
 export const ActionButton = (props: Props) => {
-  const [buttonState, setButtonState] = React.useState('inDemo');
+	const [buttonState, setButtonState] = React.useState("inDemo");
 	const ref = React.useRef<React.LegacyRef<HTMLDivElement>>(null);
 	const frameId = React.useRef<number | null>(null);
 
@@ -93,13 +95,13 @@ export const ActionButton = (props: Props) => {
 				props.onAction();
 			}
 		});
-    appState.subscribe(["status"], (state) => {
-      if (state.status === "playing") {
-        setButtonState('mini');
-      } else if (state.status === "gameOver") {
-        setButtonState('gameOver');
-      }
-    });
+		appState.subscribe(["status"], (state) => {
+			if (state.status === "playing") {
+				setButtonState("mini");
+			} else if (state.status === "gameOver") {
+				setButtonState("gameOver");
+			}
+		});
 		frameId.current = requestAnimationFrame(animate);
 		return () => {
 			typeof frameId.current === "number" &&
@@ -112,7 +114,7 @@ export const ActionButton = (props: Props) => {
 			style={{
 				position: "absolute",
 				bottom: 30,
-				left: 'calc(50% - 130px)',
+				left: "calc(50% - 130px)",
 				display: "flex",
 				flexDirection: "column",
 				justifyContent: "center",
@@ -124,7 +126,7 @@ export const ActionButton = (props: Props) => {
 			}}
 		>
 			<div
-        className={ buttonState === 'mini' ? "scaledDown" : "" }
+				className={buttonState === "mini" ? "scaledDown" : ""}
 				style={{
 					width: 60,
 					height: 60,
@@ -137,19 +139,15 @@ export const ActionButton = (props: Props) => {
 				}}
 				// @ts-ignore
 				ref={ref}
-        onPointerUp={props.onAction}
+				onPointerUp={props.onAction}
 			>
-        {
-          buttonState !== 'mini' &&
+				{buttonState !== "mini" &&
 					// @ts-ignore
-            Variants[buttonState]?.icon()
-        }
+					Variants[buttonState]?.icon()}
 			</div>
-      {
-        buttonState !== 'mini' &&
+			{buttonState !== "mini" &&
 				// @ts-ignore
-          Variants[buttonState]?.label()
-      }
+				Variants[buttonState]?.label()}
 		</div>
 	);
 };

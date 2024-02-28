@@ -1,10 +1,10 @@
 import * as React from "react";
 
 interface TextProps {
-  mono?: boolean;
-  size?: number;
-  color?: string;
-  children: React.ReactNode;
+	mono?: boolean;
+	size?: number;
+	color?: string;
+	children: React.ReactNode;
 }
 
 export const Text = (props: TextProps) => {

@@ -6,22 +6,26 @@ import { Text } from "./text";
 const getScoreString = (score: number) => {
 	const scoreString = String(score);
 	const scoreStringLength = 4;
-	const reminderString = new Array(scoreStringLength - scoreString.length).fill('_');
-	return [...reminderString, ...scoreString].join('');
-}
+	const reminderString = new Array(scoreStringLength - scoreString.length).fill(
+		"_",
+	);
+	return [...reminderString, ...scoreString].join("");
+};
 
 export const Score = () => {
 	const [score, setScore] = React.useState(0);
-	const [bestScore, setBestScore] = React.useState(Number(localStorage.getItem('bestScore')) || 0);
+	const [bestScore, setBestScore] = React.useState(
+		Number(localStorage.getItem("bestScore")) || 0,
+	);
 	const [isDemo, setIsdemo] = React.useState(true);
 
 	React.useEffect(() => {
-		appState.subscribe(['score', 'bestScore'], (state) => {
+		appState.subscribe(["score", "bestScore"], (state) => {
 			setBestScore(state.bestScore);
 			setScore(state.score);
-		});	
-		appState.subscribe(['status'], (state) => {
-			if (state.status !== 'inDemo') {
+		});
+		appState.subscribe(["status"], (state) => {
+			if (state.status !== "inDemo") {
 				setIsdemo(false);
 			}
 		});
@@ -42,16 +46,14 @@ export const Score = () => {
 				overflow: "hidden",
 			}}
 		>
-			{
-				!isDemo && (
-					<Text size={ 18 } mono>
-						{ scoreString }
-					</Text>
-				)
-			}
+			{!isDemo && (
+				<Text size={18} mono>
+					{scoreString}
+				</Text>
+			)}
 			<Fire />
-			<Text size={ 18 } mono>
-				{ bestScoreString }
+			<Text size={18} mono>
+				{bestScoreString}
 			</Text>
 			<div
 				style={{
@@ -60,7 +62,7 @@ export const Score = () => {
 					bottom: 20,
 				}}
 			>
-				<Text size={ 7 } color="#FFFFFFDD">
+				<Text size={7} color="#FFFFFFDD">
 					BEST SCORE
 				</Text>
 			</div>
