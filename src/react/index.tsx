@@ -38,7 +38,7 @@ const App = () => {
 						publishPosition="legend1"
 						w={220}
 						h={148}
-						x={0.10}
+						x={0.18}
 						y={0.15}
 					>
 						<Text>
@@ -59,8 +59,8 @@ const App = () => {
 						publishPosition="legend2"
 						w={220}
 						h={124}
-						x={0.8}
-						y={0.4}
+						x={0.7}
+						y={0.5}
 					>
 						<Text>
 							Press <Key label="shift" w={3} />
