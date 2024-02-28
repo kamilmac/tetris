@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,900&display=swap" rel="stylesheet">
     <title>Tetris</title>
     <style>
       .splash {
@@ -19,8 +19,8 @@
       }
       .tnt {
         position: absolute;
-        bottom: 16px;
-        left: 16px;
+        bottom: 8px;
+        left: 8px;
         transform: scale(0.25);
         transform-origin: bottom left;
         z-index: 1000;
@@ -56,7 +56,7 @@
           clearInterval(interval);
           setTimeout(() => {
             splash.style.visibility = 'hidden';
-          }, 200)
+          }, 500)
         }
       }, 50)
     </script>
