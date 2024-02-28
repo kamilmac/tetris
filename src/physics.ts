@@ -61,8 +61,8 @@ export class Physics {
 		}
 		this.timeActive = performance.now() - this.startTime;
 		for (const [_, box] of this.boxes) {
-			box.mesh.position.copy(box._body.position);
-			box.mesh.quaternion.copy(box._body.quaternion);
+			box.mesh?.position.copy(box._body.position);
+			box.mesh?.quaternion.copy(box._body.quaternion);
 		}
 	}
 }

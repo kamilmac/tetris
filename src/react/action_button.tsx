@@ -3,7 +3,6 @@ import { Control } from "./icons";
 import { Text } from "./text";
 import { appState } from "../state";
 
-
 let scale = 1;
 let dir = +1;
 
@@ -63,7 +62,11 @@ const Variants = {
 	},
 };
 
-export const ActionButton = (props) => {
+interface Props {
+	onAction: () => void;
+}
+
+export const ActionButton = (props: Props) => {
   const [buttonState, setButtonState] = React.useState('inDemo');
 	const ref = React.useRef<React.LegacyRef<HTMLDivElement>>(null);
 	const frameId = React.useRef<number | null>(null);
@@ -83,6 +86,12 @@ export const ActionButton = (props) => {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
+		// listen on enter keypress on document
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				props.onAction();
+			}
+		});
     appState.subscribe(["status"], (state) => {
       if (state.status === "playing") {
         setButtonState('mini');
