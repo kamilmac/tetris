@@ -20,7 +20,6 @@ class Game {
 	fastForward = false;
 
 	constructor() {
-		window.__READY__ = true;
 		this.stage = new Stage(CFG.stage.height, CFG.stage.width, CFG.stage.depth);
 		new Engine(this.stage, (engine: Engine) => {
 			this.engine = engine;

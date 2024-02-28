@@ -6,7 +6,7 @@ import pattern1 from "../patterns/porous.jpg";
 const loader = new THREE.TextureLoader();
 
 const patterns = [
-	loader.load(pattern1),
+	loader.load(pattern1, () => { window.__READY__ = true; }),
 ];
 
 export class Cube {
