@@ -151,7 +151,7 @@ export const CFG = {
 		thickness: 0.02,
 		color: "#444444",
 	},
-	cycleTime: 480,
+	cycleTime: 500,
 	accelerationFactor: 15,
 	shapes: [],
 	stage: {

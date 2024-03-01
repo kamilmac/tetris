@@ -104,7 +104,7 @@ export const ActionButton = (props: Props) => {
 			    bottom: 0,
 			    position: 'absolute',
 			    animation: 'opacity 2s linear',
-			    background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4))',
+			    background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))',
 					width: '100%',
 				}}	
 			/>
