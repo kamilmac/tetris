@@ -6,6 +6,18 @@ interface BrickCube {
 	locked: boolean;
 }
 
+let randShapes: number[][] = [];
+
+const randomizeFromBucket = (shapes: number[][][]) => {
+	if (randShapes.length === 0) {
+		randShapes = shapes;
+	}
+	const rIndex = Math.floor(Math.random() * randShapes.length)
+	const r = randShapes[rIndex];
+	randShapes = randShapes.filter((_, index) => index !== rIndex);
+	return r;
+}
+
 export class Brick {
 	stage: Stage;
 	locked: boolean;
@@ -236,7 +248,8 @@ export class Brick {
 	}
 
 	createMock() {
-		const shape = Brick.SHAPES[Math.floor(Math.random() * Brick.SHAPES.length)];
+		// const shape = Brick.SHAPES[Math.floor(Math.random() * Brick.SHAPES.length)];
+		const shape = randomizeFromBucket(Brick.SHAPES);
 		const startPosition = [
 			this.stage.width / 2 - 1,
 			this.stage.height - 1,
