@@ -98,7 +98,7 @@ class Game {
 			if (this.engine?.usePhysics) {
 				return;
 			}
-			this.brick?.moveDown();
+			this.brick?.fallStep();
 			if (this.brick?.locked) {
 				this.resetTempo();
 				this.stage.checkForFilledLines();

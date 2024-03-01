@@ -6,8 +6,6 @@ interface BrickCube {
 	locked: boolean;
 }
 
-let CREATED_BRICKS = 0;
-
 export class Brick {
 	stage: Stage;
 	locked: boolean;
@@ -57,7 +55,7 @@ export class Brick {
 		}
 	}
 
-	moveDown() {
+	fallStep() {
 		if (this.locked) return;
 		this.clearFromStage();
 		const newPosition = this.cubes.map((cube) => [
@@ -238,7 +236,7 @@ export class Brick {
 	}
 
 	createMock() {
-		const shape = Brick.SHAPES[CREATED_BRICKS % Brick.SHAPES.length];
+		const shape = Brick.SHAPES[Math.floor(Math.random() * Brick.SHAPES.length)];
 		const startPosition = [
 			this.stage.width / 2 - 1,
 			this.stage.height - 1,
@@ -265,6 +263,5 @@ export class Brick {
 		);
 		this.applyNewPosition(correctedPositions);
 		this.updateStage();
-		CREATED_BRICKS += 1;
 	}
 }
