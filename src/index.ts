@@ -40,8 +40,9 @@ class Game {
 	onResetGame = () => {
 		this.engine?.reset();
 		this.controls?.reset();
-		this.resetTempo();
 		this.stage.reset();
+		this.lastBlockStepTime = this.getClock();
+		this.resetTempo();
 		this.addBrick();
 	};
 
@@ -51,9 +52,6 @@ class Game {
 	}
 
 	onNextStep(callback: () => void) {
-		if (appState.state.status === "pause") {
-			return;
-		}
 		const t = this.getClock();
 		// @ts-ignore
 		if (t > this.lastBlockStepTime) {
