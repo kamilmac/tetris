@@ -96,58 +96,71 @@ export const ActionButton = (props: Props) => {
 	}, []);
 
 	return (
-		<div
-			style={{
-				position: "absolute",
-				bottom: 48,
-				left: "calc(50% - 130px)",
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "center",
-				alignItems: "center",
-				width: 260,
-				height: 120,
-				overflow: "hidden",
-				gap: 20,
-			}}
-		>
-			{ buttonState !== 'mini' && (
-				<div
-					style={{
-						animation: 'rotate 1.2s linear infinite',
-						width: 66,
-					  height: 66,
-						background: "conic-gradient(from 90deg, rgb(249 146 76), rgb(203 50 90), rgb(57 112 193), rgb(249 146 76))",
-					  margin: 10,
-					  borderRadius: '50%',
-					  position: 'absolute',
-					  bottom: 40,
-					}}
-				/>
-			)}
+		<>
+			<div
+				className={appState.state.status !== 'gameOver' ? 'hidden' : 'visible'}
+				style={{
+			    height: '40%',
+			    bottom: 0,
+			    position: 'absolute',
+			    animation: 'opacity 2s linear',
+			    background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4))',
+					width: '100%',
+				}}	
+			/>
 			<div
 				style={{
-					width: 60,
-					height: 60,
-					borderRadius: "50%",
-					background: "#1A1B26",
+					position: "absolute",
+					bottom: 48,
+					left: "calc(50% - 130px)",
 					display: "flex",
+					flexDirection: "column",
 					justifyContent: "center",
 					alignItems: "center",
-					cursor: "pointer",
-					zIndex: 1,
+					width: 260,
+					height: 120,
+					overflow: "hidden",
+					gap: 20,
 				}}
-				// @ts-ignore
-				ref={ref}
-				onPointerUp={props.onAction}
 			>
+				{ buttonState !== 'mini' && (
+					<div
+						style={{
+							animation: 'rotate 1.2s linear infinite',
+							width: 66,
+						  height: 66,
+							background: "conic-gradient(from 90deg, rgb(249 146 76), rgb(203 50 90), rgb(57 112 193), rgb(249 146 76))",
+						  margin: 10,
+						  borderRadius: '50%',
+						  position: 'absolute',
+						  bottom: 40,
+						}}
+					/>
+				)}
+				<div
+					style={{
+						width: 60,
+						height: 60,
+						borderRadius: "50%",
+						background: "#1A1B26",
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						cursor: "pointer",
+						zIndex: 1,
+					}}
+					// @ts-ignore
+					ref={ref}
+					onPointerUp={props.onAction}
+				>
+					{buttonState !== "mini" &&
+						// @ts-ignore
+						Variants[buttonState]?.icon()}
+				</div>
 				{buttonState !== "mini" &&
 					// @ts-ignore
-					Variants[buttonState]?.icon()}
+					Variants[buttonState]?.label()}
 			</div>
-			{buttonState !== "mini" &&
-				// @ts-ignore
-				Variants[buttonState]?.label()}
-		</div>
+		</>
 	);
 };
