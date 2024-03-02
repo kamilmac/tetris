@@ -6,7 +6,7 @@ interface BrickCube {
 	locked: boolean;
 }
 
-let randShapes: number[][] = [];
+let randShapes: number[][][] = [];
 
 const randomizeFromBucket = (shapes: number[][][]) => {
 	if (randShapes.length === 0) {
