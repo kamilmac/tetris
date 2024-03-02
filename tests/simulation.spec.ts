@@ -4,8 +4,8 @@ test("simulation", async ({ page }) => {
   await page.goto("/");
 
   // trigger click on eleement with attribute data-test "cta-play"
-  await page.waitForSelector('[data-test="cta-play"]');
-  await page.click('[data-test="cta-play"]');
+  await page.waitForSelector('[data-test="cta-button"]');
+  await page.click('[data-test="cta-button"]');
   await page.waitForTimeout(300);
   await page.keyboard.press("r");
   await page.waitForTimeout(100);

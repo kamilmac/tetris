@@ -151,6 +151,7 @@ export const ActionButton = (props: Props) => {
 					}}
 					// @ts-ignore
 					ref={ref}
+					data-test="cta-button"
 					onPointerUp={props.onAction}
 				>
 					{buttonState !== "mini" &&

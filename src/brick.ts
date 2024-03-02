@@ -1,4 +1,5 @@
 import { Stage } from "./stage";
+import { isTestMode } from "./utils/utils";
 
 interface BrickCube {
 	position: number[];
@@ -12,7 +13,9 @@ const randomizeFromBucket = (shapes: number[][][]) => {
 	if (randShapes.length === 0) {
 		randShapes = shapes;
 	}
-	const rIndex = Math.floor(Math.random() * randShapes.length)
+	const rIndex = isTestMode()
+		? 0
+		: Math.floor(Math.random() * randShapes.length)
 	const r = randShapes[rIndex];
 	randShapes = randShapes.filter((_, index) => index !== rIndex);
 	return r;
