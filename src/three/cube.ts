@@ -2,13 +2,10 @@ import * as THREE from "three";
 import { CubeType, TPane, cubeVariants } from "../config";
 // @ts-ignore
 import pattern1 from "../patterns/porous.jpg";
-import * as amplitude from '@amplitude/analytics-browser';
-
 const loader = new THREE.TextureLoader();
 
 const patterns = [
 	loader.load(pattern1, () => {
-		amplitude.track('Game Loaded');
 		window.__READY__ = true;
 	}),
 ];

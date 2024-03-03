@@ -1,5 +1,3 @@
-import * as amplitude from '@amplitude/analytics-browser';
-
 type Status =
 	| "loading"
 	| "inDemo"
@@ -69,10 +67,7 @@ class State {
 			return;
 		}
 		if (status === "playing") {
-			amplitude.track('Game Started');
 			this.resetScore();
-		} else if (status === "gameOver") {
-			amplitude.track('Game Over', { score: this.state.score });
 		}
 		this.state.status = status;
 		this.onUpdate("status");

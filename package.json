@@ -28,7 +28,6 @@
     "vite-tsconfig-paths": "^4.3.1"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^2.5.2",
     "cannon-es": "^0.20.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

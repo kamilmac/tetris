@@ -4,12 +4,6 @@ import { Controls } from "./controls";
 import { Stage } from "./stage";
 import { appState } from "./state";
 import { Engine } from "./three/engine";
-import * as amplitude from '@amplitude/analytics-browser';
-import { isRunningInProduction } from "./utils/utils";
-
-if (isRunningInProduction()) {
-	amplitude.init('bf7d07521ce9c86ebc70a6d04a09a67d');
-}
 
 declare global {
 	interface Window {
