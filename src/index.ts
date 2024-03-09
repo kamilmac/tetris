@@ -2,7 +2,7 @@ import { Brick } from "./brick";
 import { CFG } from "./config";
 import { Controls } from "./controls";
 import { Stage } from "./stage";
-import { appState } from "./state";
+import { AppState } from "./state";
 import { Engine } from "./three/engine";
 
 declare global {
@@ -29,7 +29,7 @@ class Game {
 			this.lastBlockStepTime = this.getClock();
 			this.addBrick();
 			this.go();
-			appState.subscribe(["status"], (state) => {
+			AppState.subscribe(["status"], (state) => {
 				if (state.status === "playing") {
 					this.onResetGame();
 				}
@@ -76,14 +76,14 @@ class Game {
 
 	processEndGame() {
 		const isOverLimit = this.stage.lastLockedY >= CFG.stage.limit;
-		const isPlaying = appState.state.status === "playing";
-		const isInDemo = appState.state.status === "inDemo";
+		const isPlaying = AppState.state.status === "playing";
+		const isInDemo = AppState.state.status === "inDemo";
 		const isPhysicsActive = (this.engine?.physics?.timeActive || 0) > 3000;
 
 		if (!this.engine?.usePhysics && isOverLimit) {
 			this.engine?.captureSceneWithPhysics();
 			if (isPlaying) {
-				appState.changeStatus("gameOver");
+				AppState.changeStatus("gameOver");
 			}
 		}
 

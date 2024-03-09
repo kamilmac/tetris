@@ -1,5 +1,5 @@
 import { CFG } from "../config";
-import { appState } from "../state";
+import { AppState } from "../state";
 
 const RANDOM_ACTIONS: (keyof typeof CFG.controls)[] = [
 	"left",
@@ -27,7 +27,7 @@ const RANDOM_ACTIONS: (keyof typeof CFG.controls)[] = [
 
 export const initAI = () => {
 	setInterval(() => {
-		if (appState.state.status !== "inDemo") {
+		if (AppState.state.status !== "inDemo") {
 			return;
 		}
 		const chance = 0.1;

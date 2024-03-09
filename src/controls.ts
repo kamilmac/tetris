@@ -1,5 +1,5 @@
 import { Brick } from "./brick";
-import { appState } from "./state";
+import { AppState } from "./state";
 import { Engine } from "./three/engine";
 
 export class Controls {
@@ -84,7 +84,7 @@ export class Controls {
 
 		const keyUpHandler = (event: KeyboardEvent) => {
 			if (
-				!["playing", "pause"].includes(appState.state.status) &&
+				!["playing", "pause"].includes(AppState.state.status) &&
 				event.isTrusted
 			) {
 				return;
@@ -173,10 +173,10 @@ export class Controls {
 				this.brick.rotate();
 				break;
 			case "pause":
-				if (appState.state.status === "playing") {
-					appState.changeStatus("pause");
-				} else if (appState.state.status === "pause") {
-					appState.changeStatus("playing");
+				if (AppState.state.status === "playing") {
+					AppState.changeStatus("pause");
+				} else if (AppState.state.status === "pause") {
+					AppState.changeStatus("playing");
 				}
 				break;
 			case "camera_rotate_right":

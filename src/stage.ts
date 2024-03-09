@@ -1,5 +1,5 @@
 import { CFG } from "./config";
-import { appState } from "./state";
+import { AppState } from "./state";
 
 export interface Cube {
 	id: number | null;
@@ -180,7 +180,7 @@ export class Stage {
 		});
 
 		if (localScore > 0) {
-			appState.addToScore(localScore);
+			AppState.addToScore(localScore);
 			this.cycleTime -= CFG.accelerationFactor;
 		}
 

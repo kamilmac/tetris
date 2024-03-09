@@ -17,6 +17,29 @@
         background: #1A1B26;
         z-index: 1000;
       }
+      #mobile-alert {
+        visibility: visible;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-image: url(/collapsed_sm.jpg);
+        background-repeat: no-repeat;
+        background-position: 50% 30%;
+        background-size: 70%;
+        line-height: 1.3;
+      }
+      #mobile-alert-msg {
+        color: #ddd;
+        font-family: monospace;
+        font-size: 34px;
+        position: absolute;
+        text-align: center;
+        width: 60vw;
+        left: 20vw;
+        top: 60%;
+      }
       .tnt {
         position: absolute;
         bottom: 16px;
@@ -46,7 +69,7 @@
       .visible {
         opacity: 1;
       }
-      .lemon {
+      #loader {
         position: absolute;
         animation: rotate 1s linear infinite;
         top: calc(50% - 25px);
@@ -55,22 +78,39 @@
     </style>
   </head>
   <body>
+    <div class="splash">
+      <img id="loader" src="/lemon.png" style="visibility: hidden;"></img>
+      <div id="mobile-alert" style="visibility: hidden;">
+        <p id="mobile-alert-msg">
+          Mobile support coming soon...<br /><br />Try desktop in the meantime!
+        </p>
+      </div>
+    </div>
     <script>
-      const interval = setInterval(() => {
-        const splash = document.querySelector('.splash');
-        if (window.__READY__) {
-          clearInterval(interval);
-          setTimeout(() => {
-            splash.style.visibility = 'hidden';
-          }, 500)
-        }
-      }, 50)
+      function isMobile() {
+        const userAgent = navigator.userAgent;
+        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        return regex.test(userAgent);
+      }
+      if (!isMobile()) {
+        const l = document.getElementById('loader');
+        l.style.visibility = 'visible';
+        const interval = setInterval(() => {
+          const splash = document.querySelector('.splash');
+          if (window.__READY__) {
+            clearInterval(interval);
+            setTimeout(() => {
+              splash.style.display = 'none';
+            }, 500)
+          }
+        }, 50)
+      } else {
+        const ma = document.getElementById('mobile-alert');
+        ma.style.visibility = 'visible';
+      }
     </script>
     <script type="module" src="/src/index.ts"></script>
     <script type="module" src="/src/react/index.tsx"></script>
-    <div class="splash">
-      <img class="lemon" src="/lemon.png"></img>
-    </div>
     <div id="canvas-root"></div>
     <div id="react-root"></div>
     <img class="tnt" src="/tnt.png"></img>

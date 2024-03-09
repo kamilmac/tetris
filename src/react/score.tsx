@@ -1,5 +1,5 @@
 import * as React from "react";
-import { appState } from "../state";
+import { AppState } from "../state";
 import { Fire } from "./icons";
 import { Text } from "./text";
 
@@ -20,11 +20,11 @@ export const Score = () => {
 	const [isDemo, setIsdemo] = React.useState(true);
 
 	React.useEffect(() => {
-		appState.subscribe(["score", "bestScore"], (state) => {
+		AppState.subscribe(["score", "bestScore"], (state) => {
 			setBestScore(state.bestScore);
 			setScore(state.score);
 		});
-		appState.subscribe(["status"], (state) => {
+		AppState.subscribe(["status"], (state) => {
 			if (state.status !== "inDemo") {
 				setIsdemo(false);
 			}

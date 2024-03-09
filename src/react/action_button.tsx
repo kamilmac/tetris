@@ -1,5 +1,5 @@
 import * as React from "react";
-import { appState } from "../state";
+import { AppState } from "../state";
 import { Control } from "./icons";
 import { Text } from "./text";
 
@@ -81,7 +81,7 @@ export const ActionButton = (props: Props) => {
 				props.onAction();
 			}
 		});
-		appState.subscribe(["status"], (state) => {
+		AppState.subscribe(["status"], (state) => {
 			if (state.status === "playing") {
 				setButtonState("mini");
 			} else if (state.status === "gameOver") {
@@ -98,7 +98,7 @@ export const ActionButton = (props: Props) => {
 	return (
 		<>
 			<div
-				className={appState.state.status !== 'gameOver' ? 'hidden' : 'visible'}
+				className={AppState.state.status !== 'gameOver' ? 'hidden' : 'visible'}
 				style={{
 			    height: '40%',
 			    bottom: 0,

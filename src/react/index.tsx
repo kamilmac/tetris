@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import { appState } from "../state";
+import { AppState } from "../state";
 import { ActionButton } from "./action_button";
 import { Key, LegendBox } from "./legend_box";
 import { Score } from "./score";
@@ -14,10 +14,10 @@ const App = () => {
 	const [showLegend, setShowLegend] = React.useState(true);
 
 	const onAction = () => {
-		if (["inDemo", "gameOver"].includes(appState.state.status)) {
+		if (["inDemo", "gameOver"].includes(AppState.state.status)) {
 			setShowLegend(false);
 			setTimeout(() => {
-				appState.changeStatus("playing");
+				AppState.changeStatus("playing");
 			}, 200);
 		}
 	};

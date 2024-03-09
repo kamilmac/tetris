@@ -2,7 +2,7 @@ import * as THREE from "three";
 // @ts-ignore
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Stage } from "../stage";
-import { appState } from "../state";
+import { AppState } from "../state";
 import { Bridge } from "../utils/bridge";
 
 export class Camera {
@@ -68,7 +68,7 @@ export class Camera {
 		this.camera = new THREE.PerspectiveCamera(120, width / height, 0.1, 1000);
 		this.camera.zoom = 2.4;
 
-		appState.subscribe(["status"], (state) => {
+		AppState.subscribe(["status"], (state) => {
 			if (state.status === "inDemo") {
 				// @ts-ignore
 				this.camera._targetZoom = 2.4;
