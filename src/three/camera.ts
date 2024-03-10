@@ -153,7 +153,7 @@ export class Camera {
 		}
 		this.setPosition(
 			this.cameraPositions[this.activeCamera].x,
-			this.camera.position.y,
+			this.stage.width * 2,
 			this.cameraPositions[this.activeCamera].z,
 		);
 	};
