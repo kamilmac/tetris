@@ -42,6 +42,7 @@ export const SvgLine = (props: LineProps) => {
 		frameId.current = requestAnimationFrame(animate);
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
 		// @ts-ignore
 		frameId.current = requestAnimationFrame(animate);
