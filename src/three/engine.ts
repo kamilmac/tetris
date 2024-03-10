@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CFG, TPane } from "../config";
+import { CFG } from "../config";
 import { Physics } from "../physics";
 import { Cube, Stage } from "../stage";
 import { Bridge } from "../utils/bridge";
@@ -7,7 +7,7 @@ import { Camera } from "./camera";
 import { Cube as Tetrino } from "./cube";
 import { Floor } from "./floor";
 import { shadowMaterial } from "./materials";
-
+        
 interface ShadowCube extends Cube {
 	x: number;
 	y: number;
@@ -42,7 +42,6 @@ export class Engine {
 		this.physics = null;
 		this.usePhysics = false;
 		this.setup();
-		TPane?.on("change", this.onTweakPaneChange);
 		onReady(this);
 	}
 
@@ -64,6 +63,7 @@ export class Engine {
 	setup() {
 		this.renderer = new THREE.WebGLRenderer({
 			antialias: true,
+		  powerPreference: "high-performance",
 		});
 		const canvasRoot = document.getElementById("canvas-root");
 		canvasRoot?.appendChild(this.renderer.domElement);

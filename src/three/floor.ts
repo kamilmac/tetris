@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { Scene } from "three";
-import { CFG, TPane } from "../config";
+import { CFG } from "../config";
 import { Camera } from "./camera";
 
 // @ts-ignore
@@ -58,8 +58,6 @@ export class Floor {
 		this.wallF.position.y += width / 2;
 		this.wallF.position.z += width - 0.5;
 		scene?.add(this.wallF);
-
-		TPane?.on("change", this.onTweakPaneChange);
 	}
 
 	hideWalls() {

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CubeType, TPane, cubeVariants } from "../config";
+import { CubeType,  cubeVariants } from "../config";
 // @ts-ignore
 import pattern1 from "../patterns/porous.jpg";
 const loader = new THREE.TextureLoader();
@@ -18,13 +18,13 @@ export class Cube {
 	targetScale: THREE.Vector3 | null = null;
 	destroying = false;
 	variant: CubeType | null = null;
+	variantName = '';
 
 	constructor(variant: string, scene: THREE.Scene) {
 		this.scene = scene;
 		this.mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial());
 		this.setVariant(variant);
 		this.scene.add(this.mesh);
-		TPane?.on("change", this.onTweakPaneChange);
 		requestAnimationFrame(this.animate);
 	}
 
@@ -85,6 +85,11 @@ export class Cube {
 	}
 
 	setVariant(newVariant: string) {
+		if (this.variantName === newVariant) {
+			this.setPattern();
+			return;
+		}
+		this.variantName = newVariant;
 		this.variant = cubeVariants[newVariant];
 		this.setColor();
 		this.setPattern();
