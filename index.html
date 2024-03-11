@@ -106,13 +106,14 @@
         '[  =   ]',
         '[ =    ]',
       ];
+      const intervals = [];
       const loaderElement1 = document.getElementById('l1');
       let currentFrame1 = 0;
       function updateLoader1() {
           loaderElement1.textContent = frames[currentFrame1];
           currentFrame1 = (currentFrame1 + 1) % frames.length; // Cycle through frames
       }
-      setInterval(updateLoader1, 64);
+      intervals.push(setInterval(updateLoader1, 64));
 
       const loaderElement2 = document.getElementById('l2');
       let currentFrame2 = 2;
@@ -120,7 +121,7 @@
           loaderElement2.textContent = frames[currentFrame2];
           currentFrame2 = (currentFrame2 + 1) % frames.length; // Cycle through frames
       }
-      setInterval(updateLoader2, 96);
+      intervals.push(setInterval(updateLoader2, 96));
 
       const loaderElement3 = document.getElementById('l3');
       let currentFrame3 = 4;
@@ -128,7 +129,8 @@
           loaderElement3.textContent = frames[currentFrame3];
           currentFrame3 = (currentFrame3 + 1) % frames.length; // Cycle through frames
       }
-      setInterval(updateLoader3, 128);
+      intervals.push(setInterval(updateLoader3, 128));
+
       function isMobile() {
         const userAgent = navigator.userAgent;
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -142,6 +144,7 @@
           if (window.__READY__) {
             clearInterval(interval);
             setTimeout(() => {
+              intervals.forEach(i => clearInterval(i));
               splash.style.display = 'none';
             }, 1800)
           }
