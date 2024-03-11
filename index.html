@@ -62,20 +62,73 @@
         opacity: 1;
       }
       #loader {
-        position: absolute;
-        animation: rotate 1s linear infinite;
-        top: calc(50% - 25px);
-        left: calc(50% - 25px);
+        font-family: monospace;
+        white-space: pre;
+        color: white;
+        font-size: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        align-items: center;
+      }
+      #loader #l1 {
+        color: #E9426C;
+      }
+      #loader #l2 {
+        color: #3670C0;
+      }
+      #loader #l3 {
+        color: #D66D01;
       }
     </style>
   </head>
   <body>
     <div class="splash">
-      <img id="loader" src="/lemon.png" style="visibility: hidden;"></img>
+      <div id="loader">
+        <div id="l1"></div>
+        <div id="l2"></div>
+        <div id="l3"></div>
+      </div>
       <div id="mobile-alert" style="visibility: hidden;">
       </div>
     </div>
     <script>
+      const frames = [
+        '[=     ]',
+        '[ =    ]',
+        '[  =   ]',
+        '[   =  ]',
+        '[    = ]',
+        '[     =]',
+        '[    = ]',
+        '[   =  ]',
+        '[  =   ]',
+        '[ =    ]',
+      ];
+      const loaderElement1 = document.getElementById('l1');
+      let currentFrame1 = 0;
+      function updateLoader1() {
+          loaderElement1.textContent = frames[currentFrame1];
+          currentFrame1 = (currentFrame1 + 1) % frames.length; // Cycle through frames
+      }
+      setInterval(updateLoader1, 64);
+
+      const loaderElement2 = document.getElementById('l2');
+      let currentFrame2 = 2;
+      function updateLoader2() {
+          loaderElement2.textContent = frames[currentFrame2];
+          currentFrame2 = (currentFrame2 + 1) % frames.length; // Cycle through frames
+      }
+      setInterval(updateLoader2, 96);
+
+      const loaderElement3 = document.getElementById('l3');
+      let currentFrame3 = 4;
+      function updateLoader3() {
+          loaderElement3.textContent = frames[currentFrame3];
+          currentFrame3 = (currentFrame3 + 1) % frames.length; // Cycle through frames
+      }
+      setInterval(updateLoader3, 128);
       function isMobile() {
         const userAgent = navigator.userAgent;
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -90,7 +143,7 @@
             clearInterval(interval);
             setTimeout(() => {
               splash.style.display = 'none';
-            }, 500)
+            }, 1800)
           }
         }, 50)
       } else {
