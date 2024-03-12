@@ -11,16 +11,16 @@ const Variants = {
 		icon: Control,
 		label: () => (
 			<div>
-				<Text color="#FFFFFF80">Press</Text>
+				<Text color="#FFFFFFFF">Press</Text>
 				<Text> </Text>
-				<Text color="#FFFFFFCC" size={16}>
+				<Text color="#FFFFFFFF" size={16}>
 					<b>ENTER</b>
 				</Text>
 				<Text> </Text>
-				<Text color="#FFFFFF80">to</Text>
+				<Text color="#FFFFFFFF">to</Text>
 				<Text> </Text>
-				<Text color="#FFFFFFCC">
-					<b>take control</b>
+				<Text color="#FFFFFFFF">
+					<b>PLAY!</b>
 				</Text>
 			</div>
 		),
@@ -100,7 +100,7 @@ export const ActionButton = (props: Props) => {
 			<div
 				className={AppState.state.status !== 'gameOver' ? 'hidden' : 'visible'}
 				style={{
-			    height: '40%',
+			    height: '50%',
 			    bottom: 0,
 			    position: 'absolute',
 			    animation: 'opacity 2s linear',
@@ -111,7 +111,7 @@ export const ActionButton = (props: Props) => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 48,
+					bottom: 96,
 					left: "calc(50% - 130px)",
 					display: "flex",
 					flexDirection: "column",
@@ -121,6 +121,7 @@ export const ActionButton = (props: Props) => {
 					height: 120,
 					overflow: "hidden",
 					gap: 20,
+					transform: 'scale(1.25)',
 				}}
 			>
 				{ buttonState !== 'mini' && (
