@@ -92,7 +92,7 @@ const App = () => {
 				}}
 			>
 				<a href="https://github.com/kamilmac/tetris" target="_blank" rel="noreferrer">
-				  <img src="/gh.png" alt="GitHub Badge" width="28" height="28" />
+				  <img src="/gh.png" alt="GitHub Badge" width="24" height="24" />
 				</a>
 			</div>
 		</>
