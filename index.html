@@ -106,30 +106,35 @@
         '[  =   ]',
         '[ =    ]',
       ];
-      const intervals = [];
-      const loaderElement1 = document.getElementById('l1');
-      let currentFrame1 = 0;
-      function updateLoader1() {
-          loaderElement1.textContent = frames[currentFrame1];
-          currentFrame1 = (currentFrame1 + 1) % frames.length; // Cycle through frames
-      }
-      intervals.push(setInterval(updateLoader1, 64));
+      const loaders = [
+        {
+          frameIndex: 0,
+          speed: 64,
+          el: document.getElementById('l1'),
+          interval: null,
+        },
+        {
+          frameIndex: 0,
+          speed: 96,
+          el: document.getElementById('l2'),
+          interval: null,
+        },
+        {
+          frameIndex: 0,
+          speed: 128,
+          el: document.getElementById('l3'),
+          interval: null,
+        },
+      ];
 
-      const loaderElement2 = document.getElementById('l2');
-      let currentFrame2 = 2;
-      function updateLoader2() {
-          loaderElement2.textContent = frames[currentFrame2];
-          currentFrame2 = (currentFrame2 + 1) % frames.length; // Cycle through frames
+      function updateLoader(loader) {
+          loader.el.textContent = frames[loader.frameIndex];
+          loader.frameIndex = (loader.frameIndex + 1) % frames.length; // Cycle through frames
       }
-      intervals.push(setInterval(updateLoader2, 96));
 
-      const loaderElement3 = document.getElementById('l3');
-      let currentFrame3 = 4;
-      function updateLoader3() {
-          loaderElement3.textContent = frames[currentFrame3];
-          currentFrame3 = (currentFrame3 + 1) % frames.length; // Cycle through frames
+      for (let i = 0; i < loaders.length; i++) {
+        loaders[i].interval = setInterval(() => updateLoader(loaders[i]), loaders[i].speed );
       }
-      intervals.push(setInterval(updateLoader3, 128));
 
       function isMobile() {
         const userAgent = navigator.userAgent;
@@ -144,7 +149,7 @@
           if (window.__READY__) {
             clearInterval(interval);
             setTimeout(() => {
-              intervals.forEach(i => clearInterval(i));
+              loaders.forEach(l => clearInterval(l.interval));
               splash.style.display = 'none';
             }, 1800)
           }
