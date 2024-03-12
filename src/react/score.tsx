@@ -43,6 +43,8 @@ export const Score = () => {
 				height: 60,
 				display: "flex",
 				gap: 12,
+				transformOrigin: 'top right',
+				transform: 'scale(1.20)',
 			}}
 		>
 			{!isDemo && (
