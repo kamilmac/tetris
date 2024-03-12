@@ -83,6 +83,17 @@ const App = () => {
 			}
 			<ActionButton onAction={onAction} />
 			<Score />
+			<div
+				style={{
+					position: 'absolute',
+					bottom: 16,
+					right: 16,
+				}}
+			>
+				<a href="https://github.com/kamilmac/tetris" target="_blank" rel="noreferrer">
+				  <img src="/gh.png" alt="GitHub Badge" width="24" height="24" />
+				</a>
+			</div>
 		</>
 	);
 };
