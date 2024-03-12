@@ -87,12 +87,12 @@ const App = () => {
 				style={{
 					position: 'absolute',
 					bottom: 16,
-					right: 16,
+					right: 18,
 					opacity: 0.85,
 				}}
 			>
 				<a href="https://github.com/kamilmac/tetris" target="_blank" rel="noreferrer">
-				  <img src="/gh.png" alt="GitHub Badge" width="24" height="24" />
+				  <img src="/gh.png" alt="GitHub Badge" width="28" height="28" />
 				</a>
 			</div>
 		</>
