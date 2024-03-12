@@ -88,6 +88,7 @@ const App = () => {
 					position: 'absolute',
 					bottom: 16,
 					right: 16,
+					opacity: 0.85,
 				}}
 			>
 				<a href="https://github.com/kamilmac/tetris" target="_blank" rel="noreferrer">
