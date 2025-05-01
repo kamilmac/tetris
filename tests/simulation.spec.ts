@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("simulation", async ({ page }) => {
   await page.goto("/?testmode");
 
-  // trigger click on eleement with attribute data-test "cta-play"
+  // trigger click on element with attribute data-test "cta-play"
   await page.waitForSelector('[data-test="cta-button"]');
   await page.click('[data-test="cta-button"]');
   await page.waitForTimeout(300);

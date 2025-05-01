@@ -81,7 +81,6 @@ export class Stage {
 		};
 	}
 
-	// TODO: pass array of cubes instead here
 	fillCube(x: number, y: number, z: number, id: number, state: Cube["state"]) {
 		if (state === "locked") {
 			this.lastLockedY = y;
@@ -124,73 +123,9 @@ export class Stage {
 	}
 
 	checkForFilledLines() {
-		this.toBeRemovedCubes = [];
-		const xLines = [];
-		const zLines = [];
-		let localScore = 0;
-
-		for (let x = 0; x < this.width; x++) {
-			zLines[x] = true;
-			for (let z = 0; z < this.depth; z++) {
-				if (this.cubes[x][this.lastLockedY][z]?.state !== "locked") {
-					zLines[x] = false;
-					break;
-				}
-			}
-		}
-
-		for (let z = 0; z < this.depth; z++) {
-			xLines[z] = true;
-			for (let x = 0; x < this.width; x++) {
-				if (this.cubes[x][this.lastLockedY][z]?.state !== "locked") {
-					xLines[z] = false;
-					break;
-				}
-			}
-		}
-
-		const toBeMovedDown: Record<string, number[]> = {};
-
-		zLines.forEach((n, index) => {
-			if (n) {
-				localScore += this.width;
-				for (let z = 0; z < this.depth; z++) {
-					this.setToBeRemovedCube(index, this.lastLockedY, z);
-					for (let y = this.lastLockedY + 1; y < this.height; y++) {
-						if (this.cubes[index][y][z]?.state === "locked") {
-							toBeMovedDown[`${index}-${y}-${z}`] = [index, y, z];
-						}
-					}
-				}
-			}
-		});
-
-		xLines.forEach((n, index) => {
-			if (n) {
-				localScore += this.depth;
-				for (let x = 0; x < this.width; x++) {
-					this.setToBeRemovedCube(x, this.lastLockedY, index);
-					for (let y = this.lastLockedY + 1; y < this.height; y++) {
-						if (this.cubes[x][y][index]?.state === "locked") {
-							toBeMovedDown[`${x}-${y}-${index}`] = [x, y, index];
-						}
-					}
-				}
-			}
-		});
-
-		if (localScore > 0) {
-			AppState.addToScore(localScore);
-			this.cycleTime -= CFG.accelerationFactor;
-		}
-
-		for (const key of Object.keys(toBeMovedDown)) {
-			this.setToBeMovedDownCube(
-				toBeMovedDown[key][0],
-				toBeMovedDown[key][1],
-				toBeMovedDown[key][2],
-			);
-		}
+		// Disabled line-clearing logic to simulate realistic factory stacking
+		// This keeps the game loop alive without modifying other game flow logic
+		this.cycleTime -= CFG.accelerationFactor / 10;
 	}
 
 	isCubeDefined(x: number, y: number, z: number) {
